@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080d13">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex,nofollow">
+<title>Arbeitsorganisation lernen</title>
+<style>:root{color-scheme:dark;--bg:#080d13;--surface:#121b25;--surface2:#182330;--surface3:#202d3b;--border:#344252;--text:#f4f7fa;--muted:#b8c5d2;--soft:#d7e1e9;--accent:#9bdec9;--accent-bg:#163b35;--danger:#ffb9ae;--radius:18px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+*{box-sizing:border-box}
+html{background:var(--bg);-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit}
+button,select{cursor:pointer}
+button{appearance:none;-webkit-appearance:none;color:var(--text)}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.app-shell{min-height:100dvh;max-width:1440px;margin:0 auto;padding:24px clamp(16px,3vw,44px) 80px}
+.site-header{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:0 0 22px;border-bottom:1px solid var(--border)}
+.brand-kicker,.eyebrow,.section-label{color:var(--accent);font-size:.76rem;font-weight:750;letter-spacing:.11em;text-transform:uppercase}
+.brand-title{font-size:clamp(1.4rem,2vw,1.9rem);letter-spacing:-.035em;line-height:1.18;margin:5px 0 0;font-weight:750}
+.overall{display:flex;align-items:center;gap:14px;min-width:205px;color:var(--muted);font-size:.84rem}
+.overall strong{color:var(--text);font-size:1.2rem;line-height:1}
+.overall-copy{display:grid;gap:4px}
+.progress-ring{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) var(--angle),var(--border) 0);flex:none}
+.progress-ring:after{content:"";width:29px;height:29px;border-radius:50%;background:var(--bg)}
+.layout{display:grid;grid-template-columns:252px minmax(0,1fr);gap:clamp(24px,4vw,62px);padding-top:34px}
+.lecture-nav{align-self:start;position:sticky;top:20px;max-height:calc(100dvh - 40px);overflow:auto;padding-right:8px}
+.nav-heading{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin:0 0 14px 12px}
+.lecture-list{display:grid;gap:5px}
+.lecture-button{width:100%;min-height:49px;border:1px solid transparent;border-radius:12px;background:transparent;text-align:left;padding:9px 11px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.lecture-button:hover{background:var(--surface)}
+.lecture-button[aria-current="true"]{background:var(--surface2);border-color:var(--border)}
+.lecture-button__main{display:grid;gap:1px;min-width:0}
+.lecture-button__number{color:var(--text);font-size:.88rem;font-weight:750}
+.lecture-button__title{color:var(--muted);font-size:.77rem;line-height:1.3;overflow-wrap:anywhere}
+.lecture-button__count{color:var(--muted);font-size:.76rem;white-space:nowrap}
+.lecture-button[aria-current="true"] .lecture-button__number,.lecture-button[aria-current="true"] .lecture-button__count{color:var(--accent)}
+.reset{margin:21px 10px 0;padding:5px 0;border:0;background:none;color:var(--muted);font-size:.82rem;text-decoration:underline;text-underline-offset:3px}
+.reset:hover{color:var(--danger)}
+.main{min-width:0;max-width:1020px}
+.mobile-lecture{display:none}
+.lecture-intro{display:flex;justify-content:space-between;align-items:end;gap:18px;margin:2px 0 26px}
+.lecture-title{font-size:clamp(1.7rem,3vw,2.65rem);line-height:1.15;letter-spacing:-.04em;margin:7px 0 7px}
+.lecture-sub{color:var(--muted);font-size:.94rem;margin:0}
+.lecture-progress{min-width:130px;text-align:right;color:var(--muted);font-size:.85rem}
+.lecture-progress strong{display:block;color:var(--text);font-size:1.12rem}
+.mini-bar{height:5px;background:var(--border);border-radius:99px;overflow:hidden;margin-top:8px}
+.mini-bar span{display:block;height:100%;background:var(--accent)}
+.mode-tabs{display:flex;gap:5px;max-width:460px;padding:5px;background:var(--surface);border:1px solid var(--border);border-radius:13px;margin-bottom:28px}
+.mode-tab{min-height:44px;flex:1;border:0;border-radius:9px;background:transparent;color:var(--muted);font-size:.89rem;font-weight:650;padding:8px 12px}
+.mode-tab[aria-selected="true"]{background:var(--surface3);color:var(--text);box-shadow:0 1px 4px #0005}
+.learning-grid{display:grid;grid-template-columns:minmax(185px,244px) minmax(0,1fr);gap:23px;align-items:start}
+.topic-panel{display:grid;gap:12px;align-self:start}
+.topic-heading{display:flex;justify-content:space-between;gap:8px;align-items:center;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700;padding:0 5px}
+.topic-list{display:grid;gap:5px}
+.topic-button{width:100%;border:1px solid transparent;border-radius:10px;background:transparent;text-align:left;padding:10px 12px;display:flex;align-items:start;gap:10px;min-height:49px}
+.topic-button:hover{background:var(--surface)}
+.topic-button[aria-current="true"]{background:var(--surface2);border-color:var(--border)}
+.topic-num{font-size:.73rem;color:var(--muted);padding-top:2px;min-width:19px}
+.topic-name{font-size:.88rem;line-height:1.4;font-weight:650;color:var(--soft)}
+.topic-button[aria-current="true"] .topic-name{color:var(--text)}
+.topic-done{color:var(--accent);margin-left:auto}
+.mobile-topic{display:none}
+.study-card,.single-card,.notes-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+.study-card{padding:clamp(22px,4vw,40px);min-height:395px}
+.topic-index{color:var(--accent);font-size:.77rem;letter-spacing:.09em;text-transform:uppercase;font-weight:750}
+.study-title{font-size:clamp(1.4rem,2.4vw,2rem);letter-spacing:-.025em;line-height:1.2;margin:12px 0 18px}
+.study-lead{color:var(--text);font-size:clamp(1.05rem,1.6vw,1.18rem);line-height:1.6;margin:0 0 26px}
+.key-points{padding:20px 22px;margin:0;background:var(--surface2);border:1px solid var(--border);border-radius:13px}
+.key-points h3{font-size:.79rem;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+.key-points ul{padding:0 0 0 20px;margin:0;display:grid;gap:12px}
+.key-points li{color:var(--soft);padding-left:2px;line-height:1.55}
+.key-points strong{color:var(--text)}
+.source-tag{font-size:.78rem;color:var(--muted);margin:18px 0 0}
+.card-footer{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:30px;padding-top:22px;border-top:1px solid var(--border)}
+.card-nav{display:flex;gap:7px}
+.quiet-button,.primary-button,.success-button{min-height:44px;border-radius:10px;padding:9px 15px;font-size:.88rem;font-weight:700}
+.quiet-button{background:var(--surface2);border:1px solid var(--border);color:var(--text)}
+.quiet-button:hover{background:var(--surface3)}
+.quiet-button:disabled{opacity:.45;cursor:default}
+.primary-button{background:var(--accent);border:1px solid var(--accent);color:#09231c}
+.primary-button:hover{background:#b5ead9}
+.success-button{background:var(--accent-bg);border:1px solid #467e70;color:var(--accent)}
+.success-button:hover{background:#205346}
+.notes-panel{margin-top:20px;padding:0 24px}
+.notes-panel summary{cursor:pointer;padding:18px 0;color:var(--soft);font-weight:700;min-height:58px}
+.notes-panel summary::marker{color:var(--accent)}
+.notes-help{color:var(--muted);font-size:.86rem;margin:0 0 20px}
+.notes-content{border-top:1px solid var(--border);padding:16px 0 30px;max-width:72ch;color:var(--soft);line-height:1.72}
+.notes-content h2{font-size:1.3rem;color:var(--text);margin:28px 0 10px}
+.notes-content h3{font-size:1.08rem;color:var(--text);margin:23px 0 8px}
+.notes-content h4{font-size:1rem;color:var(--accent);margin:20px 0 6px}
+.notes-content p{margin:9px 0}
+.notes-content ul,.notes-content ol{padding-left:24px;margin:10px 0}
+.notes-content li{margin:5px 0}
+.notes-content strong{color:var(--text)}
+.notes-content hr{border:0;border-top:1px solid var(--border);margin:24px 0}
+.note-section{border-bottom:1px solid var(--border)}
+.note-section summary{font-size:1rem;color:var(--text);padding:16px 0}
+.note-section>div{padding:0 0 17px 22px}
+.single-layout{max-width:730px;margin:0 auto}
+.single-meta{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:.87rem;margin-bottom:12px}
+.single-card{padding:clamp(24px,5vw,46px);min-height:320px}
+.flash-prompt{font-size:clamp(1.5rem,3vw,2.25rem);line-height:1.25;margin:16px 0 32px;letter-spacing:-.025em}
+.flash-hint{color:var(--muted);font-size:.9rem}
+.flash-answer{border-top:1px solid var(--border);padding-top:20px;color:var(--soft)}
+.flash-answer p{font-size:1.07rem;color:var(--text)}
+.flash-answer ul{padding-left:22px;display:grid;gap:9px}
+.flash-answer strong{color:var(--text)}
+.action-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.option-list{display:grid;gap:9px;margin-top:28px}
+.option{width:100%;min-height:54px;display:flex;gap:14px;align-items:center;text-align:left;padding:12px 15px;border:1px solid var(--border);border-radius:11px;background:var(--surface2);color:var(--text);line-height:1.4}
+.option:hover:not(:disabled){border-color:var(--accent)}
+.option:disabled{cursor:default;opacity:1}
+.option.correct{border-color:#70bca4;background:#19463a}
+.option.incorrect{border-color:#bf827b;background:#4a2929}
+.option-letter{display:grid;place-items:center;width:27px;height:27px;flex:none;border-radius:7px;background:var(--surface3);color:var(--muted);font-size:.77rem;font-weight:700}
+.feedback{margin-top:18px;padding:14px 17px;border-radius:11px;background:var(--surface2);color:var(--soft)}
+.feedback strong{color:var(--text)}
+.empty{padding:42px 26px;border:1px dashed var(--border);border-radius:var(--radius);color:var(--muted);text-align:center}
+.screen-reader{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:900px){.layout{grid-template-columns:1fr;gap:0;padding-top:22px}.lecture-nav{display:none}.mobile-lecture{display:block;margin-bottom:22px}.mobile-lecture label,.mobile-topic label{display:block;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;font-weight:700;margin-bottom:8px}.selector{width:100%;min-height:48px;padding:10px 13px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--text);appearance:auto;-webkit-appearance:menulist}.selector option{background:var(--surface2);color:var(--text)}.lecture-intro{margin-bottom:22px}.main{max-width:none}}
+@media(max-width:680px){.app-shell{padding:18px 16px 70px}.site-header{padding-bottom:17px}.overall{min-width:auto;gap:8px;text-align:right}.overall-copy span{display:none}.progress-ring{width:34px;height:34px}.progress-ring:after{width:23px;height:23px}.brand-kicker{font-size:.66rem}.brand-title{font-size:1.34rem}.lecture-title{font-size:1.75rem}.lecture-progress{min-width:75px}.lecture-progress strong{font-size:.96rem}.mode-tabs{max-width:none;margin-bottom:22px}.mode-tab{padding:8px 4px;font-size:.86rem}.learning-grid{display:block}.topic-panel{display:none}.mobile-topic{display:block;margin-bottom:15px}.study-card{padding:22px 19px;min-height:0}.key-points{padding:17px 18px}.card-footer{flex-direction:column;align-items:stretch}.card-nav{display:grid;grid-template-columns:1fr 1fr}.card-nav button,.card-footer>button{width:100%}.notes-panel{padding:0 19px}.single-card{padding:25px 20px}.action-row>*{flex:1}.single-meta{font-size:.81rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const VL_LABELS = {
+  1:'Karriere & Wohlbefinden', 2:'Befragung & Itemkonstruktion', 3:'Arbeitsleistung, OCB & Commitment',
+  4:'Motivation & Zielsetzung', 5:'Humane Arbeitsgestaltung', 6:'Zukunft der Arbeit & Empowerment',
+  7:'Stress & Beanspruchung', 8:'Selbst- & Zeitmanagement', 9:'Achtsamkeit & Trainingsevaluation',
+  10:'Gruppenleistung & Gruppendenken', 11:'Teams: Rollen & Entwicklung', 12:'Konfliktmanagement',
+  13:'Interkulturelle Psychologie'
+};
+
+const TOPICS = [
+{id:'vl1-karriere-messung', vl:1, title:`Messung von Karriereerfolg`, tag:`Spurk, 2019`,
+ def:`Erfolg ist für jeden anders. Es gibt zwei Wege, ihn zu messen.`,
+ points:[
+  `<strong>Top-down:</strong> Die Wissenschaft legt vorher fest, was zählt.`,
+  `Objektiv: Gehalt, Hierarchiestufe, Beförderungen.`,
+  `Subjektiv: Bist du zufrieden und stolz?`,
+  `<strong>Bottom-up:</strong> Du selbst sagst, was Erfolg für dich bedeutet.`
+ ]},
+{id:'vl1-hedonistische-adaption', vl:1, title:`Hedonistische Adaption`, tag:`Helson, 1964`,
+ def:`Wir gewöhnen uns an fast alles – an Gutes wie an Schlechtes.`,
+ points:[
+  `Nach vielen Veränderungen nähert sich das Wohlbefinden mit der Zeit wieder dem persönlichen Ausgangsniveau. Wie stark das geschieht, ist von Mensch und Ereignis abhängig.`,
+  `<strong>Lifestyle Inflation:</strong> Deine Ansprüche wachsen mit deinem Erfolg – dein Glücksgefühl aber kaum.`
+ ]},
+{id:'vl2-befragungsmethoden', vl:2, title:`Befragungsmethoden`, tag:`Frieling & Sonntag, 1999`,
+ def:`Es gibt zwei grundverschiedene Arten, Menschen zu befragen.`,
+ points:[
+  `<strong>Qualitativ:</strong> offene Fragen, wenige Personen, dafür viel Tiefe – aber aufwendig.`,
+  `<strong>Quantitativ:</strong> feste Antworten, viele Personen, gut vergleichbar – aber wenig Tiefgang.`
+ ]},
+{id:'vl2-item-richtlinien', vl:2, title:`Richtlinien für die Konstruktion von Items`,
+ def:`So formulierst du gute Fragebogen-Fragen – und das solltest du vermeiden.`,
+ points:[
+  `<strong>Gut:</strong> klar formuliert, jeder versteht sie gleich, nur eine Sache pro Frage.`,
+  `<strong>Schlecht:</strong> doppelte Verneinung, Fremdwörter, mehrere Themen in einer Frage, Suggestivfragen.`
+ ]},
+{id:'vl3-ocb-modell', vl:3, title:`OCB-Modell (Extra-Rollenverhalten)`, tag:`Organ, 1988`,
+ def:`OCB: freiwillig extra helfen, ohne Bezahlung.`,
+ points:[
+  `<strong>Altruism:</strong> einem Kollegen helfen, z. B. neue Mitarbeitende einarbeiten.`,
+  `<strong>Conscientiousness:</strong> besonders zuverlässig und pünktlich sein.`,
+  `<strong>Courtesy:</strong> Rücksicht nehmen, Kollegen rechtzeitig informieren.`,
+  `<strong>Sportsmanship:</strong> Unannehmlichkeiten hinnehmen, ohne ständig zu meckern.`,
+  `<strong>Civic Virtue:</strong> sich aktiv einbringen, z. B. bei Meetings mitreden.`
+ ]},
+{id:'vl3-struktur-arbeitsverhalten', vl:3, title:`Struktur des Arbeitsverhaltens (4 Verhaltensformen)`,
+ def:`Vier Formen von Arbeitsverhalten unterscheiden sich darin, ob sie der Organisation nützen und ob sie zu Vorgaben passen.`,
+ points:[
+  `<strong>Nach Vorschrift:</strong> macht seinen Job korrekt, nicht mehr und nicht weniger.`,
+  `<strong>Extraproduktiv</strong> (= OCB): macht freiwillig mehr, hält sich an Regeln.`,
+  `<strong>Kontraproduktiv:</strong> bricht Regeln und schadet der Firma, z. B. durch Diebstahl.`,
+  `<strong>Intrapreneurship:</strong> entwickelt und verwirklicht neue Ideen innerhalb der Organisation; dabei werden bestehende Abläufe auch einmal hinterfragt.`
+ ]},
+{id:'vl3-mcclelland-motive', vl:3, title:`Motivklassen – Motivtheorie von McClelland`, tag:`McClelland, 1964`,
+ def:`Drei Antriebe stecken in jedem von uns – nur unterschiedlich stark.`,
+ points:[
+  `<strong>Leistungsmotiv:</strong> will Herausforderungen meistern (Hoffnung auf Erfolg vs. Angst vor Misserfolg).`,
+  `<strong>Machtmotiv:</strong> will führen und entscheiden (Hoffnung auf Kontrolle vs. Angst vor Kontrollverlust).`,
+  `<strong>Anschlussmotiv:</strong> will dazugehören und Harmonie (Hoffnung auf Nähe vs. Angst vor Ablehnung).`
+ ]},
+{id:'vl3-commitment-modell', vl:3, title:`Drei-Komponenten-Modell des Commitment`,
+ def:`Drei Gründe, warum Menschen in ihrem Job bleiben.`,
+ points:[
+  `<strong>Affektiv</strong> – „Ich will bleiben“: Du fühlst dich emotional verbunden.`,
+  `<strong>Kalkulatorisch</strong> – „Ich muss bleiben“: Ein Wechsel wäre zu teuer oder riskant.`,
+  `<strong>Normativ</strong> – „Ich soll bleiben“: Du fühlst dich verpflichtet, aus Dankbarkeit.`
+ ]},
+{id:'vl4-determinanten-verhalten', vl:4, title:`Determinanten des Verhaltens`,
+ def:`Damit du etwas tust, brauchst du drei Dinge gleichzeitig.`,
+ points:[
+  `<strong>Wollen:</strong> Hast du überhaupt Lust dazu?`,
+  `<strong>Können:</strong> Hast du die nötigen Fähigkeiten?`,
+  `<strong>Dürfen:</strong> Ist es erlaubt, hast du die nötigen Mittel?`
+ ]},
+{id:'vl4-motiv-anreiz-motivation', vl:4, title:`Motiv – Anreiz – Motivation`,
+ def:`Motivation entsteht, wenn ein innerer Wunsch auf einen passenden Reiz trifft.`,
+ points:[
+  `<strong>Motiv:</strong> das, was in dir steckt – z. B. Ehrgeiz oder Machtstreben.`,
+  `<strong>Anreiz:</strong> das, was von außen lockt – z. B. Prämie oder Lob.`,
+  `Motivation = Motiv trifft Anreiz. Ohne beides passiert wenig.`
+ ]},
+{id:'vl4-maslow-pyramide', vl:4, title:`Bedürfnispyramide nach Maslow`,
+ def:`Erst die Grundbedürfnisse, dann gewinnen höhere Bedürfnisse an Bedeutung.`,
+ points:[
+  `1. Physiologisch: Essen, Trinken, Schlafen.`,
+  `2. Sicherheit: sicherer Job, sicheres Zuhause.`,
+  `3. Soziales: Familie, Freunde, Zugehörigkeit.`,
+  `4. Ich-Bedürfnisse: Status, Erfolg, Anerkennung.`,
+  `5. Selbstverwirklichung: dein eigenes Potenzial ausschöpfen.`
+ ]},
+{id:'vl4-heckhausen-rubikon', vl:4, title:`Handlungstheorie nach Heckhausen (Rubikon-Modell)`,
+ def:`So wird aus einer Idee eine Tat – in vier Schritten.`,
+ points:[
+  `1. <strong>Wählen:</strong> Du wägst ab, was du tun willst.`,
+  `<strong>Der Rubikon:</strong> die Entscheidung für ein Ziel. Danach wird geplant, wie du es erreichst.`,
+  `2. <strong>Planen:</strong> Du legst genau fest, wann und wie.`,
+  `3. <strong>Handeln:</strong> Du setzt es um.`,
+  `4. <strong>Bewerten:</strong> Du prüfst, ob es geklappt hat.`
+ ]},
+{id:'vl4-job-characteristics-model', vl:4, title:`Job Characteristics Model`,
+ def:`Wie du deine Arbeit erlebst, entscheidet über deine Motivation.`,
+ points:[
+  `5 Merkmale guter Arbeit: Abwechslung, ganze Aufgaben, Bedeutung, Autonomie, Feedback.`,
+  `Diese lösen aus: erlebte Sinnhaftigkeit, erlebte Verantwortlichkeit, Kenntnis der Ergebnisse.`,
+  `Ergebnis: mehr Motivation, Zufriedenheit und bessere Leistung.`
+ ]},
+{id:'vl4-zielsetzungstheorie', vl:4, title:`Theorie der Zielsetzung`,
+ def:`Klare, konkrete Ziele bringen mehr als vage Wünsche.`,
+ points:[
+  `Gute Ziele sind spezifisch und anspruchsvoll – aber trotzdem erreichbar.`,
+  `Bsp.: nicht „ich lerne mal“, sondern „heute 20 Aufgaben“.`,
+  `<strong>Mediatoren</strong> (warum es wirkt): Aufmerksamkeit, Einsatz, Ausdauer.`,
+  `<strong>Moderatoren</strong> (wie stark es wirkt): Zielbindung, Feedback, Aufgabenschwierigkeit.`
+ ]},
+{id:'vl4-self-determination-theory', vl:4, title:`Self-Determination Theory`,
+ def:`Drei Grundbedürfnisse machen dich wirklich motiviert.`,
+ points:[
+  `<strong>Autonomie:</strong> Du entscheidest selbst, was und wie du arbeitest.`,
+  `<strong>Kompetenz:</strong> Du fühlst dich fähig, die Aufgabe zu schaffen.`,
+  `<strong>Soziale Gebundenheit:</strong> Du fühlst dich zugehörig und wertgeschätzt.`
+ ]},
+{id:'vl5-hacker-kriterien', vl:5, title:`Kriterien humaner Arbeitsgestaltung`, tag:`Hacker, 1980`,
+ def:`Vier Regeln, die gesunde und gute Arbeit ausmachen.`,
+ points:[
+  `<strong>Ausführbarkeit:</strong> machbar mit deinen vorhandenen Fähigkeiten.`,
+  `<strong>Schädigungslosigkeit:</strong> darf deine Gesundheit nicht gefährden.`,
+  `<strong>Beeinträchtigungsfreiheit:</strong> keine unnötigen körperlichen oder psychischen Belastungen.`,
+  `<strong>Persönlichkeitsförderlichkeit:</strong> fördert dein Lernen und deine Entwicklung.`
+ ]},
+{id:'vl5-smart-modell', vl:5, title:`SMART-Modell der Arbeitsgestaltung`,
+ def:`Fünf Merkmale, die gute Arbeit ausmachen.`,
+ points:[
+  `<strong>S:</strong> abwechslungsreich und herausfordernd.`,
+  `<strong>M:</strong> du lernst dabei und entwickelst dich weiter.`,
+  `<strong>A:</strong> du hast Einfluss und Entscheidungsfreiheit.`,
+  `<strong>R:</strong> gute Beziehungen und Unterstützung durch Kollegen.`,
+  `<strong>T:</strong> die Anforderungen passen zu deinen Fähigkeiten.`
+ ]},
+{id:'vl5-job-enlargement-enrichment', vl:5, title:`Job Enlargement und Job Enrichment`,
+ def:`Zwei Wege, um Arbeitsaufgaben interessanter zu machen.`,
+ points:[
+  `<strong>Enlargement</strong> (horizontal): mehr verschiedene Aufgaben auf gleicher Ebene – wenig zusätzliche Motivation.`,
+  `<strong>Enrichment</strong> (vertikal): mehr Verantwortung und Entscheidungsfreiheit – wirkt stärker auf die Motivation.`
+ ]},
+{id:'vl6-vuca', vl:6, title:`VUCA`,
+ def:`Vier Merkmale, die die moderne Arbeitswelt beschreiben.`,
+ points:[
+  `<strong>Volatilität:</strong> Alles verändert sich ständig und unvorhersehbar.`,
+  `<strong>Unsicherheit:</strong> Man weiß nie genug oder zu viel Widersprüchliches.`,
+  `<strong>Komplexität:</strong> Zu viele Zusammenhänge, schwer zu durchschauen.`,
+  `<strong>Ambiguität:</strong> Es gibt keine eindeutig richtige Antwort.`
+ ]},
+{id:'vl6-psychologisches-empowerment', vl:6, title:`Psychologisches Empowerment`,
+ def:`Das Gefühl, deine Arbeit wirklich im Griff zu haben.`,
+ points:[
+  `<strong>Kompetenz:</strong> „Ich kann meine Arbeit gut erledigen.“`,
+  `<strong>Bedeutsamkeit:</strong> „Meine Arbeit ist wichtig und sinnvoll.“`,
+  `<strong>Einfluss:</strong> „Ich kann etwas bewirken.“`,
+  `<strong>Selbstbestimmung:</strong> „Ich entscheide selbst, wie ich arbeite.“`
+ ]},
+{id:'vl7-yerkes-dodson', vl:7, title:`Yerkes-Dodson-Gesetz`,
+ def:`Ein bisschen Stress hilft dir, zu viel schadet.`,
+ points:[
+  `Zu wenig Erregung: Langeweile und schlechte Leistung.`,
+  `Mittlere Erregung: beste Konzentration und beste Leistung.`,
+  `Zu viel Erregung: Panik, die Leistung bricht ein – z. B. starke Prüfungsangst.`
+ ]},
+{id:'vl7-transaktionales-stressmodell', vl:7, title:`Transaktionales Stressmodell`, tag:`Lazarus`,
+ def:`Nicht die Situation selbst macht Stress – deine Bewertung davon.`,
+ points:[
+  `<strong>Primäre Bewertung:</strong> Ist diese Situation gefährlich oder wichtig für mich?`,
+  `<strong>Sekundäre Bewertung:</strong> Habe ich genug Ressourcen, um das zu bewältigen?`,
+  `Fühlst du dich überfordert, entsteht Stress – im schlimmsten Fall Burnout.`,
+  `Fühlst du dich gewachsen, wächst dein Selbstvertrauen für die Zukunft.`
+ ]},
+{id:'vl7-demand-control-modell', vl:7, title:`Demand-Control-Modell`,
+ def:`Am meisten Stress hast du bei viel Druck und wenig Mitbestimmung.`,
+ points:[
+  `Hohe Anforderungen + wenig Kontrolle = viel Stress. Bsp.: Fließbandarbeit unter Zeitdruck.`,
+  `Hohe Anforderungen + viel Kontrolle = wenig Stress. Bsp.: Ingenieur mit Eigenverantwortung.`
+ ]},
+{id:'vl7-jdr-modell', vl:7, title:`Job Demands-Resources Modell`,
+ def:`Jeder Job hat zwei Seiten: Was auslaugt, was Kraft gibt.`,
+ points:[
+  `<strong>Demands</strong> laugen aus: Zeitdruck, viel Arbeit – zu viel führt zu Burnout.`,
+  `<strong>Resources</strong> geben Kraft: Autonomie, Unterstützung – mehr davon steigert die Motivation.`,
+  `Genug Ressourcen können hohe Anforderungen abfedern.`
+ ]},
+{id:'vl8-eisenhower-matrix', vl:8, title:`Eisenhower-Matrix`,
+ def:`Sortiere deine Aufgaben nach wichtig und dringend.`,
+ points:[
+  `Wichtig + dringend: sofort erledigen.`,
+  `<strong>Wichtig + nicht dringend:</strong> fest einplanen – hier entsteht dein langfristiger Erfolg.`,
+  `Nicht wichtig + dringend: nach Möglichkeit delegieren.`,
+  `Nicht wichtig + nicht dringend: einfach weglassen.`
+ ]},
+{id:'vl8-gantt-chart', vl:8, title:`Gantt-Chart & Methodenwahl`,
+ def:`Ein Balkenplan zeigt, wann welche Aufgabe beginnt und endet.`,
+ points:[
+  `Sinnvoll bei Projekten mit mehreren Phasen und festen Deadlines.`,
+  `Faustregel: lohnt sich ab 2 Wochen Laufzeit mit mind. 3 Arbeitspaketen.`,
+  `Nachteil: wirkt genauer, als es ist, und braucht ständige Pflege.`
+ ]},
+{id:'vl9-mbsr', vl:9, title:`MBSR (Mindfulness-Based Stress Reduction)`, tag:`Jon Kabat-Zinn, 1979`,
+ def:`Ein 8-wöchiges Achtsamkeitstraining – wissenschaftlich, nicht religiös.`,
+ points:[
+  `Entwickelt von Jon Kabat-Zinn.`,
+  `Etwa 2,5 Stunden pro Woche plus tägliches Üben zuhause.`,
+  `Heute weit verbreitet: bei der Arbeit, in der Schule, in der Klinik.`
+ ]},
+{id:'vl9-kirkpatrick', vl:9, title:`Trainingsevaluation nach Kirkpatrick`,
+ def:`Vier Fragen, um zu prüfen, ob ein Training etwas gebracht hat.`,
+ points:[
+  `1. <strong>Reaktion:</strong> Wie zufrieden waren die Teilnehmenden?`,
+  `2. <strong>Lernen:</strong> Wurde tatsächlich etwas gelernt?`,
+  `3. <strong>Verhalten:</strong> Wird das Gelernte im Alltag angewendet?`,
+  `4. <strong>Ergebnisse:</strong> Bringt es der Firma etwas, z. B. weniger Krankheitstage?`
+ ]},
+{id:'vl9-kraiger', vl:9, title:`Trainingsziele formulieren nach Kraiger`,
+ def:`Ergänzt Kirkpatrick um die Frage: WAS genau soll gelernt werden?`,
+ points:[
+  `<strong>Affektiv</strong> (Fühlen): eine neue Einstellung oder mehr Selbstvertrauen.`,
+  `<strong>Kognitiv</strong> (Denken): neues Wissen und besseres Verständnis.`,
+  `<strong>Behavioral</strong> (Handeln): eine neue Fähigkeit, die man wirklich anwenden kann.`
+ ]},
+{id:'vl10-steiners-formel', vl:10, title:`Steiners Formel`,
+ def:`Eine Gruppe schöpft ihr Potenzial fast nie voll aus.`,
+ points:[
+  `Tatsächliche Gruppenleistung = Potenzielle Leistung minus Prozessverluste.`,
+  `Verluste entstehen z. B. durch schlechte Motivation oder schlechte Abstimmung.`,
+  `Bsp.: Alle ziehen am Seil, aber nicht gleichzeitig.`
+ ]},
+{id:'vl10-erleichterung-faulenzen', vl:10, title:`Soziale Erleichterung vs. Soziales Faulenzen`,
+ def:`Sieht man dich, gibst du mehr. Sieht man dich nicht, weniger.`,
+ points:[
+  `Messbar → <strong>Soziale Erleichterung:</strong> du strengst dich mehr an.`,
+  `Nicht messbar → <strong>Soziales Faulenzen:</strong> du lässt eher locker. Bsp.: ein Auto gemeinsam schieben.`
+ ]},
+{id:'vl10-gruppendenken-janis', vl:10, title:`Prozessmodell des Gruppendenkens`, tag:`Janis, 1982`,
+ def:`Zu viel Harmonie führt zu schlechten Entscheidungen.`,
+ points:[
+  `Ursache: alle wollen sich einig sein, keiner will widersprechen.`,
+  `Typische Anzeichen: Überschätzung von Unverwundbarkeit, Druck auf Kritiker, Illusion der Einstimmigkeit, Selbstzensur.`,
+  `Folge: die Gruppe sucht nicht wirklich nach der besten Lösung.`
+ ]},
+{id:'vl10-gruppendenken-vermeiden', vl:10, title:`Strategien zur Vermeidung von Gruppendenken`,
+ def:`So kannst du Gruppendenken gezielt verhindern.`,
+ points:[
+  `Eine Person übernimmt bewusst die Rolle des Kritikers.`,
+  `Unabhängige Experten von außen dazuholen.`,
+  `Die Gruppe in kleinere Untergruppen aufteilen, die getrennt diskutieren.`,
+  `Sich nicht zu früh festlegen, sondern erst alle anhören.`
+ ]},
+{id:'vl11-belbin-teamrollen', vl:11, title:`Teamrollen nach Belbin`,
+ def:`Ein gutes Team braucht unterschiedliche, sich ergänzende Rollen-Typen.`,
+ points:[
+  `<strong>Handlungsorientiert</strong> (anpacken): Macher, Umsetzer, Perfektionist.`,
+  `<strong>Wissensorientiert</strong> (Ideen liefern): Erfinder, Beobachter, Spezialist.`,
+  `<strong>Kommunikationsorientiert</strong> (zusammenhalten): Koordinator, Teamarbeiter, Weichensteller.`
+ ]},
+{id:'vl11-tuckman-phasen', vl:11, title:`Teamentwicklungsphasen nach Tuckman`,
+ def:`Das Modell beschreibt fünf typische Phasen der Teamentwicklung. Nicht jedes Team durchläuft sie genau so.`,
+ points:[
+  `<strong>Forming:</strong> Man lernt sich kennen. Führung gibt Orientierung.`,
+  `<strong>Storming:</strong> Es kommt zu Konflikten. Führung moderiert, statt sie zu unterdrücken.`,
+  `<strong>Norming:</strong> Das Team findet gemeinsame Regeln. Führung zieht sich zurück.`,
+  `<strong>Performing:</strong> Das Team arbeitet selbstständig. Führung vertraut und lässt los.`,
+  `<strong>Adjourning:</strong> Das Projekt endet. Führung feiert Erfolge und sichert Wissen.`
+ ]},
+{id:'vl11-teamentwicklungsprozess', vl:11, title:`Schritte im (gezielten) Teamentwicklungsprozess`,
+ def:`So entwickelt man ein Team gezielt – Schritt für Schritt.`,
+ points:[
+  `1. Kontakt: Ziele und Ablauf gemeinsam klären.`,
+  `2. Diagnose: Den aktuellen Ist-Zustand des Teams erfassen.`,
+  `3. Planung: Passende Übungen und Maßnahmen auswählen.`,
+  `4. Durchführung: Die Maßnahmen umsetzen.`,
+  `5. Evaluation: Erst 1–3 Monate später prüfen, was es gebracht hat.`
+ ]},
+{id:'vl11-teamentwicklung-ansaetze', vl:11, title:`Ansätze der Teamentwicklung`,
+ def:`Vier unterschiedliche Wege, um ein Team gezielt zu stärken.`,
+ points:[
+  `<strong>Outdoor-Training:</strong> gemeinsame Aktivitäten in ungewohnter Umgebung.`,
+  `<strong>Survey-Feedback:</strong> Befragungsergebnisse gemeinsam besprechen und reflektieren.`,
+  `<strong>Teamreflexivität:</strong> regelmäßig über die eigene Zusammenarbeit nachdenken.`,
+  `<strong>Teamcoaching:</strong> langfristige, professionelle Begleitung von außen.`
+ ]},
+{id:'vl12-konflikttypen', vl:12, title:`Konflikttypen`,
+ def:`Drei unterschiedliche Gründe, warum es im Team kracht.`,
+ points:[
+  `<strong>Sachkonflikt:</strong> Man ist sich bei der Sache selbst uneinig.`,
+  `<strong>Beziehungskonflikt:</strong> Man hat persönlich ein Problem miteinander.`,
+  `<strong>Prozesskonflikt:</strong> Man streitet über Zuständigkeiten und Abläufe.`
+ ]},
+{id:'vl12-konflikte-brauchen-wir', vl:12, title:`Brauchen wir Konflikte?`,
+ def:`Streit über die Sache kann die Leistung sogar fördern.`,
+ points:[
+  `Das klappt aber nur, wenn er nicht persönlich wird.`,
+  `Braucht: gemeinsame Ziele, psychologische Sicherheit, gute Diskussionskultur.`
+ ]},
+{id:'vl12-glasl-eskalation', vl:12, title:`Eskalationsstufen nach Glasl`,
+ def:`Je heftiger ein Streit eskaliert, desto schwerer lösen ihn die Beteiligten allein.`,
+ points:[
+  `<strong>Stufen 1–3 – Win-Win:</strong> erste Spannungen, noch selbst lösbar.`,
+  `<strong>Stufen 4–6 – Win-Lose:</strong> es bilden sich Lager, Moderation von außen nötig.`,
+  `<strong>Stufen 7–9 – Lose-Lose:</strong> beide verlieren, nur eine übergeordnete Entscheidung hilft noch.`
+ ]},
+{id:'vl12-moderator-mediator', vl:12, title:`Moderator und Mediator`,
+ def:`Zwei Rollen, die oft miteinander verwechselt werden.`,
+ points:[
+  `<strong>Moderator:</strong> leitet ein Gespräch neutral und gibt ihm Struktur.`,
+  `<strong>Mediator:</strong> hilft Streitenden, selbst eine gemeinsame Lösung zu finden.`
+ ]},
+{id:'vl12-konfliktmanagement-team', vl:12, title:`Konfliktmanagement auf Teamebene`,
+ def:`Drei grundlegende Arten, wie Teams mit Konflikten umgehen.`,
+ points:[
+  `<strong>Kooperativ:</strong> gemeinsam nach einer Lösung suchen, beide gewinnen.`,
+  `<strong>Kompetitiv:</strong> sich durchsetzen, eine Seite gewinnt, die andere verliert.`,
+  `<strong>Vermeidend:</strong> dem Konflikt aus dem Weg gehen.`
+ ]},
+{id:'vl12-konfliktmanagement-individuell', vl:12, title:`Konfliktmanagement auf individueller Ebene`,
+ def:`Kämpfst du für dich – oder für den anderen?`,
+ points:[
+  `Nur für dich: <strong>Durchsetzen.</strong>`,
+  `Nur für den anderen: <strong>Nachgeben.</strong>`,
+  `Für keinen von beiden: <strong>Vermeiden.</strong>`,
+  `Für beide ein bisschen: <strong>Kompromiss.</strong>`,
+  `Für beide: <strong>Integration</strong> – gemeinsam nach einer Lösung suchen, die beide Anliegen berücksichtigt.`
+ ]},
+{id:'vl12-sag-es', vl:12, title:`Konflikte ansprechen: SAG ES!`,
+ def:`Ein Gesprächsleitfaden, um Konflikte konstruktiv anzusprechen.`,
+ points:[
+  `<strong>S – Sichtweise:</strong> Was hast du beobachtet? Neutral, ohne Wertung.`,
+  `<strong>A – Auswirkung:</strong> Was hat das konkret bei dir ausgelöst?`,
+  `<strong>G – Gefühl:</strong> Wie hat sich das für dich angefühlt?`,
+  `<strong>E – Erfragen:</strong> Wie sieht die andere Person das?`,
+  `<strong>S – Schlussfolgerung:</strong> Was soll sich künftig ändern?`
+ ]},
+{id:'vl12-konstruktive-kontroverse', vl:12, title:`Konstruktive Kontroverse`, tag:`Johnson & Johnson, 1979/2015`,
+ def:`Bewusst gegenteilige Positionen erarbeiten, um die beste Lösung zu finden.`,
+ points:[
+  `1. Zwei Untergruppen erarbeiten je eine gut begründete Position.`,
+  `2. Sie stellen sie vor – die andere Seite hört nur aktiv zu.`,
+  `3. Dann tauschen sie die Seiten – das erzwingt echtes Verstehen.`,
+  `4. Synthese: Gemeinsam wird die bestmögliche Lösung erarbeitet.`
+ ]},
+{id:'vl13-halls-konzept', vl:13, title:`Halls Konzept`, tag:`Hall, 1983`,
+ def:`Kultur steckt tief in uns, ohne dass wir es merken.`,
+ points:[
+  `Erst im Kontakt mit Fremdem merkst du, was für dich normal ist.`,
+  `Wir verhalten uns automatisch nach den Normen unserer eigenen Kultur.`
+ ]},
+{id:'vl13-kulturzwiebel', vl:13, title:`Hofstedes Kulturzwiebelmodell`,
+ def:`Kultur ist wie eine Zwiebel – mit mehreren Schichten.`,
+ points:[
+  `Außen: <strong>Symbole</strong> – Wörter, Farben, Dinge mit besonderer Bedeutung.`,
+  `Dann: <strong>Helden</strong> – bewunderte Personen, die als Vorbild dienen.`,
+  `Dann: <strong>Rituale</strong> – die Art, wie man grüßt und Respekt zeigt.`,
+  `Im Kern: <strong>Werte</strong> – was einem wichtiger ist als anderes.`
+ ]},
+{id:'vl13-eisberg-konzept', vl:13, title:`Eisberg-Konzept`,
+ def:`Kultur ist wie ein Eisberg – das meiste bleibt unsichtbar.`,
+ points:[
+  `<strong>Sichtbar:</strong> Essen, Kleidung, Sprache, Musik, Begrüßungsrituale.`,
+  `<strong>Unsichtbar:</strong> Werte, Erwartungen, Gefühle, Kommunikationsstil.`
+ ]},
+{id:'vl13-hofstede-dimensionen', vl:13, title:`Kulturdimensionen nach Hofstede`,
+ def:`Sechs Regler, mit denen man Kulturen miteinander vergleichen kann.`,
+ points:[
+  `<strong>Individualismus vs. Kollektivismus:</strong> Zählt eher das Ich oder das Wir?`,
+  `<strong>Machtdistanz:</strong> Werden Hierarchien akzeptiert oder eher Gleichheit bevorzugt?`,
+  `<strong>Maskulinität vs. Feminität:</strong> Zählt Wettbewerb mehr oder Fürsorge?`,
+  `<strong>Unsicherheitsvermeidung:</strong> Wunsch nach klaren Regeln oder Offenheit für Neues?`,
+  `<strong>Zeitliche Orientierung:</strong> Ist die Zukunft wichtiger oder die Gegenwart?`,
+  `<strong>Nachgiebigkeit vs. Beherrschung:</strong> Werden Genuss und freie Bedürfnisbefriedigung eher zugelassen oder durch soziale Regeln begrenzt?`
+ ]},
+{id:'vl13-globe-kultur', vl:13, title:`Kulturdimensionen des GLOBE-Projekts`,
+ def:`Ähnlich wie Hofstede, nur mit neun statt sechs Reglern.`,
+ points:[
+  `<strong>Unsicherheitsvermeidung:</strong> Wie sehr hält man sich an feste Regeln?`,
+  `<strong>Machtdistanz:</strong> Wie akzeptiert ist ungleich verteilte Macht?`,
+  `<strong>Institutional Collectivism:</strong> Wie sehr wird Teamarbeit gefördert und belohnt?`,
+  `<strong>Intra-Gruppen-Kollektivismus:</strong> Wie loyal ist man zu Familie und Firma?`,
+  `<strong>Geschlechtergleichheit:</strong> Wie ausgeglichen sind die Geschlechterrollen?`,
+  `<strong>Bestimmtheit:</strong> Wie direkt und durchsetzungsstark tritt man auf?`,
+  `<strong>Zukunftsorientierung:</strong> Wie sehr wird langfristig geplant?`,
+  `<strong>Leistungsorientierung:</strong> Wie stark wird Leistung belohnt?`,
+  `<strong>Soziale Orientierung:</strong> Wie wichtig sind Fairness und Hilfsbereitschaft?`
+ ]},
+{id:'vl13-globe-fuehrung', vl:13, title:`Führungsdimensionen des GLOBE-Projekts`,
+ def:`Sechs Führungsstile, die je nach Kultur unterschiedlich gut ankommen.`,
+ points:[
+  `<strong>Charismatic:</strong> motiviert und inspiriert andere durch Visionen.`,
+  `<strong>Team oriented:</strong> baut effektive Teams auf, schafft gemeinsame Ziele.`,
+  `<strong>Participative:</strong> bezieht Mitarbeitende aktiv in Entscheidungen ein.`,
+  `<strong>Human oriented:</strong> handelt fürsorglich, unterstützend, großzügig.`,
+  `<strong>Autonomous:</strong> führt unabhängig und eigenständig.`,
+  `<strong>Self-protective:</strong> schützt vor allem sich selbst und den eigenen Status.`
+ ]}
+];
+
+const QUIZ = [
+{vl:1, q:`Welche zwei Hauptdimensionen unterscheidet der Top-down-Ansatz zur Messung von Karriereerfolg (Spurk, 2019)?`,
+ opts:[`Qualitativer und quantitativer Erfolg`,`Objektiver und subjektiver Karriereerfolg`,`Individueller und kollektiver Erfolg`,`Intrinsischer und extrinsischer Erfolg`], correct:1},
+{vl:1, q:`Was besagt die Hedonistische Adaption nach Helson (1964)?`,
+ opts:[`Menschen gewöhnen sich oft an Veränderungen; das Wohlbefinden kann sich wieder dem persönlichen Ausgangsniveau nähern`,`Menschen werden durch Erfolge dauerhaft glücklicher`,`Negative Ereignisse wirken immer langfristig`,`Glück ist unabhängig vom persönlichen Bezugspunkt`], correct:0},
+{vl:2, q:`Welche Aussage trifft auf die qualitative Befragung zu?`,
+ opts:[`Große Stichproben, standardisierte Fragen`,`Offene Fragen, kleine Stichproben, tiefe Einblicke`,`Statistische Analyse steht im Vordergrund`,`Schnell auswertbar, aber wenig Tiefgang`], correct:1},
+{vl:2, q:`Welches gehört zu „So geht es nicht“ bei der Item-Konstruktion?`,
+ opts:[`Bedeutungsäquivalenz`,`Homogenität`,`Verschachtelter Satzbau`,`Sprachliche Klarheit`], correct:2},
+{vl:3, q:`Wie viele Dimensionen hat das OCB-Modell nach Organ (1988)?`,
+ opts:[`3`,`4`,`5`,`6`], correct:2},
+{vl:3, q:`Welches Verhalten gehört zu „Courtesy“ im OCB-Modell?`,
+ opts:[`Neue Mitarbeitende einarbeiten`,`Kollegen rechtzeitig informieren, um Missverständnisse zu vermeiden`,`Pünktlichkeit`,`Verbesserungsvorschläge einbringen`], correct:1, note:`Altruism = Hilfe/Einarbeiten, Conscientiousness = Pünktlichkeit, Civic Virtue = Verbesserungsvorschläge.`},
+{vl:3, q:`Welche der 4 Verhaltensformen beschreibt Regelverletzung, die der Organisation schadet?`,
+ opts:[`Extraproduktives Verhalten`,`Kontraproduktives Verhalten`,`Intrapreneurship`,`Produktives Verhalten nach Vorschrift`], correct:1},
+{vl:3, q:`Welches Commitment beschreibt „Ich muss bleiben“?`,
+ opts:[`Affektives Commitment`,`Normatives Commitment`,`Kalkulatorisches Commitment`,`Emotionales Commitment`], correct:2},
+{vl:4, q:`Wie lautet die Formel der Determinanten des Verhaltens?`,
+ opts:[`Wollen × Können`,`Wollen + Können + Dürfen`,`Motiv × Anreiz`,`Fähigkeit + Motivation`], correct:1},
+{vl:4, q:`In welcher Reihenfolge stehen die Ebenen der Maslow-Pyramide von unten nach oben?`,
+ opts:[`Sicherheit, Physiologie, Soziale, Ich, Selbstverwirklichung`,`Physiologie, Sicherheit, Soziale, Ich-Bedürfnisse, Selbstverwirklichung`,`Physiologie, Soziale, Sicherheit, Selbstverwirklichung, Ich`,`Sicherheit, Soziale, Physiologie, Ich, Selbstverwirklichung`], correct:1},
+{vl:4, q:`Was markiert der „Rubikon“ im Handlungsmodell nach Heckhausen?`,
+ opts:[`Den Übergang vom Planen zum Handeln`,`Den Übergang vom Wählen zum Planen – aus Wunsch wird verbindliche Zielentscheidung`,`Den Abschluss der Handlung`,`Die Bewertung des Ergebnisses`], correct:1},
+{vl:4, q:`Welche drei psychologischen Zustände löst das Job Characteristics Model aus?`,
+ opts:[`Motivation, Zufriedenheit, Leistung`,`Erlebte Sinnhaftigkeit, erlebte Verantwortlichkeit, Kenntnis der Ergebnisse`,`Autonomie, Kompetenz, Verbundenheit`,`Anforderungsvielfalt, Ganzheitlichkeit, Bedeutsamkeit`], correct:1},
+{vl:4, q:`Laut der Theorie der Zielsetzung sollten Ziele sein:`,
+ opts:[`allgemein und leicht erreichbar`,`spezifisch, anspruchsvoll, aber erreichbar`,`langfristig und vage`,`von außen vorgegeben und unveränderlich`], correct:1},
+{vl:4, q:`Welche drei Grundbedürfnisse nennt die Self-Determination Theory?`,
+ opts:[`Sicherheit, Zugehörigkeit, Anerkennung`,`Autonomie, Kompetenz, soziale Gebundenheit`,`Leistung, Macht, Anschluss`,`Wollen, Können, Dürfen`], correct:1},
+{vl:5, q:`Welches Kriterium nach Hacker (1980) fordert, dass Arbeit Lernen und Entwicklung fördern soll?`,
+ opts:[`Ausführbarkeit`,`Schädigungslosigkeit`,`Beeinträchtigungsfreiheit`,`Persönlichkeitsförderlichkeit`], correct:3},
+{vl:5, q:`Job Enlargement ist eine … Aufgabenerweiterung, Job Enrichment eine … Aufgabenerweiterung.`,
+ opts:[`horizontale / vertikale`,`vertikale / horizontale`,`qualitative / quantitative`,`kurzfristige / langfristige`], correct:0},
+{vl:6, q:`Welche 4 Dimensionen umfasst VUCA?`,
+ opts:[`Volatilität, Unsicherheit, Komplexität, Ambiguität`,`Variabilität, Unklarheit, Kontrolle, Autonomie`,`Volatilität, Umwelt, Kompetenz, Autorität`,`Vielfalt, Unsicherheit, Change, Agilität`], correct:0},
+{vl:6, q:`Welche 4 Komponenten umfasst Psychologisches Empowerment?`,
+ opts:[`Kompetenz, Bedeutsamkeit, Einfluss, Selbstbestimmung`,`Autonomie, Kompetenz, Relatedness, Motivation`,`Wollen, Können, Dürfen, Handeln`,`Motiv, Anreiz, Motivation, Ziel`], correct:0},
+{vl:7, q:`Nach dem Yerkes-Dodson-Gesetz ist die Leistung am höchsten bei …`,
+ opts:[`sehr niedriger Erregung`,`mittlerer Erregung`,`sehr hoher Erregung`,`Erregung spielt keine Rolle`], correct:1},
+{vl:7, q:`Im transaktionalen Stressmodell prüft die sekundäre Bewertung …`,
+ opts:[`ob die Situation wichtig oder gefährlich ist`,`ob genügend Ressourcen zur Bewältigung vorhanden sind`,`ob die Situation kontrollierbar ist`,`ob bereits ein Schaden eingetreten ist`], correct:1},
+{vl:7, q:`Laut Demand-Control-Modell entsteht Stress vor allem bei …`,
+ opts:[`niedrigen Anforderungen und hoher Kontrolle`,`hohen Anforderungen und wenig Kontrolle`,`hohen Anforderungen und viel Kontrolle`,`niedrigen Anforderungen und wenig Kontrolle`], correct:1},
+{vl:7, q:`Im Job Demands-Resources Modell führen viele Ressourcen über den Motivationsprozess zu …`,
+ opts:[`Stress und Burnout`,`Motivation, Engagement, besserer Leistung`,`Erschöpfung`,`geringerer Leistung`], correct:1},
+{vl:8, q:`In der Eisenhower-Matrix gilt für Aufgaben, die wichtig, aber nicht dringend sind:`,
+ opts:[`Sofort erledigen`,`Delegieren`,`Fest einplanen – hier entsteht langfristiger Erfolg`,`Eliminieren`], correct:2},
+{vl:8, q:`Ab welcher Faustregel lohnt sich laut den Notizen ein Gantt-Chart?`,
+ opts:[`ab 2 Wochen Laufzeit mit mind. 3 Arbeitspaketen`,`ab 1 Woche mit 1 Arbeitspaket`,`nur bei agilen Projekten`,`ab 6 Monaten Laufzeit`], correct:0},
+{vl:9, q:`Wer entwickelte MBSR und wann?`,
+ opts:[`Jon Kabat-Zinn, 1979`,`Richard Lazarus, 1984`,`Abraham Maslow, 1954`,`Kurt Lewin, 1951`], correct:0},
+{vl:9, q:`Welche 4 Ebenen umfasst das Trainingsevaluationsmodell nach Kirkpatrick?`,
+ opts:[`Reaktion, Lernen, Verhalten, Ergebnisse`,`Affektiv, Kognitiv, Behavioral, Sozial`,`Planung, Durchführung, Kontrolle, Transfer`,`Wissen, Fähigkeiten, Einstellung, Motivation`], correct:0},
+{vl:9, q:`Welche 3 Lernbereiche unterscheidet Kraiger bei Trainingszielen?`,
+ opts:[`Reaktion, Lernen, Verhalten`,`Affektiv, Kognitiv, Behavioral`,`Wissen, Können, Wollen`,`Motivation, Kompetenz, Autonomie`], correct:1},
+{vl:10, q:`Steiners Formel lautet:`,
+ opts:[`Tatsächliche Gruppenleistung = Potenzielle Gruppenleistung − Prozessverluste`,`Potenzielle Leistung = Tatsächliche Leistung + Motivationsgewinne`,`Gruppenleistung = Anzahl Mitglieder × Einzelleistung`,`Leistung = Motivation × Fähigkeit`], correct:0},
+{vl:10, q:`Wenn die eigene Leistung in der Gruppe gut erkennbar ist, führt die Anwesenheit anderer meist zu …`,
+ opts:[`Sozialem Faulenzen`,`Sozialer Erleichterung (mehr Anstrengung)`,`Gruppendenken`,`Prozessverlusten`], correct:1},
+{vl:10, q:`Was ist laut den Notizen KEIN Symptom des Gruppendenkens nach Janis, sondern eher eine Gegenstrategie?`,
+ opts:[`Illusion der Einstimmigkeit`,`Selbstzensur`,`Unabhängige Experten hinzuziehen`,`Überschätzung von Unverwundbarkeit`], correct:2},
+{vl:11, q:`Welche 3 Kategorien umfassen die 9 Teamrollen nach Belbin?`,
+ opts:[`Handlungsorientiert, Wissensorientiert, Kommunikationsorientiert`,`Macher, Denker, Fühler`,`Führung, Fachwissen, Organisation`,`Introvertiert, Extrovertiert, Ambivertiert`], correct:0},
+{vl:11, q:`In welcher Reihenfolge verlaufen die Teamentwicklungsphasen nach Tuckman?`,
+ opts:[`Storming, Forming, Norming, Performing, Adjourning`,`Forming, Storming, Norming, Performing, Adjourning`,`Forming, Norming, Storming, Performing, Adjourning`,`Forming, Storming, Performing, Norming, Adjourning`], correct:1},
+{vl:11, q:`Welche Führungsrolle passt zur Storming-Phase?`,
+ opts:[`Loslassen und delegieren`,`Konflikte moderieren, nicht vermeiden`,`Orientierung geben und Struktur schaffen`,`Erfolge feiern und Wissen sichern`], correct:1},
+{vl:12, q:`Welche 3 Konflikttypen werden unterschieden?`,
+ opts:[`Sach-, Beziehungs-, Prozesskonflikte`,`Interne, externe, strukturelle Konflikte`,`Emotionale, rationale, soziale Konflikte`,`Macht-, Rollen-, Ressourcenkonflikte`], correct:0},
+{vl:12, q:`Wie viele Eskalationsstufen umfasst das Modell nach Glasl und wie viele Phasen gibt es?`,
+ opts:[`9 Stufen in 3 Phasen (Win-Win, Win-Lose, Lose-Lose)`,`5 Stufen in 2 Phasen`,`7 Stufen in 3 Phasen`,`9 Stufen in 4 Phasen`], correct:0},
+{vl:12, q:`Was macht ein Mediator im Unterschied zum Moderator?`,
+ opts:[`Leitet ein Gespräch neutral und gibt Struktur`,`Vermittelt zwischen Konfliktparteien, ohne eine eigene Lösung vorzugeben`,`Trifft die endgültige Entscheidung`,`Vertritt eine der beiden Konfliktparteien`], correct:1},
+{vl:12, q:`Wofür stehen die Buchstaben im SAG ES!-Modell?`,
+ opts:[`Sichtweise, Auswirkungen, Gefühle, Erfragen, Schlussfolgerungen`,`Situation, Analyse, Grund, Erklärung, Strategie`,`Sicherheit, Achtsamkeit, Geduld, Empathie, Struktur`,`Sachlichkeit, Argumente, Grenzen, Empathie, Support`], correct:0},
+{vl:12, q:`Was ist das Ziel der „Konstruktiven Kontroverse“ nach Johnson & Johnson?`,
+ opts:[`Eine Seite soll gewinnen`,`Schnelle Einigung um jeden Preis`,`Durch produktiven Widerspruch zur bestmöglichen Lösung gelangen`,`Konflikte vollständig vermeiden`], correct:2},
+{vl:13, q:`Was besagt Halls Konzept (1983) zu Kultur?`,
+ opts:[`Kultur wirkt meist bewusst und wird aktiv gesteuert`,`Kultur wirkt meist unbewusst und steuert Denken/Verhalten, ohne dass es auffällt`,`Kultur hat keinen Einfluss auf Verhalten`,`Kultur wird nur durch Erziehung bewusst erlebt`], correct:1},
+{vl:13, q:`Wie ist die Reihenfolge der Schichten in Hofstedes Kulturzwiebel von außen nach innen?`,
+ opts:[`Werte, Rituale, Helden, Symbole`,`Symbole, Helden, Rituale, Werte`,`Rituale, Symbole, Werte, Helden`,`Helden, Symbole, Werte, Rituale`], correct:1},
+{vl:13, q:`Welche Dimension gehört laut den Notizen NICHT zu Hofstedes 6 Kulturdimensionen (sondern zu GLOBE)?`,
+ opts:[`Machtdistanz`,`Individualismus`,`Zukunftsorientierung`,`Unsicherheitsvermeidung`], correct:2},
+{vl:13, q:`Welche GLOBE-Führungsdimension beschreibt die Fähigkeit, andere durch Visionen zu motivieren?`,
+ opts:[`Team oriented`,`Charismatic / value-based`,`Participative`,`Autonomous`], correct:1}
+];
+
+
+const NOTE_HTML = {"1":"\u003cdetails class=\"note-section\">\u003csummary>Messung von Karriere (Laufbahnerfolg) [Spurk, 2019]\u003c/summary>\u003cdiv>\u003cp>Spurk unterteilt in 2 Ansätze um Karriereerfolg wissenschaftlich sinnvoll zu messen, da Karriereerfolg kein einheitliches Konstrukt ist.\u003c/p>\n\u003cp>Für manche Menschen Erfolg = hohes Gehalt,\u003cbr />\nfür andere = Work-Life-Balance usw.\u003c/p>\n\u003cp>Unterteilt in Ebenen.\u003c/p>\n\u003cp>Ganz oben Karriereerfolg wird dann in verschiedene Dimensionen unterteilt.\u003c/p>\n\u003cp>Dann konkrete Messgrößen.\u003c/p>\n\u003cp>Konkrete, messbare Merkmale.\u003c/p>\n\u003cp>Bei bottom up gehen am Antworten der befragten Personen vor.\u003c/p>\n\u003ch3>1. Top-down-Ansatz\u003c/h3>\n\u003cul>\n\u003cli>Wissenschaft definiert vorab, was Karriereerfolg ist.\u003c/li>\n\u003cli>Typische Dimensionen:\u003c/li>\n\u003c/ul>\n\u003ch4>Objektiver Karriereerfolg\u003c/h4>\n\u003cp>Messbar und von außen beobachtbar:\u003c/p>\n\u003cul>\n\u003cli>Einkommen\u003c/li>\n\u003cli>Gehalt\u003c/li>\n\u003cli>Hierarchiestufe\u003c/li>\n\u003cli>Anzahl Beförderungen\u003c/li>\n\u003cli>Führungsverantwortung\u003c/li>\n\u003c/ul>\n\u003ch4>Subjektiver Karriereerfolg\u003c/h4>\n\u003cp>Persönliche Bewertung der eigenen Karriere:\u003c/p>\n\u003cul>\n\u003cli>Karrierezufriedenheit\u003c/li>\n\u003cli>Stolz auf eigene Laufbahn\u003c/li>\n\u003cli>Erreichen persönlicher Ziele\u003c/li>\n\u003cli>wahrgenommener Erfolg\u003c/li>\n\u003c/ul>\n\u003ch3>2. Bottom-up-Ansatz\u003c/h3>\n\u003cul>\n\u003cli>Nicht Wissenschaft definiert Karriere, sondern befragte Person selbst\u003c/li>\n\u003cli>Aus den Antworten werden Kategorien entwickelt\u003c/li>\n\u003c/ul>\n\u003cp>Eine Person nennt:\u003c/p>\n\u003cul>\n\u003cli>Familie\u003c/li>\n\u003cli>sinnvolle Arbeit\u003c/li>\n\u003cli>Gesundheit\u003c/li>\n\u003cli>Freizeit\u003c/li>\n\u003cli>Sicherheit\u003c/li>\n\u003c/ul>\n\u003cp>Eine andere nennt:\u003c/p>\n\u003cul>\n\u003cli>Geld\u003c/li>\n\u003cli>Macht\u003c/li>\n\u003cli>Karriere\u003c/li>\n\u003cli>Status\u003c/li>\n\u003c/ul>\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Hedonistische Adaption [Helson, 1964]\u003c/summary>\u003cdiv>\u003cp>Gewöhnung an positive und negative Lebensereignisse.\u003c/p>\n\u003cp>= Tendenz des Menschen, sich an positive und negative Lebensereignisse zu gewöhnen und nach einiger Zeit wieder zu seinem individuellen, relativ stabilen Glücksniveau zurückzukehren.\u003c/p>\n\u003cp>Große Veränderungen:\u003c/p>\n\u003cul>\n\u003cli>Lottogewinn\u003c/li>\n\u003cli>Unfall\u003c/li>\n\u003cli>Beförderung usw.\u003c/li>\n\u003c/ul>\n\u003cp>können das Wohlbefinden verändern. Häufig tritt mit der Zeit Gewöhnung ein; bei manchen Ereignissen bleiben aber langfristige Folgen.\u003c/p>\n\u003ch3>Grundlage: Adaptions-Niveau-Theorie [Helson]\u003c/h3>\n\u003cp>Menschen bewerten ihr Glück nicht absolut, sondern relativ zu ihrem bisherigen Lebensstand und ihrem persönlichen Bezugspunkt.\u003c/p>\n\u003cp>Das Wohlbefinden kann sich mit der Zeit wieder dem persönlichen Ausgangsniveau annähern. Das gelingt nicht immer vollständig.\u003c/p>\n\u003ch3>Lifestyle Inflation\u003c/h3>\n\u003cp>Ansprüche steigen immer weiter an\u003cbr />\nz.B. AMG, jetzt will ich Porsche,\u003cbr />\nwährend langfristige Glück kaum zunimmt.\u003c/p>\n\u003c/div>\u003c/details>","2":"\u003cdetails class=\"note-section\">\u003csummary>Befragungsmethoden [Frieling &amp; Sonntag, 1999]\u003c/summary>\u003cdiv>\u003cp>Methoden und Befragungen gestalten.\u003c/p>\n\u003ch3>1. Qualitative Befragung\u003c/h3>\n\u003cp>\u003cstrong>Ziel:\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>neue Erkenntnisse gewinnen und Zusammenhänge verstehen.\u003c/li>\n\u003c/ul>\n\u003cp>\u003cstrong>Merkmale:\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>offene Fragen\u003c/li>\n\u003cli>freie Antworten\u003c/li>\n\u003cli>flexibel\u003c/li>\n\u003cli>kleine Stichproben\u003c/li>\n\u003cli>tiefe Einblicke\u003c/li>\n\u003c/ul>\n\u003cp>Neue Aspekte können entdeckt werden, aber zeitaufwendig.\u003c/p>\n\u003ch3>2. Quantitative Befragung\u003c/h3>\n\u003cp>\u003cstrong>Ziel:\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>Hypothesen prüfen und Ergebnisse statistisch auswerten\u003c/li>\n\u003c/ul>\n\u003cp>\u003cstrong>Merkmale:\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>standardisierte Fragen\u003c/li>\n\u003cli>feste Antwortmöglichkeiten\u003c/li>\n\u003cli>große Stichproben\u003c/li>\n\u003cli>statistische Analyse\u003c/li>\n\u003c/ul>\n\u003cp>Objektiv und gut vergleichbar, außerdem schnell auswertbar, aber wenig Tiefgang und keine spontanen Antworten.\u003c/p>\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Richtlinien für die Konstruktion von Items\u003c/summary>\u003cdiv>\u003ch3>So geht es\u003c/h3>\n\u003cul>\n\u003cli>\n\u003cp>Bedeutungsäquivalenz\u003c/p>\n\u003cul>\n\u003cli>Alle Personen müssen ein Item auf gleiche Weise interpretieren\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003cli>\n\u003cp>Relevanz / Validität\u003c/p>\n\u003cul>\n\u003cli>Item muss relevant für das zu messende Merkmal sein\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003cli>\n\u003cp>Homogenität\u003c/p>\n\u003cul>\n\u003cli>Nur ein Sachverhalt pro Item\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003cli>\n\u003cp>Sprachliche Klarheit / Verständlichkeit\u003c/p>\n\u003cul>\n\u003cli>Item muss für alle Befragten verständlich sein\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003c/ul>\n\u003ch3>So geht es nicht\u003c/h3>\n\u003cul>\n\u003cli>Mehrdeutige Begriffe\u003c/li>\n\u003cli>Doppelte Negationen\u003c/li>\n\u003cli>Fremdwörter und Fremdbegriffe\u003c/li>\n\u003cli>Mehrere Inhalte pro Item\u003c/li>\n\u003cli>Verallgemeinerungen jeglicher Art\u003c/li>\n\u003cli>Verschachtelter Satzbau\u003c/li>\n\u003cli>Suggestivfragen\u003c/li>\n\u003c/ul>\n\u003c/div>\u003c/details>","3":"\u003cdetails class=\"note-section\">\u003csummary>Arbeitsleistung und mehr\u003c/summary>\u003cdiv>\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>OCB-Modell [Organ, 1988]\u003c/summary>\u003cdiv>\u003cp>Beschreibt freiwillige Verhaltensweisen von Mitarbeitenden,\u003cbr />\ndie nicht zur formalen Stellenbeschreibung gehören und\u003cbr />\nnicht direkt belohnt werden,\u003cbr />\naber Funktionieren und Erfolg\u003cbr />\nder Organisation fördern.\u003c/p>\n\u003cp>OCB = Extra-Rollenverhalten\u003c/p>\n\u003ch3>Merkmale\u003c/h3>\n\u003cul>\n\u003cli>freiwillig\u003c/li>\n\u003cli>nicht Teil der offiziellen Arbeitsaufgaben\u003c/li>\n\u003cli>kein Bestandteil der Vergütung\u003c/li>\n\u003cli>unterstützt Kollegen und Organisation\u003c/li>\n\u003c/ul>\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>5 Dimensionen nach Organ (1988)\u003c/summary>\u003cdiv>\u003ch3>1. Altruism (Altruismus)\u003c/h3>\n\u003cp>Freiwillige Hilfe für Kollegen.\u003c/p>\n\u003cul>\n\u003cli>Neue Mitarbeitende einarbeiten\u003c/li>\n\u003cli>Kollegen bei hoher Arbeitsbelastung unterstützen\u003c/li>\n\u003c/ul>\n\u003ch3>2. Conscientiousness (Gewissenhaftigkeit)\u003c/h3>\n\u003cp>Überdurchschnittlich zuverlässiges und pflichtbewusstes Verhalten.\u003c/p>\n\u003cul>\n\u003cli>Pünktlichkeit\u003c/li>\n\u003cli>Aufgaben besonders sorgfältig erledigen\u003c/li>\n\u003cli>Regeln auch ohne Kontrolle einhalten\u003c/li>\n\u003c/ul>\n\u003ch3>3. Courtesy (Höflichkeit)\u003c/h3>\n\u003cp>Rücksichtnahme, um Konflikte zu vermeiden.\u003c/p>\n\u003cul>\n\u003cli>Kollegen rechtzeitig informieren\u003c/li>\n\u003cli>Entscheidungen abstimmen\u003c/li>\n\u003cli>Missverständnisse vorbeugen\u003c/li>\n\u003c/ul>\n\u003ch3>4. Sportsmanship (Sportsgeist)\u003c/h3>\n\u003cp>Unannehmlichkeiten akzeptieren, ohne sich ständig zu beschweren.\u003c/p>\n\u003cul>\n\u003cli>gelassen mit kurzfristigen Änderungen umgehen\u003c/li>\n\u003cli>bei Problemen konstruktiv bleiben\u003c/li>\n\u003c/ul>\n\u003ch3>5. Civic Virtue (Bürgersinn)\u003c/h3>\n\u003cp>Aktives Engagement für die Organisation.\u003c/p>\n\u003cul>\n\u003cli>freiwillige Teilnahme an Meetings oder Projekten\u003c/li>\n\u003cli>Verbesserungsvorschläge einbringen\u003c/li>\n\u003cli>Interesse an Entwicklung des Unternehmens zeigen\u003c/li>\n\u003c/ul>\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Struktur des Arbeitsverhaltens\u003c/summary>\u003cdiv>\u003cp>Grundidee:\u003c/p>\n\u003cp>Arbeitsverhalten lässt sich anhand von zwei Dimensionen einordnen:\u003c/p>\n\u003col>\n\u003cli>Fördert oder schadet das Verhalten den Organisationszielen?\u003c/li>\n\u003cli>Werden Regeln eingehalten oder verletzt?\u003c/li>\n\u003c/ol>\n\u003cp>Ergebnis: 4 Verhaltensformen.\u003c/p>\n\u003ch3>1. Produktives Verhalten nach Vorschrift\u003c/h3>\n\u003cp>Mitarbeitende erfüllen ihre Aufgaben korrekt und halten sich an alle Regeln.\u003c/p>\n\u003cp>Organisationsziele werden erreicht, aber es wird nicht mehr getan als erforderlich.\u003c/p>\n\u003cul>\n\u003cli>Aufgaben ordnungsgemäß erledigen\u003c/li>\n\u003cli>pünktlich erscheinen\u003c/li>\n\u003cli>Arbeitsanweisungen befolgen\u003c/li>\n\u003c/ul>\n\u003cp>Mitarbeitende erfüllen ihre Aufgaben korrekt und halten sich an alle Regeln.\u003c/p>\n\u003ch3>2. Extraproduktives Verhalten\u003c/h3>\n\u003cp>Mitarbeitende leisten freiwillig mehr als vorgeschrieben und halten sich dabei an Regeln.\u003c/p>\n\u003cul>\n\u003cli>Kollegen freiwillig helfen\u003c/li>\n\u003cli>Verbesserungsvorschläge machen\u003c/li>\n\u003cli>freiwillig Zusatzaufgaben übernehmen\u003c/li>\n\u003cli>neue Mitarbeitende einarbeiten\u003c/li>\n\u003c/ul>\n\u003cp>Entspricht OCB.\u003c/p>\n\u003ch3>3. Kontraproduktives Verhalten\u003c/h3>\n\u003cp>Regeln werden verletzt und das Verhalten schadet der Organisation.\u003c/p>\n\u003cul>\n\u003cli>Diebstahl\u003c/li>\n\u003cli>Mobbing\u003c/li>\n\u003cli>Arbeitszeitbetrug\u003c/li>\n\u003cli>Sabotage\u003c/li>\n\u003cli>absichtliches Langsamarbeiten\u003c/li>\n\u003c/ul>\n\u003ch3>4. Intrapreneurship\u003c/h3>\n\u003cp>Regeln werden bewusst überschritten oder kreativ ausgelegt, um Organisation zu nutzen.\u003c/p>\n\u003cp>Mitarbeitende handelt wie ein Unternehmer innerhalb des Unternehmens.\u003c/p>\n\u003cul>\n\u003cli>unbürokratisch Probleme lösen\u003c/li>\n\u003cli>Prozesse ändern, obwohl offiziell nicht vorgesehen\u003c/li>\n\u003cli>eigenständig Innovationen umsetzen\u003c/li>\n\u003cli>für Kunden Lösungen finden, obwohl sie exakten Vorgaben nicht entspricht\u003c/li>\n\u003c/ul>\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Motivklassen: Motivtheorie von McClelland\u003c/summary>\u003cdiv>\u003cp>Geht davon aus, dass Menschen durch drei grundlegende Motive angetrieben werden.\u003c/p>\n\u003cp>Sie unterscheiden sich darin, wie diese Motive bei ihnen ausgeprägt sind.\u003c/p>\n\u003cp>Motive = Präferenzen, bestimmte emotionale Erfahrungen zu erleben.\u003c/p>\n\u003ch3>1. Leistungsmotiv\u003c/h3>\n\u003cp>Wunsch anspruchsvolle Aufgaben erfolgreich zu bewältigen und gute Leistungen zu erbringen.\u003c/p>\n\u003ch4>2 Pole\u003c/h4>\n\u003col>\n\u003cli>\n\u003cp>Hoffnung auf Erfolg\u003cbr />\nHerausforderungen werden gesucht\u003c/p>\n\u003c/li>\n\u003cli>\n\u003cp>Furcht vor Misserfolg\u003cbr />\nschwierige Aufgaben werden eher vermieden\u003c/p>\n\u003c/li>\n\u003c/ol>\n\u003cul>\n\u003cli>setzt sich anspruchsvolle, aber erreichbare Ziele\u003c/li>\n\u003cli>möchte Leistung verbessern\u003c/li>\n\u003cli>sucht Feedback\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.: Mitarbeitende übernimmt freiwillig ein anspruchsvolles Projekt.\u003c/p>\n\u003ch3>2. Machtmotiv\u003c/h3>\n\u003cp>Wunsch, Einfluss auf andere auszuüben und Situationen zu kontrollieren.\u003c/p>\n\u003ch4>Zwei Pole\u003c/h4>\n\u003col>\n\u003cli>Hoffnung auf Kontrolle\u003c/li>\n\u003cli>Furcht vor Kontrollverlust\u003c/li>\n\u003c/ol>\n\u003ch3>Merkmale\u003c/h3>\n\u003cul>\n\u003cli>möchte führen\u003c/li>\n\u003cli>übernimmt Verantwortung\u003c/li>\n\u003cli>trifft Entscheidungen\u003c/li>\n\u003cli>beeinflusst andere\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.: Teamleiter möchte Entscheidungen treffen und sein Team erfolgreich führen.\u003c/p>\n\u003ch3>3. Anschlussmotiv\u003c/h3>\n\u003cp>Wunsch nach positiven sozialen Beziehungen und Zugehörigkeit.\u003c/p>\n\u003ch4>Zwei Pole\u003c/h4>\n\u003col>\n\u003cli>Hoffnung auf Anschluss\u003c/li>\n\u003cli>Angst vor Zurückweisung\u003c/li>\n\u003c/ol>\n\u003ch3>Merkmale\u003c/h3>\n\u003cul>\n\u003cli>arbeitet gerne im Team\u003c/li>\n\u003cli>sucht Harmonie\u003c/li>\n\u003cli>pflegt soziale Kontakte\u003c/li>\n\u003cli>vermeidet Konflikte\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.: Kollegin unterstützt andere und legt großen Wert auf ein gutes Arbeitsklima.\u003c/p>\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Drei-Komponenten-Modell des Commitment\u003c/summary>\u003cdiv>\u003cp>Commitment besteht aus drei Komponenten.\u003c/p>\n\u003cp>Commitment beschreibt psychologische Bindung eines Mitarbeitenden an seine Organisation.\u003c/p>\n\u003ch3>1. Affektives Commitment = „Ich will bleiben“\u003c/h3>\n\u003cp>Mitarbeitender bleibt, weil er sich emotional mit der Organisation identifiziert und sich ihr verbunden fühlt.\u003c/p>\n\u003cp>→ bleiben wollen\u003c/p>\n\u003cp>\u003cstrong>Merkmale:\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>emotionale Bindung\u003c/li>\n\u003cli>Identifikation mit Unternehmenswerten\u003c/li>\n\u003cli>hohe Motivation und Engagement\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.:\u003cbr />\n„Ich arbeite gerne hier und fühle mich als Teil des Unternehmens.“\u003c/p>\n\u003ch3>2. Kalkulatorisches Commitment = „Ich muss bleiben“\u003c/h3>\n\u003cp>Mitarbeitende bleibt, weil Wechsel zu teuer oder nachteilig wäre.\u003c/p>\n\u003cp>→ bleiben müssen\u003c/p>\n\u003cp>\u003cstrong>Gründe:\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>fehlende Jobalternativen\u003c/li>\n\u003cli>hohes Gehalt\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.:\u003cbr />\n„Ich würde gerne kündigen, aber ich finde derzeit keinen gleichwertigen Job.“\u003c/p>\n\u003ch3>3. Normatives Commitment = „Ich soll bleiben“\u003c/h3>\n\u003cp>Mitarbeitender bleibt aus einem Gefühl der moralischen Verpflichtung, Dankbarkeit und Loyalität.\u003c/p>\n\u003cp>→ bleiben sollen\u003c/p>\n\u003cp>\u003cstrong>Gründe:\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>Dankbarkeit gegenüber Arbeitgeber\u003c/li>\n\u003cli>Pflichtgefühl\u003c/li>\n\u003cli>Loyalität\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.:\u003cbr />\n„Mein Arbeitgeber hat mich in schwierigen Zeiten unterstützt. Deshalb möchte ich ihn nicht im Stich lassen.“\u003c/p>\n\u003c/div>\u003c/details>","4":"\u003cdetails class=\"note-section\">\u003csummary>Determinanten des Verhaltens\u003c/summary>\u003cdiv>\u003cp>Verhalten eines Menschen wird von 3 Faktoren bestimmt.\u003c/p>\n\u003ch3>1) Wollen (Motivation)\u003c/h3>\n\u003cp>Hat die Person die Bereitschaft oder den Wunsch, etwas zu tun?\u003c/p>\n\u003ch3>2) Können (Fähigkeiten)\u003c/h3>\n\u003cp>Verfügt die Person über die Kenntnisse, Fähigkeiten und Kompetenzen, um das Verhalten auszuführen?\u003c/p>\n\u003ch3>3) Dürfen (Rahmenbedingungen)\u003c/h3>\n\u003cp>Ist das Verhalten erlaubt oder möglich?\u003c/p>\n\u003cul>\n\u003cli>Regeln\u003c/li>\n\u003cli>Vorgesetzetzte\u003c/li>\n\u003cli>Ressourcen\u003c/li>\n\u003cli>Zeit\u003c/li>\n\u003c/ul>\n\u003cp>\u003cstrong>Verhalten = Wollen + Können + Dürfen\u003c/strong>\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Motiv - Anreiz - Motivation\u003c/summary>\u003cdiv>\u003ch3>1. Motiv (Person)\u003c/h3>\n\u003cp>Relativ stabiles Bedürfnis oder Wert einer Person.\u003c/p>\n\u003cp>Liegt in der Person.\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cul>\n\u003cli>Leistung\u003c/li>\n\u003cli>Macht\u003c/li>\n\u003cli>Anschlussmotiv\u003c/li>\n\u003c/ul>\n\u003ch3>2. Anreiz\u003c/h3>\n\u003cp>Merkmale der Situation, die ein Motiv aktivieren.\u003c/p>\n\u003cp>Liegt in der Umwelt / Situation.\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cul>\n\u003cli>Bonus oder Gehaltserhöhung\u003c/li>\n\u003cli>Lob vom Vorgesetzten\u003c/li>\n\u003cli>Beförderung\u003c/li>\n\u003cli>gute Note\u003c/li>\n\u003cli>Wettbewerb\u003c/li>\n\u003c/ul>\n\u003ch3>3. Motivation\u003c/h3>\n\u003cp>Aktueller Zustand der Handlungsbereitschaft.\u003c/p>\n\u003cp>Entsteht durch das Zusammenwirken von Motiv und Anreiz.\u003c/p>\n\u003cp>\u003cstrong>Motivation = Motiv (Person) × Anreiz (Situation)\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>Motiv = innerer Antrieb\u003c/li>\n\u003cli>Anreiz = äußerer Auslöser\u003c/li>\n\u003cli>Motivation = aktueller Zustand, der aus Zusammenspiel Motiv × Anreiz entsteht\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Bedürfnispyramide nach Maslow\u003c/summary>\u003cdiv>\u003cp>Beschreibt, dass Menschen zunächst Grundbedürfnisse befriedigen wollen.\u003c/p>\n\u003cp>Erst danach gewinnen höhere Bedürfnisse an Bedeutung.\u003c/p>\n\u003ch3>1. Physiologische Grundbedürfnisse\u003c/h3>\n\u003cp>Überleben sichern:\u003c/p>\n\u003cul>\n\u003cli>Essen\u003c/li>\n\u003cli>Trinken\u003c/li>\n\u003cli>Schlaf\u003c/li>\n\u003cli>Wohnung\u003c/li>\n\u003c/ul>\n\u003ch3>2. Sicherheitsbedürfnisse\u003c/h3>\n\u003cp>Schutz und Stabilität:\u003c/p>\n\u003cul>\n\u003cli>Geborgenheit\u003c/li>\n\u003cli>Arbeitsplatzsicherheit\u003c/li>\n\u003cli>Gesundheit\u003c/li>\n\u003cli>finanzielle Sicherheit\u003c/li>\n\u003c/ul>\n\u003ch3>3. Soziale Bedürfnisse\u003c/h3>\n\u003cp>Zugehörigkeit und soziale Kontakte:\u003c/p>\n\u003cul>\n\u003cli>Familie\u003c/li>\n\u003cli>Freunde\u003c/li>\n\u003cli>Liebe\u003c/li>\n\u003cli>Teamzugehörigkeit\u003c/li>\n\u003c/ul>\n\u003ch3>4. Individualbedürfnisse (Ich-Bedürfnisse)\u003c/h3>\n\u003cp>Anerkennung und Selbstwert:\u003c/p>\n\u003cul>\n\u003cli>Status\u003c/li>\n\u003cli>Macht\u003c/li>\n\u003cli>Erfolg\u003c/li>\n\u003cli>Respekt\u003c/li>\n\u003cli>Wertschätzung\u003c/li>\n\u003c/ul>\n\u003ch3>5. Selbstverwirklichung\u003c/h3>\n\u003cul>\n\u003cli>eigenes Potenzial entfalten\u003c/li>\n\u003cli>persönliche Entwicklung\u003c/li>\n\u003cli>Kreativität\u003c/li>\n\u003cli>eigene Ziele erreichen\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Motivklassen\u003c/summary>\u003cdiv>\u003ch3>Motivtheorie von McClelland (1964)\u003c/h3>\n\u003cp>Eigenschaftstheoretischer Ansatz.\u003c/p>\n\u003cp>Motive sind relativ stabile Persönlichkeitseigenschaften.\u003c/p>\n\u003cp>Menschen unterscheiden sich darin, wie stark die drei Motive ausgeprägt sind.\u003c/p>\n\u003cp>Motivausprägung beeinflusst Verhalten und Erfolg im Beruf.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Handlungstheorie nach Heckhausen\u003c/summary>\u003cdiv>\u003ch3>Grundidee\u003c/h3>\n\u003cp>Handlungen verlaufen in vier aufeinanderfolgenden Phasen, von Entscheidung bis zur Bewertung des Ergebnisses.\u003c/p>\n\u003ch3>1) Wählen (prädezisionale Phase)\u003c/h3>\n\u003cp>Abwägen verschiedener Handlungsalternativen.\u003c/p>\n\u003cp>Entscheidung, welches Ziel verfolgt werden soll.\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>Ich lerne heute für Mathematik oder für Arbeitsorganisation.\u003c/p>\n\u003ch3>Rubikon zwischen 1 und 2\u003c/h3>\n\u003cp>Punkt der Entscheidung.\u003c/p>\n\u003cp>Mit Überschreiten des Rubikons steht Ziel fest und wird verfolgt.\u003c/p>\n\u003ch3>2) Planen / Zielsetzung (präaktionale Phase)\u003c/h3>\n\u003cp>Konkrete Planung der Zielerreichung.\u003c/p>\n\u003cp>Bildung einer Zielintention.\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>Ich lerne heute von 18-20 Uhr Mathe und bearbeite 15 Aufgaben.\u003c/p>\n\u003ch3>3) Handeln (aktionale Phase)\u003c/h3>\n\u003cp>Durchführung der geplanten Handlung.\u003c/p>\n\u003ch3>4) Bewerten (postaktionale Phase)\u003c/h3>\n\u003cp>Überprüfung, ob das Ziel erreicht wurde.\u003c/p>\n\u003cp>Bewertung des Ergebnisses.\u003c/p>\n\u003cp>Bsp. mit Probeklausur.\u003c/p>\n\u003ch3>Rubikon-Übergang\u003c/h3>\n\u003cp>Zwischen Wählen und Planen.\u003c/p>\n\u003cp>Markiert den Moment, aus dem ein bloßer Wunsch zu einer verbindlichen Zielentscheidung / Intention wird.\u003c/p>\n\u003cp>Danach richtet sich Verhalten auf Umsetzung des gestellten Ziels aus.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Job Characteristics Model\u003c/summary>\u003cdiv>\u003cp>Nicht Arbeit selbst bestimmt Motivation oder Zufriedenheit, sondern wie der Mitarbeiter die Arbeit wahrnimmt und bewertet.\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>2 Mitarbeiter haben selben Job.\u003c/p>\n\u003cp>Arbeit objektiv gleich, aber reagieren unterschiedlich, weil sie Arbeit unterschiedlich bewerten.\u003c/p>\n\u003cp>Der subjektive Aspekt.\u003c/p>\n\u003ch3>Grundidee\u003c/h3>\n\u003cp>Nicht die objektiven Arbeitsbedingungen allein bestimmen Motivation oder Zufriedenheit.\u003c/p>\n\u003cp>Entscheidend ist, wie Beschäftigte ihre Arbeit wahrnehmen und bewerten.\u003c/p>\n\u003cp>\u003cstrong>Arbeitsmerkmale → psychologische Zustände → Ergebnisse\u003c/strong>\u003c/p>\n\u003ch3>1. Kernmerkmale der Arbeit\u003c/h3>\n\u003ch4>1) Anforderungsvielfalt / Variabilität\u003c/h4>\n\u003cp>Verschiedene Fähigkeiten werden benötigt.\u003c/p>\n\u003ch4>2) Ganzheitlichkeit\u003c/h4>\n\u003cp>Eine Aufgabe wird von Anfang bis Ende bearbeitet.\u003c/p>\n\u003ch4>3) Bedeutsamkeit\u003c/h4>\n\u003cp>Die Arbeit hat einen erkennbaren Wert oder Nutzen.\u003c/p>\n\u003ch4>4) Autonomie\u003c/h4>\n\u003cp>Selbstständigkeit und Entscheidungsspielraum.\u003c/p>\n\u003ch4>5) Feedback\u003c/h4>\n\u003cp>Rückmeldung über Qualität der eigenen Arbeit.\u003c/p>\n\u003ch3>2. Kritische psychologische Folgen\u003c/h3>\n\u003cp>Arbeitsmerkmale lösen drei wichtige psychologische Zustände aus:\u003c/p>\n\u003col>\n\u003cli>\n\u003cp>Anforderungsvielfalt + Ganzheitlichkeit + Bedeutsamkeit\u003cbr />\n= erlebte Sinnhaftigkeit der Arbeit\u003c/p>\n\u003c/li>\n\u003cli>\n\u003cp>Autonomie\u003cbr />\n= erlebte Verantwortlichkeit für die Ergebnisse\u003c/p>\n\u003c/li>\n\u003cli>\n\u003cp>Feedback\u003cbr />\n= Kenntnis der Ergebnisse der eigenen Tätigkeit\u003c/p>\n\u003c/li>\n\u003c/ol>\n\u003ch3>3. Folgen, wenn psychologische Zustände positiv ausgeprägt sind\u003c/h3>\n\u003cul>\n\u003cli>hohe intrinsische Motivation\u003c/li>\n\u003cli>höhere Arbeitszufriedenheit\u003c/li>\n\u003cli>bessere Leistung\u003c/li>\n\u003cli>geringere Fluktuation\u003c/li>\n\u003cli>weniger Fehlzeiten\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Theorie der Zielsetzung\u003c/summary>\u003cdiv>\u003ch3>Grundidee\u003c/h3>\n\u003cp>Klare, spezifische und anspruchsvolle Ziele führen zu höheren Leistungen als vage oder leichte Ziele.\u003c/p>\n\u003cp>Wirkung wird durch Moderatoren beeinflusst.\u003c/p>\n\u003ch3>1. Ziele\u003c/h3>\n\u003cp>Damit Ziele motivierend wirken, sollten sie sein:\u003c/p>\n\u003cul>\n\u003cli>spezifisch / klar formuliert\u003c/li>\n\u003cli>anspruchsvoll\u003c/li>\n\u003cli>aber erreichbar\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>\u003cstrong>X:\u003c/strong> Ich lerne irgendwann.\u003c/p>\n\u003cp>\u003cstrong>✓:\u003c/strong> Ich bearbeite heute 20 Thermo-Aufgaben.\u003c/p>\n\u003ch3>2. Mediatoren\u003c/h3>\n\u003cp>Erklären, warum Ziele wirken.\u003c/p>\n\u003cp>Ziele verbessern Leistung durch:\u003c/p>\n\u003cul>\n\u003cli>\n\u003cp>Aufmerksamkeit\u003cbr />\n→ Fokus auf Ziel\u003c/p>\n\u003c/li>\n\u003cli>\n\u003cp>Anstrengung\u003cbr />\n→ mehr Einsatz\u003c/p>\n\u003c/li>\n\u003cli>\n\u003cp>Ausdauer\u003cbr />\n→ länger dranbleiben\u003c/p>\n\u003c/li>\n\u003cli>\n\u003cp>Strategien\u003cbr />\n→ bessere Vorgehensweisen entwickeln\u003c/p>\n\u003c/li>\n\u003c/ul>\n\u003cp>Die Mechanismen führen zu höherer Leistung.\u003c/p>\n\u003ch3>3. Moderatoren\u003c/h3>\n\u003cp>Beeinflussen, wie stark Ziele wirken.\u003c/p>\n\u003cp>Zielwirkung hängt unter anderem ab von:\u003c/p>\n\u003cul>\n\u003cli>\n\u003cp>Zielbindung / Commitment\u003cbr />\n→ Wie sehr will ich das Ziel erreichen?\u003c/p>\n\u003c/li>\n\u003cli>\n\u003cp>Feedback\u003cbr />\n→ Weiß ich, wie gut ich vorankomme?\u003c/p>\n\u003c/li>\n\u003cli>\n\u003cp>Aufgabenkomplexität\u003cbr />\n→ Bei sehr schwierigen Aufgaben sind mehr Zeit und bessere Strategien nötig.\u003c/p>\n\u003c/li>\n\u003c/ul>\n\u003ch3>Ergebnis\u003c/h3>\n\u003cp>Je klarer und anspruchsvoller das Ziel und je günstiger die Moderatoren, desto bessere Leistung.\u003c/p>\n\u003cp>Spezifische und anspruchsvolle Ziele steigern Leistung, weil sie Aufmerksamkeit, Anstrengung, Ausdauer und Strategien fördern.\u003c/p>\n\u003cp>Wie stark dieser Effekt ist, hängt von:\u003c/p>\n\u003cul>\n\u003cli>Zielbindung\u003c/li>\n\u003cli>Feedback\u003c/li>\n\u003cli>Aufgabenkomplexität\u003c/li>\n\u003c/ul>\n\u003cp>ab.\u003c/p>\n\u003cp>\u003cstrong>Mediatoren = warum Ziele Leistung steigern\u003c/strong>\u003c/p>\n\u003cp>\u003cstrong>Moderatoren = unter welchen Bedingungen Ziele besonders wirksam sind\u003c/strong>\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Self-Determination Theory\u003c/summary>\u003cdiv>\u003ch3>Kernaussage\u003c/h3>\n\u003cp>Menschen sind besonders motiviert, leistungsfähig und zufrieden, wenn drei grundlegende psychologische Bedürfnisse erfüllt werden.\u003c/p>\n\u003cp>Umwelt kann durch Support beeinflussen.\u003c/p>\n\u003ch3>1) Autonomie\u003c/h3>\n\u003cp>Gefühl, selbst entscheiden und eigenständig handeln zu können.\u003c/p>\n\u003cul>\n\u003cli>Freiräume\u003c/li>\n\u003cli>Wahlmöglichkeiten geben\u003c/li>\n\u003c/ul>\n\u003ch3>2) Kompetenz\u003c/h3>\n\u003cp>Gefühl, fähig und erfolgreich zu sein und Herausforderungen zu bewältigen.\u003c/p>\n\u003cul>\n\u003cli>Feedback\u003c/li>\n\u003cli>passende Herausforderungen\u003c/li>\n\u003c/ul>\n\u003ch3>3) Soziale Gebundenheit (Relatedness)\u003c/h3>\n\u003cp>Gefühl, dazuzugehören, akzeptiert und mit anderen verbunden zu sein.\u003c/p>\n\u003cul>\n\u003cli>Wertschätzung\u003c/li>\n\u003c/ul>\n\u003cp>Dadurch entsteht:\u003c/p>\n\u003col>\n\u003cli>Ich entscheide selbst.\u003c/li>\n\u003cli>Ich kann das schaffen.\u003c/li>\n\u003cli>Ich gehöre dazu.\u003c/li>\n\u003c/ol>\n\u003cp>Sind diese drei Bedürfnisse erfüllt, steigt:\u003c/p>\n\u003cul>\n\u003cli>die intrinsische Motivation\u003c/li>\n\u003cli>das Wohlbefinden\u003c/li>\n\u003cli>die Leistung\u003c/li>\n\u003c/ul>\n\u003cp>Ansonsten sinkt Motivation und Zufriedenheit.\u003c/p>\n\u003c/div>\u003c/details>","5":"\u003cdetails class=\"note-section\">\u003csummary>Kriterien humaner Arbeitsgestaltung nach Hacker (1980)\u003c/summary>\u003cdiv>\u003ch3>1) Ausführbarkeit\u003c/h3>\n\u003cp>Arbeit ist mit vorhandenen Fähigkeiten und Ressourcen machbar.\u003c/p>\n\u003ch3>2) Schädigungslosigkeit\u003c/h3>\n\u003cp>Arbeit darf Gesundheit und Sicherheit nicht gefährden.\u003c/p>\n\u003ch3>3) Beeinträchtigungsfreiheit\u003c/h3>\n\u003cp>Arbeit soll keine unnötigen körperlichen oder psychischen Belastungen verursachen.\u003c/p>\n\u003ch3>4) Persönlichkeitsförderlichkeit\u003c/h3>\n\u003cp>Arbeit soll:\u003c/p>\n\u003cul>\n\u003cli>Lernen\u003c/li>\n\u003cli>Entwicklung\u003c/li>\n\u003cli>Selbstständigkeit\u003c/li>\n\u003cli>Motivation\u003c/li>\n\u003c/ul>\n\u003cp>fördern.\u003c/p>\n\u003cp>Diese 4 Kriterien sollen Gesundheit, Leistungsfähigkeit und persönliche Entwicklung der Beschäftigten sichern.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>SMART-Modell der Arbeitsgestaltung\u003c/summary>\u003cdiv>\u003ch3>S\u003c/h3>\n\u003cp>Arbeit soll abwechslungsreich, interessant und herausfordernd sein.\u003c/p>\n\u003ch3>M\u003c/h3>\n\u003cp>Arbeit soll Lernen, Kompetenzentwicklung und Erfolgserlebnisse ermöglichen.\u003c/p>\n\u003ch3>A\u003c/h3>\n\u003cp>Die Beschäftigten sollen:\u003c/p>\n\u003cul>\n\u003cli>Einfluss\u003c/li>\n\u003cli>Entscheidungsfreiheit\u003c/li>\n\u003cli>Autonomie\u003c/li>\n\u003c/ul>\n\u003cp>haben.\u003c/p>\n\u003ch3>R\u003c/h3>\n\u003cp>Arbeit soll gute soziale Beziehungen, Unterstützung und Zusammenarbeit fördern.\u003c/p>\n\u003ch3>T\u003c/h3>\n\u003cp>Anforderungen sollen gesund und bewältigbar sein.\u003c/p>\n\u003cp>Nicht über- oder unterfordernd.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Job Enlargement und Job Enrichment\u003c/summary>\u003cdiv>\u003ch3>Job Enlargement\u003c/h3>\n\u003cp>Horizontale Aufgabenerweiterung.\u003c/p>\n\u003cp>Mitarbeiter machen mehr verschiedene Aufgaben auf derselben Hierarchieebene.\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>Früher:\u003c/p>\n\u003cul>\n\u003cli>nur Schrauben montieren\u003c/li>\n\u003c/ul>\n\u003cp>Jetzt:\u003c/p>\n\u003cul>\n\u003cli>Schrauben montieren\u003c/li>\n\u003cli>Teile prüfen\u003c/li>\n\u003cli>verpacken\u003c/li>\n\u003c/ul>\n\u003cp>Folgen:\u003c/p>\n\u003cul>\n\u003cli>mehr Abwechslung\u003c/li>\n\u003cli>aber keine zusätzliche Verantwortung\u003c/li>\n\u003cli>Arbeitszyklus wird länger\u003c/li>\n\u003cli>Motivation steigt meist nur wenig\u003c/li>\n\u003c/ul>\n\u003ch3>Job Enrichment\u003c/h3>\n\u003cp>Vertikale Aufgabenerweiterung.\u003c/p>\n\u003cp>Beschäftigte erhalten höhere Ausmaße an Kontrolle über Arbeitsabläufe.\u003c/p>\n\u003cp>Führt zu einer wirkungsvolleren Motivationssteigerung.\u003c/p>\n\u003cul>\n\u003cli>zusätzliche Verantwortung\u003c/li>\n\u003cli>Entscheidungsfreiheit\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>Zusätzlich darf Mitarbeiter:\u003c/p>\n\u003cul>\n\u003cli>Arbeit selbst planen\u003c/li>\n\u003cli>Qualität kontrollieren\u003c/li>\n\u003cli>Probleme eigenständig lösen\u003c/li>\n\u003c/ul>\n\u003cp>Folge:\u003c/p>\n\u003cul>\n\u003cli>mehr Motivation\u003c/li>\n\u003cli>Arbeitszufriedenheit\u003c/li>\n\u003cli>Eigenverantwortung\u003c/li>\n\u003c/ul>\n\u003c/div>\u003c/details>","6":"\u003cdetails class=\"note-section\">\u003csummary>Zukunft der Arbeitswelt\u003c/summary>\u003cdiv>\u003ch3>VUCA\u003c/h3>\n\u003ch4>Volatilität\u003c/h4>\n\u003cp>Dynamische Probleme mit unvorhersehbarem Charakter.\u003c/p>\n\u003cul>\n\u003cli>schnelle, unvorhersehbare Veränderungen\u003c/li>\n\u003cli>Probleme ändern sich ständig\u003c/li>\n\u003c/ul>\n\u003ch4>Unsicherheit\u003c/h4>\n\u003cp>Schwer, Entwicklungen vorherzusagen.\u003c/p>\n\u003cul>\n\u003cli>es fehlen verlässliche Informationen\u003c/li>\n\u003cli>oder es gibt zu viele Informationen\u003c/li>\n\u003cli>Entscheidungen müssen oft mit unvollständigem Wissen getroffen werden\u003c/li>\n\u003c/ul>\n\u003ch4>Komplexität\u003c/h4>\n\u003cp>Situationen schwer überschaubar.\u003c/p>\n\u003ch4>Ambiguität\u003c/h4>\n\u003cp>Es gibt keine eindeutige richtige Lösung.\u003c/p>\n\u003cp>Unternehmen und Beschäftigte müssen deshalb flexibel handeln.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Psychologisches Empowerment\u003c/summary>\u003cdiv>\u003cp>Beschreibt das Gefühl eines Mitarbeiters, dass er seine Arbeit selbstständig, sinnvoll und wirksam ausführen kann.\u003c/p>\n\u003cp>Innere Motivation, die beeinflusst, wie jemand seine Rolle bei der Arbeit wahrnimmt.\u003c/p>\n\u003ch3>1) Kompetenz\u003c/h3>\n\u003cp>\u003cstrong>„Ich kann meine Arbeit gut erledigen.“\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>Vertrauen in die eigenen Fähigkeiten\u003c/li>\n\u003cli>Gefühl, den Anforderungen gewachsen zu sein\u003c/li>\n\u003c/ul>\n\u003ch3>2) Bedeutsamkeit\u003c/h3>\n\u003cp>\u003cstrong>„Meine Arbeit ist wichtig und sinnvoll.“\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>Arbeit passt zu den eigenen Werten\u003c/li>\n\u003cli>man empfindet sie als bedeutungsvoll\u003c/li>\n\u003c/ul>\n\u003ch3>3) Einfluss\u003c/h3>\n\u003cp>\u003cstrong>„Ich kann etwas bewirken.“\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>eigene Arbeit hat Auswirkungen auf Ergebnisse oder Entscheidungen\u003c/li>\n\u003cli>ich kann Veränderungen mitgestalten\u003c/li>\n\u003c/ul>\n\u003ch3>4) Selbstbestimmung\u003c/h3>\n\u003cp>\u003cstrong>„Ich kann selbst entscheiden, wie ich arbeite.“\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>Eigenständigkeit\u003c/li>\n\u003cli>Entscheidungsfreiheit\u003c/li>\n\u003cli>Autonomie\u003c/li>\n\u003c/ul>\n\u003cp>Psychologisches Empowerment ist das subjektive Gefühl, die eigene Arbeit kompetent, sinnvoll, selbstbestimmt und einflussreich ausführen zu können.\u003c/p>\n\u003cp>Dadurch steigen:\u003c/p>\n\u003cul>\n\u003cli>Motivation\u003c/li>\n\u003cli>Arbeitszufriedenheit\u003c/li>\n\u003cli>Leistung\u003c/li>\n\u003c/ul>\n\u003c/div>\u003c/details>","7":"\u003cdetails class=\"note-section\">\u003csummary>Yerkes-Dodson-Gesetz\u003c/summary>\u003cdiv>\u003ch3>Zu wenig Erregung\u003c/h3>\n\u003cul>\n\u003cli>Unterforderung\u003c/li>\n\u003cli>Langeweile\u003c/li>\n\u003cli>geringe Leistung\u003c/li>\n\u003c/ul>\n\u003ch3>Mittlere Erregung\u003c/h3>\n\u003cul>\n\u003cli>optimale Konzentration\u003c/li>\n\u003cli>beste Leistung\u003c/li>\n\u003c/ul>\n\u003ch3>Zu viel Erregung\u003c/h3>\n\u003cul>\n\u003cli>Stress\u003c/li>\n\u003cli>Nervosität\u003c/li>\n\u003cli>Überforderung\u003c/li>\n\u003cli>Leistung sinkt\u003c/li>\n\u003c/ul>\n\u003cp>Wenn Aktivierung / Erregung zunimmt, steigt zunächst auch Anstrengung und damit Leistung.\u003c/p>\n\u003ch3>Erregung\u003c/h3>\n\u003cp>Grad der körperlichen und geistigen Aktivierung eines Menschen.\u003c/p>\n\u003ch4>Wenn niedrig\u003c/h4>\n\u003cul>\n\u003cli>müde\u003c/li>\n\u003cli>gelangweilt\u003c/li>\n\u003cli>unkonzentriert\u003c/li>\n\u003c/ul>\n\u003ch4>Wenn mittel\u003c/h4>\n\u003cul>\n\u003cli>wach\u003c/li>\n\u003cli>aufmerksam\u003c/li>\n\u003cli>konzentriert\u003c/li>\n\u003c/ul>\n\u003ch4>Wenn hoch\u003c/h4>\n\u003cul>\n\u003cli>sehr nervös\u003c/li>\n\u003cli>gestresst\u003c/li>\n\u003cli>hektisch\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.:\u003c/p>\n\u003cul>\n\u003cli>starke Prüfungsangst\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Transaktionales Stressmodell\u003c/summary>\u003cdiv>\u003cp>Stress entsteht nicht automatisch durch eine Situation, sondern durch die Bewertung der Situation.\u003c/p>\n\u003cp>Stress entsteht durch das Zusammenspiel / die Transaktion zwischen Person und Umwelt.\u003c/p>\n\u003cp>Dieselbe Situation kann für eine Person stressig sein, für eine andere nicht.\u003c/p>\n\u003ch3>Primäre Bewertung\u003c/h3>\n\u003cp>Person fragt sich:\u003c/p>\n\u003cp>\u003cstrong>„Ist die Situation für mich wichtig oder gefährlich?“\u003c/strong>\u003c/p>\n\u003cp>Mögliche Bewertungen:\u003c/p>\n\u003cul>\n\u003cli>\n\u003cp>irrelevant\u003cbr />\n→ kein Stress\u003c/p>\n\u003c/li>\n\u003cli>\n\u003cp>positiv\u003cbr />\n→ kein Stress\u003c/p>\n\u003c/li>\n\u003cli>\n\u003cp>stressrelevant:\u003c/p>\n\u003cul>\n\u003cli>Schaden / Verlust\u003cbr />\n→ bereits eingetreten\u003c/li>\n\u003cli>Bedrohung\u003cbr />\n→ könnte passieren\u003c/li>\n\u003cli>Herausforderung\u003cbr />\n→ schwierig, aber machbar\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003c/ul>\n\u003ch3>Sekundäre Bewertung\u003c/h3>\n\u003cp>Person fragt sich:\u003c/p>\n\u003cp>\u003cstrong>„Kann ich das bewältigen?“\u003c/strong>\u003c/p>\n\u003cp>Bewertet ihre Ressourcen:\u003c/p>\n\u003cul>\n\u003cli>Wissen\u003c/li>\n\u003cli>Fähigkeiten\u003c/li>\n\u003cli>Zeit\u003c/li>\n\u003cli>Unterstützung\u003c/li>\n\u003cli>Geld\u003c/li>\n\u003cli>usw.\u003c/li>\n\u003c/ul>\n\u003ch4>Genug Ressourcen\u003c/h4>\n\u003cp>→ wenig Stress\u003c/p>\n\u003ch4>Zu wenige Ressourcen\u003c/h4>\n\u003cp>→ Stress\u003c/p>\n\u003ch3>Bedrohung\u003c/h3>\n\u003cp>Situation wird als nicht kontrollierbar erlebt.\u003c/p>\n\u003cp>Es entsteht Stress.\u003c/p>\n\u003cp>Mögliche Folgen:\u003c/p>\n\u003cul>\n\u003cli>Gesundheitsgefährdung\u003c/li>\n\u003cli>Burnout\u003c/li>\n\u003cli>Erschöpfung\u003c/li>\n\u003c/ul>\n\u003ch3>Herausforderung\u003c/h3>\n\u003cp>Situation wird als kontrollierbar erlebt.\u003c/p>\n\u003cp>Man empfindet sie als Herausforderung.\u003c/p>\n\u003cp>Folgen:\u003c/p>\n\u003cul>\n\u003cli>Wertschätzung\u003c/li>\n\u003cli>Erfolgserlebnisse\u003c/li>\n\u003cli>persönliches Wachstum\u003c/li>\n\u003c/ul>\n\u003ch3>Positive Rückkopplung\u003c/h3>\n\u003cp>Kontrollierbare Herausforderung\u003c/p>\n\u003cp>→ Erfolg\u003cbr />\n→ mehr Selbstvertrauen\u003cbr />\n→ zukünftige Situationen werden ebenfalls bewältigbarer\u003cbr />\n→ persönliches Wachstum\u003c/p>\n\u003cp>\u003cstrong>Positiver Kreislauf\u003c/strong>\u003c/p>\n\u003ch3>Negative Rückkopplung\u003c/h3>\n\u003cp>Nicht kontrollierbare Situation\u003c/p>\n\u003cp>→ Stress\u003cbr />\n→ Überforderung\u003cbr />\n→ Gesundheitsprobleme\u003cbr />\n→ weniger Ressourcen\u003cbr />\n→ zukünftige Situationen werden noch stressiger erlebt\u003c/p>\n\u003cp>\u003cstrong>Negativer Kreislauf\u003c/strong>\u003c/p>\n\u003ch3>All in all\u003c/h3>\n\u003cp>Das transaktionale Stressmodell zeigt, dass Stress nicht direkt durch Umweltreize entsteht, sondern durch deren Bewertung als kontrollierbar oder unkontrollierbar, wodurch entweder ein positiver Wachstumsprozess oder ein negativer Stressprozess ausgelöst wird.\u003c/p>\n\u003cp>→ Kommt auf die persönliche Bewertung der Situation an.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Demand-Control-Modell\u003c/summary>\u003cdiv>\u003cp>Erklärt, wie Stress am Arbeitsplatz entsteht.\u003c/p>\n\u003ch3>Grundidee\u003c/h3>\n\u003cp>Stress hängt von 2 Faktoren gleichzeitig ab.\u003c/p>\n\u003ch3>1) Arbeitsanforderungen (Demand)\u003c/h3>\n\u003cp>Wie viel Druck / Arbeitsmenge?\u003c/p>\n\u003ch3>2) Entscheidungsspielraum (Control)\u003c/h3>\n\u003cp>Wie viel Einfluss / Autonomie habe ich?\u003c/p>\n\u003cp>Stress entsteht vor allem bei:\u003c/p>\n\u003cp>\u003cstrong>hohen Anforderungen + wenig Kontrolle\u003c/strong>\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>Fließbandarbeiter unter Zeitdruck.\u003c/p>\n\u003cp>Wenig Kontrolle.\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>Ingenieur arbeitet mit Eigenverantwortung.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Job Demands-Resources Modell\u003c/summary>\u003cdiv>\u003cp>Jede Arbeit besteht aus Anforderungen und Ressourcen.\u003c/p>\n\u003cp>Ob Beschäftigte gestresst oder motiviert sind, hängt vom Verhältnis zwischen Anforderungen und Ressourcen ab.\u003c/p>\n\u003ch3>1) Job Demands / Arbeitsanforderungen\u003c/h3>\n\u003cp>Aspekte der Arbeit, die Anstrengung erfordern.\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cul>\n\u003cli>hoher Zeitdruck\u003c/li>\n\u003cli>hohe Arbeitsmenge\u003c/li>\n\u003cli>emotionale Belastung\u003c/li>\n\u003cli>Schichtarbeit\u003c/li>\n\u003cli>schwierige Kunden\u003c/li>\n\u003c/ul>\n\u003cp>Zu viele Anforderungen können zu:\u003c/p>\n\u003cul>\n\u003cli>Stress\u003c/li>\n\u003cli>Erschöpfung\u003c/li>\n\u003cli>Burnout\u003c/li>\n\u003c/ul>\n\u003cp>führen.\u003c/p>\n\u003ch3>2) Job Resources\u003c/h3>\n\u003cp>Aspekte der Arbeit, die helfen, die Anforderungen zu bewältigen.\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cul>\n\u003cli>Autonomie\u003c/li>\n\u003cli>Unterstützung durch Vorgesetzte und Kollegen\u003c/li>\n\u003cli>Feedback\u003c/li>\n\u003cli>Weiterbildung\u003c/li>\n\u003cli>ausreichende Arbeitsmittel\u003c/li>\n\u003c/ul>\n\u003cp>Ressourcen fördern:\u003c/p>\n\u003cul>\n\u003cli>Motivation\u003c/li>\n\u003cli>Engagement\u003c/li>\n\u003cli>Leistung\u003c/li>\n\u003c/ul>\n\u003ch3>2 Prozesse im Modell\u003c/h3>\n\u003ch4>1) Gesundheitsbeeinträchtigungsprozess\u003c/h4>\n\u003cp>Hohe Anforderungen\u003c/p>\n\u003cp>→ Stress\u003cbr />\n→ Erschöpfung\u003cbr />\n→ Burnout\u003cbr />\n→ geringere Leistung\u003c/p>\n\u003ch4>2) Motivationsprozess\u003c/h4>\n\u003cp>Viele Ressourcen\u003c/p>\n\u003cp>→ Motivation\u003cbr />\n→ Arbeitsengagement\u003cbr />\n→ bessere Leistung\u003cbr />\n→ höhere Arbeitszufriedenheit\u003c/p>\n\u003cp>\u003cstrong>Wichtig: Ressourcen können negative Folgen von hohen Anforderungen abschwächen.\u003c/strong>\u003c/p>\n\u003cp>Modell geht davon aus, dass jede Arbeit aus Arbeitsanforderungen und Arbeitsressourcen besteht.\u003c/p>\n\u003c/div>\u003c/details>","8":"\u003cdetails class=\"note-section\">\u003csummary>Eisenhower-Matrix\u003c/summary>\u003cdiv>\u003ch3>Grundidee\u003c/h3>\n\u003cp>Aufgaben werden nach zwei Kriterien eingeteilt:\u003c/p>\n\u003ch3>Wichtig\u003c/h3>\n\u003cp>Trägt zu langfristigen Zielen und Werten bei.\u003c/p>\n\u003ch3>Dringend\u003c/h3>\n\u003cp>Muss sofort erledigt werden.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Die 4 Quadranten\u003c/summary>\u003cdiv>\u003ch3>Wichtig und dringend\u003c/h3>\n\u003cp>Bsp.:\u003c/p>\n\u003cul>\n\u003cli>Klausur morgen\u003c/li>\n\u003cli>Abgabe heute\u003c/li>\n\u003c/ul>\n\u003ch3>Wichtig und nicht dringend\u003c/h3>\n\u003cp>Bsp.:\u003c/p>\n\u003cul>\n\u003cli>für Klausuren frühzeitig lernen\u003c/li>\n\u003cli>Sport\u003c/li>\n\u003cli>Weiterbildung\u003c/li>\n\u003cli>Karriereplanung\u003c/li>\n\u003cli>Beziehungen pflegen\u003c/li>\n\u003c/ul>\n\u003cp>\u003cstrong>Wichtigster Quadrant.\u003c/strong>\u003c/p>\n\u003cp>Hier entsteht langfristiger Erfolg.\u003c/p>\n\u003ch3>Nicht wichtig und dringend\u003c/h3>\n\u003cp>\u003cstrong>Delegieren\u003c/strong>\u003c/p>\n\u003cp>Aufgabe an eine andere Person übertragen, die sie übernehmen kann.\u003c/p>\n\u003ch3>Nicht wichtig und nicht dringend\u003c/h3>\n\u003cp>\u003cstrong>Eliminieren oder stark reduzieren\u003c/strong>\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cul>\n\u003cli>unwichtige Telefonate\u003c/li>\n\u003cli>viele E-Mails\u003c/li>\n\u003cli>manche Meetings\u003c/li>\n\u003cli>endloses Scrollen auf Social Media\u003c/li>\n\u003cli>Unterbrechungen\u003c/li>\n\u003cli>zielloses YouTube schauen\u003c/li>\n\u003cli>Prokrastination\u003c/li>\n\u003cli>unnötiges Surfen im Internet\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Gantt-Chart\u003c/summary>\u003cdiv>\u003cp>Balkendiagramm, das zeigt:\u003c/p>\n\u003cul>\n\u003cli>welche Aufgaben erledigt werden\u003c/li>\n\u003cli>wann sie beginnen\u003c/li>\n\u003cli>wann sie enden\u003c/li>\n\u003cli>wie lange sie dauern\u003c/li>\n\u003c/ul>\n\u003cp>Zeigt auch:\u003c/p>\n\u003cul>\n\u003cli>Reihenfolge\u003c/li>\n\u003cli>Abhängigkeiten zwischen Aufgaben\u003c/li>\n\u003c/ul>\n\u003ch3>Wann eignet sich welche Methode?\u003c/h3>\n\u003ch4>GTD\u003c/h4>\n\u003cp>Alltag mit vielen kleinen Aufgaben ohne feste Zeitstruktur.\u003c/p>\n\u003cp>\u003cstrong>Ebene:\u003c/strong> Makro\u003c/p>\n\u003cul>\n\u003cli>Priorisieren\u003c/li>\n\u003cli>wenn viele Aufgaben gleichzeitig anfallen\u003c/li>\n\u003c/ul>\n\u003ch4>Pomodoro\u003c/h4>\n\u003cp>Einzelne Arbeitsphasen mit Fokusproblemen.\u003c/p>\n\u003cp>\u003cstrong>Ebene:\u003c/strong> Mikro\u003c/p>\n\u003cul>\n\u003cli>Projekte mit mehreren Phasen\u003c/li>\n\u003cli>festen Deadlines\u003c/li>\n\u003cli>Abhängigkeiten\u003c/li>\n\u003c/ul>\n\u003ch4>Gantt-Chart\u003c/h4>\n\u003cp>Projekte mit mehreren Phasen, festen Deadlines und Abhängigkeiten.\u003c/p>\n\u003cp>\u003cstrong>Faustregel:\u003c/strong>\u003c/p>\n\u003cp>Gantt lohnt sich ab mehr als zwei Wochen Laufzeit mit mindestens drei Arbeitspaketen.\u003c/p>\n\u003ch3>Was ein Gantt-Chart nicht kann\u003c/h3>\n\u003cul>\n\u003cli>Scheingenauigkeit: Ein detaillierter Plan suggeriert Kontrolle, die oft nicht existiert.\u003c/li>\n\u003cli>Kurzfristig flexible Projekte verlieren ihren Nutzen.\u003c/li>\n\u003cli>Iterationen und Sprintzeiten einfach schwer darstellbar.\u003c/li>\n\u003cli>Wartungsaufwand: Wer den Plan nicht aktuell hält, verliert schnell den Überblick.\u003c/li>\n\u003cli>Agile Kritik: In der Softwareentwicklung eher hinderlich, weil Fokus von Scrum und Kanban auf Ergebnissen liegt.\u003c/li>\n\u003c/ul>\n\u003cp>→ Empfehlung für studentische Projekte mehr auf eine wöchentliche Version mit wenigen Arbeitspaketen.\u003c/p>\n\u003c/div>\u003c/details>","9":"\u003cdetails class=\"note-section\">\u003csummary>MBSR\u003c/summary>\u003cdiv>\u003ch3>Was ist MBSR?\u003c/h3>\n\u003cul>\n\u003cli>\n\u003cp>\u003cstrong>Mindfulness-Based Stress Reduction\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>entwickelt von Jon Kabat-Zinn, Universität Massachusetts, 1979\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003cli>\n\u003cp>\u003cstrong>Strukturiertes 8-Wochen-Gruppentraining\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>ca. 2,5 h/Woche + tägliche Heimpraxis\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003cli>\n\u003cp>\u003cstrong>Ursprünglich für chronisch kranke Patienten\u003c/strong>, heute breit eingesetzt\u003c/p>\n\u003cul>\n\u003cli>Arbeitswelt\u003c/li>\n\u003cli>Schule\u003c/li>\n\u003cli>Klinik\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003cli>\n\u003cp>Kein religiöser Kontext:\u003c/p>\n\u003cul>\n\u003cli>vollständig säkularisiert\u003c/li>\n\u003cli>evidenzbasiert\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003cli>\n\u003cp>Kombination aus:\u003c/p>\n\u003cul>\n\u003cli>formaler Meditationspraxis\u003c/li>\n\u003cli>achtsamen Alltagsübungen\u003c/li>\n\u003cli>Psychoedukation\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Trainingsziele nach Kirkpatrick\u003c/summary>\u003cdiv>\u003cp>\u003cstrong>Wie wird der Trainingserfolg bewertet?\u003c/strong>\u003c/p>\n\u003ch3>Ebene 1: Hat es gefallen?\u003c/h3>\n\u003ch3>Ebene 2: Wurde etwas gelernt?\u003c/h3>\n\u003ch3>Ebene 3: Wird das Gelernte angewendet?\u003c/h3>\n\u003ch3>Ebene 4: Hat das Unternehmen einen Nutzen?\u003c/h3>\n\u003chr />\n\u003ch3>1. Reaktion\u003c/h3>\n\u003cp>Wie zufrieden waren die Teilnehmenden mit dem Training?\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cul>\n\u003cli>Zufriedenheitsfragebogen direkt nach dem Training\u003c/li>\n\u003c/ul>\n\u003ch3>2. Lernen\u003c/h3>\n\u003cp>Was haben die Teilnehmenden gelernt?\u003c/p>\n\u003cp>Haben sich Wissen oder Fähigkeiten verbessert?\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cul>\n\u003cli>Wissenstest vor und nach dem Training\u003c/li>\n\u003cli>Kompetenzmessung\u003c/li>\n\u003c/ul>\n\u003ch3>3. Verhalten\u003c/h3>\n\u003cp>Wird das Gelernte im Arbeitsalltag tatsächlich angewendet?\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cul>\n\u003cli>Befragung nach 4-8 Wochen\u003c/li>\n\u003cli>Fremdeinschätzung durch Vorgesetzte oder Kollegen\u003c/li>\n\u003c/ul>\n\u003ch3>4. Ergebnisse\u003c/h3>\n\u003cp>Welche Auswirkungen hat Training auf Organisation?\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cul>\n\u003cli>weniger Krankheitstage\u003c/li>\n\u003cli>geringere Burnout-Raten\u003c/li>\n\u003cli>höhere Produktivität\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Trainingsziele formulieren nach Kraiger\u003c/summary>\u003cdiv>\u003cp>\u003cstrong>Was wird gelernt?\u003c/strong>\u003c/p>\n\u003cp>Erweitert Kirkpatrick-Modell, indem es darauf konzentriert, \u003cstrong>was genau gelernt wird\u003c/strong>.\u003c/p>\n\u003cp>3 Lernbereiche.\u003c/p>\n\u003ch3>1) Affektiv\u003c/h3>\n\u003cp>\u003cstrong>Was wird verändert?\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>Einstellungen\u003c/li>\n\u003cli>Motivation\u003c/li>\n\u003cli>Selbstvertrauen\u003c/li>\n\u003cli>Werte\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>Teilnehmende entwickeln positive Einstellung zur Teamarbeit oder mehr Selbstvertrauen im Umgang mit Konflikten.\u003c/p>\n\u003ch3>2) Kognitiv\u003c/h3>\n\u003cp>\u003cstrong>Was wird verändert?\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>Wissen\u003c/li>\n\u003cli>Verständnis\u003c/li>\n\u003cli>Problemlösefähigkeit\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>Teilnehmende können fünf Phasen des Projektmanagements erklären.\u003c/p>\n\u003ch3>3) Behavioral\u003c/h3>\n\u003cp>\u003cstrong>Was wird verändert?\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>Fähigkeiten\u003c/li>\n\u003cli>Fertigkeiten\u003c/li>\n\u003cli>beobachtbares Verhalten\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>Teilnehmende wenden eine Feedback-Technik korrekt in Rollenspielen und später im Arbeitsalltag an.\u003c/p>\n\u003chr />\n\u003ch3>Affektiv = Fühlen\u003c/h3>\n\u003cul>\n\u003cli>Einstellungen\u003c/li>\n\u003cli>Motivation\u003c/li>\n\u003c/ul>\n\u003ch3>Kognitiv = Denken\u003c/h3>\n\u003cul>\n\u003cli>Wissen\u003c/li>\n\u003cli>Verstehen\u003c/li>\n\u003c/ul>\n\u003ch3>Behavioral = Handeln\u003c/h3>\n\u003cul>\n\u003cli>Verhalten\u003c/li>\n\u003cli>Fertigkeiten\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Unterschiede\u003c/summary>\u003cdiv>\u003ch3>Kirkpatrick beantwortet:\u003c/h3>\n\u003cp>\u003cstrong>Wie wird der Erfolg eines Trainings gemessen?\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>Reaktion\u003c/li>\n\u003cli>Lernen\u003c/li>\n\u003cli>Verhalten\u003c/li>\n\u003cli>Ergebnisse\u003c/li>\n\u003c/ul>\n\u003ch3>Kraiger et al. beantwortet:\u003c/h3>\n\u003cp>\u003cstrong>Welche Art von Lernergebnis soll das Training erreichen?\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>Affektiv\u003c/li>\n\u003cli>Kognitiv\u003c/li>\n\u003cli>Behavioral\u003c/li>\n\u003c/ul>\n\u003c/div>\u003c/details>","10":"\u003cdetails class=\"note-section\">\u003csummary>Steiners Formel\u003c/summary>\u003cdiv>\u003ch3>Bestimmung der Gruppenleistung\u003c/h3>\n\u003cp>\u003cstrong>Tatsächliche Gruppenleistung = Potenzielle Gruppenleistung - Prozessverluste\u003c/strong>\u003c/p>\n\u003ch3>Tatsächliche Gruppenleistung\u003c/h3>\n\u003cp>Was leistet die Gruppe tatsächlich, wenn Prozessverluste während der Bearbeitung wirksam werden?\u003c/p>\n\u003ch3>Potenzielle Gruppenleistung\u003c/h3>\n\u003cp>Was könnte die Gruppe leisten, wenn alle Mitglieder ihr Bestes geben und die bestmögliche Leistungskombination stattfindet?\u003c/p>\n\u003ch3>Prozessverluste\u003c/h3>\n\u003cp>z.B. Motivations- oder Koordinationsverluste\u003c/p>\n\u003cp>Motivation sinkt, wenn z.B. die Eigenleistung nicht identifizierbar oder Beitrag zum Gesamtergebnis unklar ist.\u003c/p>\n\u003cp>Koordination ist suboptimal, z.B. ziehen nicht alle zur gleichen Zeit am Seil oder jeder zieht in eine etwas andere Richtung.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Motivationsverluste oder Motivationsgewinne?\u003c/summary>\u003cdiv>\u003ch3>Kann meine Einzelleistung erkannt werden?\u003c/h3>\n\u003ch3>Pfad 1: Ja, meine Leistung ist messbar\u003c/h3>\n\u003cul>\n\u003cli>Jeder kann sehen, was du geleistet hast.\u003c/li>\n\u003cli>Folge:\n\u003cul>\n\u003cli>du strengst dich mehr an\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003c/ul>\n\u003cp>= \u003cstrong>Soziale Erleichterung\u003c/strong>\u003c/p>\n\u003cp>Anwesenheit anderer führt dazu, dass man mehr Motivation zeigt und sich stärker anstrengt, weil die eigene Leistung beobachtet oder bewertet werden kann.\u003c/p>\n\u003ch3>Soziale Erleichterung (Social Facilitation)\u003c/h3>\n\u003cp>Die Anwesenheit bzw. erwartete Bewertung durch andere erhöht die Aktivierung.\u003c/p>\n\u003cp>Dadurch wird die Leistung bei einfachen Aufgaben besser, bei schwierigen Aufgaben schlechter.\u003c/p>\n\u003chr />\n\u003ch3>Pfad 2: Nein, meine Leistung ist nicht messbar\u003c/h3>\n\u003cul>\n\u003cli>Niemand erkennt deinen persönlichen Beitrag.\u003c/li>\n\u003c/ul>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>Viele Personen schieben gemeinsam ein Auto.\u003c/p>\n\u003cp>Folge:\u003c/p>\n\u003cp>Einige denken:\u003c/p>\n\u003cp>„Ob ich mich voll anstrenge oder nicht, merkt sowieso keiner.“\u003c/p>\n\u003cp>→ Anwesenheit anderer allein führt nicht automatisch zu besserer Leistung.\u003c/p>\n\u003ch3>Soziales Faulenzen\u003c/h3>\n\u003cp>In einer Gruppe strengen sich einzelne Personen weniger an, weil ihr persönlicher Beitrag nicht erkennbar ist.\u003c/p>\n\u003ch3>Soziales Faulenzen (Social Loafing)\u003c/h3>\n\u003cp>Menschen strengen sich in der Gruppe weniger an, wenn ihr eigener Beitrag nicht erkennbar oder nicht bewertet wird.\u003c/p>\n\u003cp>Das führt zu einem Motivationsverlust und meist zu geringerer individueller Leistung.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Prozessmodell des Gruppendenkens nach Janis, 1982\u003c/summary>\u003cdiv>\u003cp>Erklärt, warum Gruppen manchmal schlechte Entscheidungen treffen, obwohl einzelne Mitglieder eigentlich kompetent sind.\u003c/p>\n\u003ch3>Ursachen und Kontext\u003c/h3>\n\u003cul>\n\u003cli>hohe Kohäsion\u003c/li>\n\u003cli>Abschottung von Außeninformationen\u003c/li>\n\u003cli>Mangel an Verfahren zur Entscheidungsfindung\u003c/li>\n\u003cli>direktive Führung\u003c/li>\n\u003cli>Druck um Einheitlichkeit\u003c/li>\n\u003cli>äußere Bedrohung / Zeitdruck / hoher Erfolgsdruck\u003c/li>\n\u003c/ul>\n\u003ch3>Übereinstimmungsdenken\u003c/h3>\n\u003cp>Gruppenmitglieder bevorzugen Einigkeit.\u003c/p>\n\u003cp>Man möchte nicht widersprechen.\u003c/p>\n\u003cp>Zweifel werden nicht oder weniger geäußert.\u003c/p>\n\u003ch3>Symptome des Gruppendenkens\u003c/h3>\n\u003cul>\n\u003cli>Überschätzung von Unverwundbarkeit\u003c/li>\n\u003cli>Rationalisierung\u003c/li>\n\u003cli>Glaube an die moralische Legitimität\u003c/li>\n\u003cli>Gruppendruck gegenüber Kritikern\u003c/li>\n\u003cli>Druck in Richtung Uniformität\u003c/li>\n\u003cli>Selbstzensur\u003c/li>\n\u003cli>Illusion der Einstimmigkeit\u003c/li>\n\u003c/ul>\n\u003ch3>Symptome einer unzulänglichen Entscheidungsfindung\u003c/h3>\n\u003cul>\n\u003cli>Versagen bei der Suche nach der besten Lösung\u003c/li>\n\u003cli>Durchspielen und Bewerten von Alternativen fehlt bzw. ist eingeschränkt\u003c/li>\n\u003c/ul>\n\u003cp>\u003cstrong>Erklärt, warum Gruppen manchmal schlechte Entscheidungen treffen, obwohl einzelne Mitglieder eigentlich kompetent sind.\u003c/strong>\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Strategien zur Vermeidung von Gruppendenken\u003c/summary>\u003cdiv>\u003ch3>Wie könnte man Gruppendenken vermeiden?\u003c/h3>\n\u003cul>\n\u003cli>Eine Person übernimmt \u003cstrong>Rolle des Kritikers\u003c/strong>\u003c/li>\n\u003cli>\u003cstrong>Unabhängige Experten\u003c/strong> hinzuziehen\u003c/li>\n\u003cli>Gruppe in \u003cstrong>Subgruppen\u003c/strong> unterteilen, die getrennt tagen\u003c/li>\n\u003cli>Nicht frühzeitig auf Entscheidung festlegen, sondern \u003cstrong>alle anhören\u003c/strong>\u003c/li>\n\u003c/ul>\n\u003c/div>\u003c/details>","11":"\u003cdetails class=\"note-section\">\u003csummary>Teamrollen nach Belbin\u003c/summary>\u003cdiv>\u003cp>Welche Rollen sollten in einem Team vertreten sein, damit das Team erfolgreich arbeitet?\u003c/p>\n\u003cp>Darum geht es.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>1) Handlungsorientierte Rollen\u003c/summary>\u003cdiv>\u003cp>Diese Personen sorgen dafür, \u003cstrong>dass etwas passiert\u003c/strong>.\u003c/p>\n\u003ch3>Macher\u003c/h3>\n\u003cul>\n\u003cli>treibt Team an\u003c/li>\n\u003cli>setzt Ziele\u003c/li>\n\u003cli>arbeitet unter Druck gut\u003c/li>\n\u003c/ul>\n\u003ch3>Umsetzer\u003c/h3>\n\u003cul>\n\u003cli>plant praktische Umsetzung\u003c/li>\n\u003cli>arbeitet zuverlässig\u003c/li>\n\u003cli>arbeitet strukturiert\u003c/li>\n\u003c/ul>\n\u003ch3>Perfektionist\u003c/h3>\n\u003cul>\n\u003cli>achtet auf Details\u003c/li>\n\u003cli>findet Fehler\u003c/li>\n\u003cli>sorgt für hohe Qualität\u003c/li>\n\u003cli>kontrolliert alles sorgfältig\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>2) Wissensorientierte Rollen\u003c/summary>\u003cdiv>\u003cp>Diese Personen \u003cstrong>liefern Ideen und Fachwissen\u003c/strong>.\u003c/p>\n\u003ch3>Erfinder\u003c/h3>\n\u003cul>\n\u003cli>entwickelt kreative Ideen\u003c/li>\n\u003cli>löst schwierige Probleme\u003c/li>\n\u003cli>denkt unkonventionell\u003c/li>\n\u003c/ul>\n\u003ch3>Beobachter\u003c/h3>\n\u003cul>\n\u003cli>analysiert sachlich\u003c/li>\n\u003cli>bewertet Vor- und Nachteile\u003c/li>\n\u003cli>trifft überlegte Entscheidungen\u003c/li>\n\u003c/ul>\n\u003ch3>Spezialist\u003c/h3>\n\u003cul>\n\u003cli>besitzt tiefes Fachwissen\u003c/li>\n\u003cli>bringt Expertenwissen ein\u003c/li>\n\u003cli>konzentriert sich auf sein Fachgebiet\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>3) Kommunikationsorientierte Rollen\u003c/summary>\u003cdiv>\u003cp>Diese Personen sorgen für \u003cstrong>gute Zusammenarbeit\u003c/strong>.\u003c/p>\n\u003ch3>Koordinator\u003c/h3>\n\u003cul>\n\u003cli>verteilt Aufgaben\u003c/li>\n\u003cli>behält den Überblick\u003c/li>\n\u003cli>motiviert andere\u003c/li>\n\u003c/ul>\n\u003ch3>Teamarbeiter\u003c/h3>\n\u003cul>\n\u003cli>vermittelt bei Konflikten\u003c/li>\n\u003cli>unterstützt andere\u003c/li>\n\u003cli>sorgt für ein gutes Klima\u003c/li>\n\u003c/ul>\n\u003ch3>Wegbereiter / Weichensteller\u003c/h3>\n\u003cul>\n\u003cli>knüpft Kontakte\u003c/li>\n\u003cli>sucht Informationen\u003c/li>\n\u003cli>bringt neue Möglichkeiten ins Team\u003c/li>\n\u003c/ul>\n\u003cp>\u003cstrong>Merksatz: Der Weichensteller öffnet Türen nach außen und bringt neue Möglichkeiten ins Team.\u003c/strong>\u003c/p>\n\u003cp>Im Teamrollenmodell nach Belbin ist der Weichensteller auch Resource Investigator / Wegbereiter die Rolle, die vor allem Kontakte knüpft und neue Möglichkeiten sucht.\u003c/p>\n\u003cp>Aufgaben des Weichenstellers:\u003c/p>\n\u003cul>\n\u003cli>sucht neue Ideen, Informationen und Chancen außerhalb des Teams\u003c/li>\n\u003cli>knüpft Kontakte zu anderen Personen oder Gruppen\u003c/li>\n\u003cli>bringt neue Impulse ins Team\u003c/li>\n\u003cli>erkennt Möglichkeiten und bringt sie ins Gespräch\u003c/li>\n\u003c/ul>\n\u003cp>Stärken:\u003c/p>\n\u003cul>\n\u003cli>offen\u003c/li>\n\u003cli>kommunikativ\u003c/li>\n\u003cli>neugierig\u003c/li>\n\u003cli>gut im Netzwerken\u003c/li>\n\u003c/ul>\n\u003cp>Schwäche:\u003c/p>\n\u003cul>\n\u003cli>kann manchmal schnell das Interesse verlieren oder Ideen nicht konsequent zu Ende verfolgen\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003cp>Ein erfolgreiches Team besteht nicht aus lauter gleichen Personen, sondern aus \u003cstrong>unterschiedlichen, sich ergänzenden Rollen\u003c/strong>.\u003c/p>\n\u003cp>Teamrollen sind keine festen Persönlichkeitstypen, sondern bevorzugte Verhaltensweisen.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Teamentwicklungsphasen nach Tuckman\u003c/summary>\u003cdiv>\u003cp>\u003cstrong>Wie entwickeln sich Teams typischerweise?\u003c/strong>\u003c/p>\n\u003cp>Beschreibt, wie sich Teams typisch entwickeln.\u003c/p>\n\u003chr />\n\u003ch3>1) Forming\u003c/h3>\n\u003cul>\n\u003cli>Team lernt sich kennen\u003c/li>\n\u003cli>alle höflich und vorsichtig\u003c/li>\n\u003cli>es herrscht Unsicherheit\u003c/li>\n\u003cli>Ziele und Rollen sind noch unklar\u003c/li>\n\u003c/ul>\n\u003ch3>Rolle der Führungskraft\u003c/h3>\n\u003cul>\n\u003cli>Orientierung geben\u003c/li>\n\u003cli>Ziele und Aufgaben erklären\u003c/li>\n\u003cli>Rollen und Erwartungen klar kommunizieren\u003c/li>\n\u003cli>Vertrauen aufbauen\u003c/li>\n\u003cli>Struktur schaffen\u003c/li>\n\u003c/ul>\n\u003cp>→ Viel führen und Orientierung geben.\u003c/p>\n\u003cp>\u003cstrong>Forming = anleiten\u003c/strong>\u003c/p>\n\u003chr />\n\u003ch3>2) Storming\u003c/h3>\n\u003cul>\n\u003cli>unterschiedliche Meinungen treffen aufeinander\u003c/li>\n\u003cli>es entstehen Konflikte um Aufgaben, Rollen oder Macht\u003c/li>\n\u003cli>manche versuchen, sich durchzusetzen\u003c/li>\n\u003c/ul>\n\u003ch3>Rolle der Führungskraft\u003c/h3>\n\u003cul>\n\u003cli>Konflikte nicht unterdrücken, sondern moderieren\u003c/li>\n\u003cli>alle Teammitglieder einbeziehen\u003c/li>\n\u003cli>dominante Personen bremsen\u003c/li>\n\u003cli>ruhigere fördern\u003c/li>\n\u003cli>bei Bedarf externe Moderation einsetzen\u003c/li>\n\u003cli>aushalten, dass es vorübergehend unruhig wird\u003c/li>\n\u003c/ul>\n\u003cp>→ Konflikte moderieren, nicht vermeiden.\u003c/p>\n\u003cp>\u003cstrong>Storming = moderieren\u003c/strong>\u003c/p>\n\u003chr />\n\u003ch3>3) Norming\u003c/h3>\n\u003cul>\n\u003cli>Team findet gemeinsame Regeln\u003c/li>\n\u003cli>Rollen sind geklärt\u003c/li>\n\u003cli>Vertrauen wächst\u003c/li>\n\u003cli>Zusammenarbeit verbessert sich\u003c/li>\n\u003c/ul>\n\u003ch3>Rolle der Führungskraft\u003c/h3>\n\u003cul>\n\u003cli>Regeln und Rollen mitgestalten\u003c/li>\n\u003cli>Eigenverantwortung fördern\u003c/li>\n\u003cli>gemeinsame Entscheidungen ermöglichen\u003c/li>\n\u003cli>weniger steuern\u003c/li>\n\u003cli>mehr begleiten\u003c/li>\n\u003c/ul>\n\u003cp>→ Begleiten, statt ständig eingreifen.\u003c/p>\n\u003cp>\u003cstrong>Norming = begleiten\u003c/strong>\u003c/p>\n\u003chr />\n\u003ch3>4) Performing\u003c/h3>\n\u003cul>\n\u003cli>Team arbeitet selbstständig\u003c/li>\n\u003cli>Zusammenarbeit funktioniert gut\u003c/li>\n\u003cli>hohe Produktivität und Zielorientierung\u003c/li>\n\u003c/ul>\n\u003ch3>Rolle der Führungskraft\u003c/h3>\n\u003cul>\n\u003cli>loslassen\u003c/li>\n\u003cli>nur noch Rahmenbedingungen schaffen\u003c/li>\n\u003cli>wenig Kontrolle\u003c/li>\n\u003cli>Leistung anerkennen und wertschätzen\u003c/li>\n\u003cli>Vertrauen und Freiraum geben\u003c/li>\n\u003c/ul>\n\u003cp>\u003cstrong>Performing = delegieren und vertrauen\u003c/strong>\u003c/p>\n\u003chr />\n\u003ch3>5) Adjourning\u003c/h3>\n\u003cul>\n\u003cli>Projekt endet\u003c/li>\n\u003cli>Team löst sich auf\u003c/li>\n\u003cli>manche Mitglieder sind stolz\u003c/li>\n\u003cli>andere traurig\u003c/li>\n\u003c/ul>\n\u003ch3>Rolle der Führungskraft\u003c/h3>\n\u003cul>\n\u003cli>einen guten Abschluss gestalten\u003c/li>\n\u003cli>Erfolge feiern\u003c/li>\n\u003cli>Erfahrungen sichern\u003c/li>\n\u003cli>Wissen an die Organisation weitergeben\u003c/li>\n\u003cli>Mitglieder beim Übergang unterstützen\u003c/li>\n\u003c/ul>\n\u003cp>→ Das Team wertschätzend verabschieden und Erfahrungen sichern.\u003c/p>\n\u003cp>\u003cstrong>Adjourning = abschließen und reflektieren\u003c/strong>\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Schritte im Teamentwicklungsprozess\u003c/summary>\u003cdiv>\u003cp>\u003cstrong>Wie entwickelt man Teams systematisch?\u003c/strong>\u003c/p>\n\u003cp>Beschreibt nicht die natürlichen Entwicklungsphasen, sondern wie man ein Team gezielt entwickelt und verbessert.\u003c/p>\n\u003cp>Wie läuft eine Arbeit mit Coach oder Führungskraft ab?\u003c/p>\n\u003chr />\n\u003ch3>1. Kontaktphase\u003c/h3>\n\u003cp>In der anfänglichen Kontaktphase sind die Erwartungen und Ziele der Teamentwicklung, das methodische Vorgehen, der organisatorische Rahmenbedingungen usw. zu klären.\u003c/p>\n\u003cp>Im Rahmen dieser Teamentwicklung ist Führungskraft und Team zu klären und Vergleich herzustellen.\u003c/p>\n\u003chr />\n\u003ch3>2. Diagnosephase\u003c/h3>\n\u003cp>Bevor eine Teamentwicklungsmaßnahme beginnt, sollten sich die an der Team beteiligten bzw. die Beratenden ein genaueres Bild über den Ist-Zustand des Teams und die aktuellen Teamprozesse machen.\u003c/p>\n\u003cp>Eine geeignete Maßnahme auswählen.\u003c/p>\n\u003chr />\n\u003ch3>3. Planungsphase\u003c/h3>\n\u003cp>Bei der Planung einer Teamentwicklung werden aus einer konkreten Ist-Situation heraus festgelegt:\u003c/p>\n\u003cul>\n\u003cli>Ziele\u003c/li>\n\u003cli>Inhalte\u003c/li>\n\u003cli>Vorgehensweisen\u003c/li>\n\u003c/ul>\n\u003cp>Es werden Übungen und Maßnahmen ausgewählt und zusammengestellt, die zu dem jeweiligen Team und seinen aktuellen Zielen passen.\u003c/p>\n\u003chr />\n\u003ch3>4. Durchführungsphase\u003c/h3>\n\u003cp>Jede Teamentwicklung sollte mit einer Motivierungsübung und mit Selbstverpflichtungen der Teilnehmenden abschließen.\u003c/p>\n\u003cp>Diese Maßnahmen unterstützen dadurch wieder Fortschritte im Team.\u003c/p>\n\u003chr />\n\u003ch3>5. Evaluation\u003c/h3>\n\u003cp>Erst ein bis drei Monate nach der Teammaßnahme sollte eine Evaluation vorgenommen werden.\u003c/p>\n\u003cp>Der Zeitraum dieser Bewertung richtet sich dabei auch nach der zeitlichen Perspektive der Maßnahmen.\u003c/p>\n\u003cp>Die jeweilige Teamveränderung sollte überprüft werden.\u003c/p>\n\u003cul>\n\u003cli>Was wurde erreicht?\u003c/li>\n\u003cli>Welche Ziele wurden erreicht?\u003c/li>\n\u003cli>Was hat funktioniert?\u003c/li>\n\u003cli>Was muss verändert werden?\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Ansätze der Teamentwicklung\u003c/summary>\u003cdiv>\u003ch3>Outdoor-Training\u003c/h3>\n\u003cp>Gruppenaktivitäten in ungewohnter Umgebung, fördert Kohäsion und Vertrauen.\u003c/p>\n\u003cp>Transfer in den Arbeitsalltag ist jedoch umstritten.\u003c/p>\n\u003ch3>Survey-Feedback\u003c/h3>\n\u003cp>Diagnosedaten werden ans Team zurückgespielt und gemeinsam diskutiert.\u003c/p>\n\u003cp>Schafft Bewusstsein für Stärken und Schwächen und initiiert erste Veränderungen.\u003c/p>\n\u003ch3>Teamreflexivität\u003c/h3>\n\u003cp>Das Team reflektiert regelmäßig gemeinsame Ziele, Strategien und Prozesse und leitet daraus Anpassungen ab.\u003c/p>\n\u003cp>Transformationale Führung fördert diesen Prozess.\u003c/p>\n\u003ch3>Teamcoaching\u003c/h3>\n\u003cp>Nachhaltige Begleitung des Teams durch externe Unterstützung.\u003c/p>\n\u003cp>Fokus auf systematische Selbstreflexion und Verhaltensänderung im Arbeitsalltag.\u003c/p>\n\u003c/div>\u003c/details>","12":"\u003cdetails class=\"note-section\">\u003csummary>Konflikttypen\u003c/summary>\u003cdiv>\u003ch3>Sachkonflikte\u003c/h3>\n\u003cp>Entstehen aufgrund von \u003cstrong>unvereinbaren Verständnissen, Interpretationen von Fakten, unterschiedlichen Theorien und Wissen über die Welt\u003c/strong>.\u003c/p>\n\u003cp>Es geht um den \u003cstrong>Inhalt oder die Sache\u003c/strong>.\u003c/p>\n\u003cp>Worum genau geht es?\u003c/p>\n\u003chr />\n\u003ch3>Beziehungskonflikte\u003c/h3>\n\u003cp>Entstehen aufgrund von \u003cstrong>Selbstwertbedrohungen durch persönliche Verletzungen, Demütigung und Abwertung\u003c/strong>.\u003c/p>\n\u003cp>Wer hat Problem mit wem?\u003c/p>\n\u003cp>Betrifft Art und Weise der Zusammenarbeit.\u003c/p>\n\u003chr />\n\u003ch3>Prozesskonflikte\u003c/h3>\n\u003cp>Entstehen im Rahmen der organisatorischen Aspekte der Zusammenarbeit hinsichtlich:\u003c/p>\n\u003cul>\n\u003cli>Arbeitsteilung\u003c/li>\n\u003cli>Verantwortlichkeiten\u003c/li>\n\u003cli>Ressourcenverteilung\u003c/li>\n\u003c/ul>\n\u003cp>Es geht um:\u003c/p>\n\u003cul>\n\u003cli>Zuständigkeiten\u003c/li>\n\u003cli>Abläufe\u003c/li>\n\u003cli>Zeitteilungen\u003c/li>\n\u003cli>Wie wird zusammengearbeitet?\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Brauchen wir Konflikte?\u003c/summary>\u003cdiv>\u003cp>Sachkonflikte können Leistung fördern.\u003c/p>\n\u003ch3>Entflechtung von Sach- und Beziehungskonflikten\u003c/h3>\n\u003ch3>Begünstigende Faktoren\u003c/h3>\n\u003cul>\n\u003cli>gemeinsame Ziele und geteilte Intentionen\u003c/li>\n\u003cli>psychologische Sicherheit\u003c/li>\n\u003cli>Diskussions-Normen\u003c/li>\n\u003cli>Historie positiver Konfliktbewältigung\u003c/li>\n\u003cli>Attribution auf Kontext vs. Person bzw. Interaktion\u003c/li>\n\u003cli>Konfliktmanagement\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Eskalationsstufen nach Glasl\u003c/summary>\u003cdiv>\u003ch3>Grundprinzip\u003c/h3>\n\u003cp>Je weiter ein Konflikt fortgeschritten ist, desto weniger können die Konfliktparteien das Problem selbst lösen und desto mehr externe Unterstützung ist erforderlich.\u003c/p>\n\u003chr />\n\u003ch3>Phase 1: Win-Win\u003c/h3>\n\u003cp>\u003cstrong>Stufen 1-3\u003c/strong>\u003c/p>\n\u003cp>Eigenverantwortliche Lösung noch möglich.\u003c/p>\n\u003ch4>1. Verhärtung\u003c/h4>\n\u003cp>Erste Spannungen und Meinungsverschiedenheiten.\u003c/p>\n\u003ch4>2. Debatte / Polarisation\u003c/h4>\n\u003cp>Standpunkte verhärten sich.\u003c/p>\n\u003cp>Jeder möchte Recht behalten.\u003c/p>\n\u003ch4>3. Taten statt Worte\u003c/h4>\n\u003cp>Vertrauen sinkt.\u003c/p>\n\u003cp>Man redet weniger miteinander und handelt stattdessen.\u003c/p>\n\u003chr />\n\u003ch3>Phase 2: Win-Lose\u003c/h3>\n\u003cp>\u003cstrong>Stufen 4-6\u003c/strong>\u003c/p>\n\u003cp>Moderation oder Mediation erforderlich.\u003c/p>\n\u003ch4>4. Koalitionen\u003c/h4>\n\u003cp>Verbündete werden gesucht.\u003c/p>\n\u003cp>Gerüchte und Lagerbildungen entstehen.\u003c/p>\n\u003ch4>5. Gesichtsverlust\u003c/h4>\n\u003cp>Gegenseite wird öffentlich bloßgestellt oder persönlich angegriffen.\u003c/p>\n\u003ch4>6. Drohstrategien\u003c/h4>\n\u003cp>Drohungen oder anderer Druck.\u003c/p>\n\u003chr />\n\u003ch3>Phase 3: Lose-Lose\u003c/h3>\n\u003cp>\u003cstrong>Stufen 7-9\u003c/strong>\u003c/p>\n\u003cp>Machteingriff oder Trennung unvermeidlich.\u003c/p>\n\u003ch4>7. Begrenzte Vernichtungsschläge\u003c/h4>\n\u003ch4>8. Zersplitterung\u003c/h4>\n\u003ch4>9. Gemeinsam in den Abgrund / gemeinsame Vernichtung\u003c/h4>\n\u003cp>Beide Seiten nehmen Schaden in Kauf.\u003c/p>\n\u003cp>Eine Seite will gewinnen, die andere verlieren.\u003c/p>\n\u003chr />\n\u003ch3>Interventionen und Implikationen für Führungskräfte\u003c/h3>\n\u003cp>Grundregel:\u003c/p>\n\u003cp>Die Eskalationsstufe bestimmt die Interventionsform.\u003c/p>\n\u003cul>\n\u003cli>\n\u003cp>\u003cstrong>Stufen 1-3:\u003c/strong> Moderation durch die Führungskraft selbst möglich\u003c/p>\n\u003cul>\n\u003cli>offenes Gespräch suchen\u003c/li>\n\u003cli>Interessen klären\u003c/li>\n\u003cli>gemeinsame Lösung erarbeiten\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003cli>\n\u003cp>\u003cstrong>Stufen 4-6:\u003c/strong> Führungskraft ist häufig selbst beteiligt oder befangen\u003c/p>\n\u003cul>\n\u003cli>neutrale Mediation von außen erforderlich\u003c/li>\n\u003cli>Prozessbegleitung durch HR oder externe Fachkraft\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003cli>\n\u003cp>\u003cstrong>Stufen 7-9:\u003c/strong> Eigenverantwortliche Lösung nicht mehr möglich\u003c/p>\n\u003cul>\n\u003cli>Machtentscheid durch die Hierarchie\u003c/li>\n\u003cli>rechtliche Schritte\u003c/li>\n\u003cli>Trennung der Parteien notwendig\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003c/ul>\n\u003cp>\u003cstrong>Kernbotschaft für Führungskräfte: Konflikte früh erkennen und intervenieren\u003c/strong>\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Moderator und Mediator\u003c/summary>\u003cdiv>\u003ch3>Moderator\u003c/h3>\n\u003cp>Leitet ein Gespräch oder eine Besprechung neutral.\u003c/p>\n\u003cp>Gibt Struktur.\u003c/p>\n\u003ch3>Mediator\u003c/h3>\n\u003cp>Vermittelt zwischen Konfliktparteien und unterstützt sie dabei, selbst eine gemeinsame Lösung zu finden.\u003c/p>\n\u003cp>Macht keine eigene Lösung.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Konfliktmanagement auf Teamebene\u003c/summary>\u003cdiv>\u003ch3>Kooperatives Konfliktmanagement\u003c/h3>\n\u003cp>\u003cstrong>Integrieren\u003c/strong>\u003c/p>\n\u003cp>Lösung von Konflikten durch Ideenaustausch, Perspektivenübernahme, Ideenintegration, um gegenseitigen Nutzen und bestmögliche Lösung zu finden.\u003c/p>\n\u003cp>→ Beide gewinnen.\u003c/p>\n\u003cp>Es wird offen kommuniziert und nach einem Kompromiss oder einer gemeinsamen Lösung gesucht.\u003c/p>\n\u003chr />\n\u003ch3>Kompetitives Konfliktmanagement\u003c/h3>\n\u003cp>\u003cstrong>Dominieren\u003c/strong>\u003c/p>\n\u003cp>Konflikte werden als Gewinner-Verlierer-Kampf betrachtet.\u003c/p>\n\u003cul>\n\u003cli>ernsthafte Diskussionen\u003c/li>\n\u003cli>Versuch\u003c/li>\n\u003cli>Zwang aufzuerlegen\u003c/li>\n\u003c/ul>\n\u003cp>Eine Seite setzt sich durch.\u003c/p>\n\u003cp>Die andere verliert.\u003c/p>\n\u003chr />\n\u003ch3>Vermeidendes Konfliktmanagement\u003c/h3>\n\u003cp>\u003cstrong>Aus dem Weg gehen\u003c/strong>\u003c/p>\n\u003cp>Konflikten wird aus dem Weg gegangen.\u003c/p>\n\u003cp>Es wird geglättet und harmonisiert.\u003c/p>\n\u003cp>Diskussionen werden nicht offen oder gar nicht geführt.\u003c/p>\n\u003cp>Kann sinnvoll sein, wenn Konflikt unwichtig ist oder zuerst Zeit genommen werden soll.\u003c/p>\n\u003cp>Bsp.:\u003c/p>\n\u003cp>Zwei Kollegen sprechen ihren Streit nicht an und gehen sich stattdessen aus dem Weg.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Konfliktmanagement, förderlich oder hinderlich?\u003c/summary>\u003cdiv>\u003ch3>Kooperatives Konfliktmanagement\u003c/h3>\n\u003cp>Zusammenhang mit:\u003c/p>\n\u003cul>\n\u003cli>Performance\u003c/li>\n\u003cli>Zufriedenheit\u003c/li>\n\u003c/ul>\n\u003ch3>Kompetitives Konfliktmanagement\u003c/h3>\n\u003cp>Zusammenhang mit:\u003c/p>\n\u003cul>\n\u003cli>Performance\u003c/li>\n\u003cli>Zufriedenheit\u003c/li>\n\u003c/ul>\n\u003ch3>Vermeidendes Konfliktmanagement\u003c/h3>\n\u003cp>Zusammenhang mit:\u003c/p>\n\u003cul>\n\u003cli>Performance\u003c/li>\n\u003cli>Zufriedenheit\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Konfliktmanagement, individuelle Ebene\u003c/summary>\u003cdiv>\u003cp>Achsen:\u003c/p>\n\u003cul>\n\u003cli>Fremddurchsetzung / Interesse an der anderen Partei\u003c/li>\n\u003cli>Selbstdurchsetzung / Berücksichtigung der eigenen Interessen\u003c/li>\n\u003c/ul>\n\u003ch3>Nachgeben\u003c/h3>\n\u003ch3>Integration\u003c/h3>\n\u003ch3>Kompromiss\u003c/h3>\n\u003ch3>Vermeiden\u003c/h3>\n\u003ch3>Durchsetzen\u003c/h3>\n\u003ch3>Integrative Diskussion\u003c/h3>\n\u003cp>Win-Win\u003c/p>\n\u003ch3>Distributiv\u003c/h3>\n\u003cp>Verteilung begrenzter Ressourcen\u003c/p>\n\u003cp>→ verteilen\u003c/p>\n\u003ch3>Integrativ\u003c/h3>\n\u003cp>Integrieren\u003c/p>\n\u003cp>\u003cstrong>Wie können beide gewinnen?\u003c/strong>\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Konflikte ansprechen\u003c/summary>\u003cdiv>\u003ch3>SAG ES!\u003c/h3>\n\u003ch3>S: Sichtweise schildern\u003c/h3>\n\u003cul>\n\u003cli>neutrale Situationsschilderung\u003c/li>\n\u003cli>keine Interpretation\u003c/li>\n\u003c/ul>\n\u003cp>Beispiel:\u003c/p>\n\u003cp>„Mir ist aufgefallen, dass du im Teammeeting sehr ruhig gewesen bist.“\u003c/p>\n\u003ch3>A: Auswirkungen beschreiben\u003c/h3>\n\u003cp>Beispiel:\u003c/p>\n\u003cp>„Deine Inputs haben gefehlt. Das hat mich irritiert.“\u003c/p>\n\u003ch3>G: Gefühle benennen\u003c/h3>\n\u003cul>\n\u003cli>persönliche Gefühle nennen\u003c/li>\n\u003c/ul>\n\u003cp>Beispiel:\u003c/p>\n\u003cp>„Das hat mich verunsichert / enttäuscht.“\u003c/p>\n\u003ch3>E: Erfragen der Sicht des anderen\u003c/h3>\n\u003cul>\n\u003cli>Einbezug des Gegenübers\u003c/li>\n\u003c/ul>\n\u003cp>Beispiel:\u003c/p>\n\u003cp>„Wie siehst du das?“\u003c/p>\n\u003ch3>S: Schlussfolgerungen ziehen\u003c/h3>\n\u003cul>\n\u003cli>Wie wollen wir es in Zukunft handhaben?\u003c/li>\n\u003c/ul>\n\u003cp>Beispiel:\u003c/p>\n\u003cp>„Könntest du beim nächsten Mal ...“\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Konstruktive Kontroverse\u003c/summary>\u003cdiv>\u003cp>Johnson &amp; Johnson (1979, 2015):\u003c/p>\n\u003cp>Strukturierte Methode, bei der Gruppen \u003cstrong>gegenteilige Positionen gezielt erarbeiten und austauschen\u003c/strong>.\u003c/p>\n\u003cp>Ziel:\u003c/p>\n\u003cp>Durch produktiven Widerspruch zu besseren Entscheidungen gelangen.\u003c/p>\n\u003chr />\n\u003ch3>Debatte\u003c/h3>\n\u003cp>\u003cstrong>Ziel: Sieg\u003c/strong>\u003c/p>\n\u003cp>Eine Seite gewinnt, die andere verliert.\u003c/p>\n\u003cp>Kritisches Denken im Dienst der eigenen Position.\u003c/p>\n\u003chr />\n\u003ch3>Streben nach Übereinstimmung\u003c/h3>\n\u003cp>\u003cstrong>Ziel: schnelle Einigung\u003c/strong>\u003c/p>\n\u003cp>Kritische Stimmen werden vermieden.\u003c/p>\n\u003cp>Gefahr:\u003c/p>\n\u003cul>\n\u003cli>Gruppendenken\u003c/li>\n\u003cli>Fehlentscheidungen\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003ch3>Konstruktive Kontroverse\u003c/h3>\n\u003cp>\u003cstrong>Ziel: beste Lösung\u003c/strong>\u003c/p>\n\u003cp>Widerspruch wird aktiv genutzt.\u003c/p>\n\u003cp>Dissens als Erkenntnisquelle.\u003c/p>\n\u003chr />\n\u003ch3>Voraussetzungen\u003c/h3>\n\u003cul>\n\u003cli>kooperative Grundhaltung\u003c/li>\n\u003cli>psychologische Sicherheit\u003c/li>\n\u003cli>Trennung von Person und Position\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Konstruktive Kontroverse: 4 Phasen\u003c/summary>\u003cdiv>\u003ch3>1. Positionserarbeitung\u003c/h3>\n\u003cp>Zwei Untergruppen erarbeiten je eine Position mit Argumenten.\u003c/p>\n\u003cp>Ziel:\u003c/p>\n\u003cp>Ein \u003cstrong>überzeugender, gut begründeter Standpunkt\u003c/strong>.\u003c/p>\n\u003chr />\n\u003ch3>2. Präsentation &amp; Verteidigung\u003c/h3>\n\u003cp>Jede Gruppe präsentiert ihre Position.\u003c/p>\n\u003cp>Die andere hört aktiv zu und stellt Verständnisfragen, greift aber nicht an.\u003c/p>\n\u003chr />\n\u003ch3>3. Perspektivwechsel\u003c/h3>\n\u003cp>Die Gruppen tauschen die Positionen und vertreten nun die gegnerische Seite.\u003c/p>\n\u003cp>Erzwingt echtes Verstehen des anderen Standpunkts.\u003c/p>\n\u003cp>\u003cstrong>Rollentausch\u003c/strong>\u003c/p>\n\u003cp>Ziel:\u003c/p>\n\u003cp>Den anderen Standpunkt wirklich verstehen.\u003c/p>\n\u003cp>Ursprüngliche Positionen werden aufgegeben.\u003c/p>\n\u003chr />\n\u003ch3>4. Synthese\u003c/h3>\n\u003cp>Positionen werden abgelegt.\u003c/p>\n\u003cp>Gemeinsam wird die \u003cstrong>bestmögliche Lösung erarbeitet\u003c/strong>, gestützt auf alle Argumente beider Seiten.\u003c/p>\n\u003c/div>\u003c/details>","13":"\u003cdetails class=\"note-section\">\u003csummary>Hall&#x27;s Konzept (1983)\u003c/summary>\u003cdiv>\u003cul>\n\u003cli>\n\u003cp>Kultur ist oft \u003cstrong>unbewusst\u003c/strong>\u003c/p>\n\u003cul>\n\u003cli>unsichtbare Kontrollmechanismen operieren in unserem Gedanken\u003c/li>\n\u003c/ul>\n\u003c/li>\n\u003cli>\n\u003cp>Uns wird dieser \u003cstrong>Kontrollmechanismus erst bewusst, wenn wir ihn wirklich herausfordern\u003c/strong>, z.B. durch die Auseinandersetzung mit fremden Kulturen\u003c/p>\n\u003c/li>\n\u003cli>\n\u003cp>Wir verhalten uns automatisch in solcher Art und Weise, wie es für die jeweilige Kultur angemessen ist\u003c/p>\n\u003c/li>\n\u003c/ul>\n\u003cp>Kultur wirkt meist unbewusst und steuert unser Denken und Verhalten, ohne dass wir es merken.\u003c/p>\n\u003cp>Menschen verhalten sich automatisch nach Normen ihrer eigenen Kultur.\u003c/p>\n\u003cblockquote>\n\u003cp>„Culture has always dictated where to draw the line separating one thing from another. These lines are arbitrary, but once learned and internalised they are treated as real.“\u003c/p>\n\u003c/blockquote>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Hofstedes Kulturzwiebelmodell\u003c/summary>\u003cdiv>\u003ch3>Symbole\u003c/h3>\n\u003cp>Wörter, Farben, Artefakte mit einer besonderen Bedeutung.\u003c/p>\n\u003ch3>Helden\u003c/h3>\n\u003cp>Bewunderte Personen, die als Vorbilder dienen.\u003c/p>\n\u003ch3>Rituale\u003c/h3>\n\u003cp>Die Art und Weise, wie man jemand grüßt und Respekt zeigt.\u003c/p>\n\u003ch3>Werte\u003c/h3>\n\u003cp>Tendenz, bestimmte Situationen anderen Situationen vorzuziehen.\u003c/p>\n\u003ch3>Anwendung\u003c/h3>\n\u003cp>Sichtbare Anwendung mit unsichtbarer kultureller Bedeutung.\u003c/p>\n\u003cp>Breitet sich auf die anderen drei Schichten aus.\u003c/p>\n\u003cp>Von außen nach innen:\u003c/p>\n\u003cul>\n\u003cli>Symbole\u003c/li>\n\u003cli>Helden\u003c/li>\n\u003cli>Rituale\u003c/li>\n\u003cli>Werte\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Eisberg-Konzept\u003c/summary>\u003cdiv>\u003ch3>Sinnlich, wahrnehmbar\u003c/h3>\n\u003cul>\n\u003cli>Literatur\u003c/li>\n\u003cli>Theater\u003c/li>\n\u003cli>Musik\u003c/li>\n\u003cli>Spiele\u003c/li>\n\u003cli>Festivals\u003c/li>\n\u003cli>Essen\u003c/li>\n\u003cli>Kleidung\u003c/li>\n\u003cli>Sprache\u003c/li>\n\u003cli>Begrüßungsrituale\u003c/li>\n\u003cli>Kommunikationsformen usw.\u003c/li>\n\u003c/ul>\n\u003ch3>Unbewusst, verborgen\u003c/h3>\n\u003cul>\n\u003cli>Werte und Normen\u003c/li>\n\u003cli>Kommunikationsstil\u003c/li>\n\u003cli>Einstellungen\u003c/li>\n\u003cli>Auffassungen\u003c/li>\n\u003cli>Gefühle\u003c/li>\n\u003cli>Verpflichtungen\u003c/li>\n\u003cli>Beziehungen\u003c/li>\n\u003cli>Erwartungen\u003c/li>\n\u003cli>Bedürfnisse\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Kulturdimensionen nach Hofstede\u003c/summary>\u003cdiv>\u003ch3>Individualismus\u003c/h3>\n\u003cp>\u003cstrong>Kollektivismus ↔ Individualismus\u003c/strong>\u003c/p>\n\u003cp>Kollektivismus:\u003c/p>\n\u003cul>\n\u003cli>Gemeinschaft und Gruppeninteressen sind wichtiger\u003c/li>\n\u003cli>„Wir“\u003c/li>\n\u003c/ul>\n\u003cp>Individualismus:\u003c/p>\n\u003cul>\n\u003cli>Eigenständigkeit und persönliche Ziele stehen im Vordergrund\u003c/li>\n\u003cli>„Ich“\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003ch3>Machtdistanz\u003c/h3>\n\u003cp>\u003cstrong>Große Machtdistanz ↔ Kleine Machtdistanz\u003c/strong>\u003c/p>\n\u003cp>Große Machtdistanz:\u003c/p>\n\u003cul>\n\u003cli>Ungleichheiten und Hierarchien werden akzeptiert\u003c/li>\n\u003cli>Hierarchie\u003c/li>\n\u003c/ul>\n\u003cp>Kleine Machtdistanz:\u003c/p>\n\u003cul>\n\u003cli>Gleichheit und flache Hierarchien werden bevorzugt\u003c/li>\n\u003cli>Gleichheit\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003ch3>Maskulinität\u003c/h3>\n\u003cp>\u003cstrong>Feminität ↔ Maskulinität\u003c/strong>\u003c/p>\n\u003cp>Feminität:\u003c/p>\n\u003cul>\n\u003cli>Kooperation\u003c/li>\n\u003cli>Fürsorge\u003c/li>\n\u003cli>Lebensqualität stehen im Vordergrund\u003c/li>\n\u003cli>Fürsorge\u003c/li>\n\u003c/ul>\n\u003cp>Maskulinität:\u003c/p>\n\u003cul>\n\u003cli>Leistung\u003c/li>\n\u003cli>Wettbewerb\u003c/li>\n\u003cli>Erfolg sind wichtig\u003c/li>\n\u003cli>Leistung\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003ch3>Unsicherheitsvermeidung\u003c/h3>\n\u003cp>\u003cstrong>Starke Unsicherheitsvermeidung ↔ Schwache Unsicherheitsvermeidung\u003c/strong>\u003c/p>\n\u003cp>Starke Unsicherheitsvermeidung:\u003c/p>\n\u003cul>\n\u003cli>Wunsch nach klaren Regeln und Sicherheit\u003c/li>\n\u003cli>Regeln\u003c/li>\n\u003c/ul>\n\u003cp>Schwache Unsicherheitsvermeidung:\u003c/p>\n\u003cul>\n\u003cli>Offenheit für Veränderungen und Unsicherheit\u003c/li>\n\u003cli>Flexibilität\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003ch3>Zeitliche Orientierung\u003c/h3>\n\u003cp>\u003cstrong>Langzeitorientierung ↔ Kurzzeitorientierung\u003c/strong>\u003c/p>\n\u003cp>Langzeitorientierung:\u003c/p>\n\u003cul>\n\u003cli>Zukunft\u003c/li>\n\u003cli>Ausdauer\u003c/li>\n\u003cli>Sparsamkeit\u003c/li>\n\u003cli>Zukunft\u003c/li>\n\u003c/ul>\n\u003cp>Kurzzeitorientierung:\u003c/p>\n\u003cul>\n\u003cli>Traditionen\u003c/li>\n\u003cli>schnelle Ergebnisse\u003c/li>\n\u003cli>Gegenwart\u003c/li>\n\u003cli>Gegenwart / Tradition\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003ch3>Nachgiebigkeit und Beherrschung\u003c/h3>\n\u003cp>\u003cstrong>Nachgiebigkeitskultur ↔ Beherrschung\u003c/strong>\u003c/p>\n\u003cp>Nachgiebigkeitskultur:\u003c/p>\n\u003cul>\n\u003cli>Bedürfnisse und Lebensfreude werden eher ausgelebt\u003c/li>\n\u003cli>Genießen\u003c/li>\n\u003c/ul>\n\u003cp>Beherrschung:\u003c/p>\n\u003cul>\n\u003cli>Bedürfnisse werden kontrolliert und gesellschaftlichen Normen untergeordnet\u003c/li>\n\u003cli>Selbstkontrolle\u003c/li>\n\u003c/ul>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Kulturdimensionen GLOBE\u003c/summary>\u003cdiv>\u003ch3>Unsicherheitsvermeidung\u003c/h3>\n\u003cp>Ausmaß des Verlassens auf etablierte soziale Normen.\u003c/p>\n\u003cul>\n\u003cli>Suche nach formalisierten Strukturen\u003c/li>\n\u003cli>Toleranz von Unsicherheit\u003c/li>\n\u003c/ul>\n\u003cp>→ Regeln\u003c/p>\n\u003chr />\n\u003ch3>Machtdistanz\u003c/h3>\n\u003cp>Ausmaß, in dem Mitglieder einer Gesellschaft erwarten / akzeptieren, dass Macht ungleich verteilt ist.\u003c/p>\n\u003cp>→ Hierarchie\u003c/p>\n\u003chr />\n\u003ch3>Institutional Collectivism\u003c/h3>\n\u003cp>Ausmaß, inwieweit gemeinsames Handeln oder gemeinsame Teilung von Ressourcen von der Gesellschaft gefördert und belohnt wird.\u003c/p>\n\u003cp>→ Teamarbeit\u003c/p>\n\u003chr />\n\u003ch3>Intra-Gruppen Kollektivismus\u003c/h3>\n\u003cp>Ausmaß, in dem Individuen Stolz und Loyalität gegenüber ihrer Familie / ihrem Unternehmen ausdrücken.\u003c/p>\n\u003cp>→ Loyalität\u003c/p>\n\u003chr />\n\u003ch3>Geschlechtergleichheit\u003c/h3>\n\u003cp>Ausmaß, in dem eine Gesellschaft Unterschiede in den Geschlechtern minimiert.\u003c/p>\n\u003cp>→ Gleichberechtigung\u003c/p>\n\u003cp>Unterschiede zwischen Männern und Frauen verringert werden.\u003c/p>\n\u003chr />\n\u003ch3>Bestimmtheit\u003c/h3>\n\u003cp>Ausmaß, in dem Individuen selbstbewusst, aggressiv oder konfrontativ auftreten.\u003c/p>\n\u003cp>→ Durchsetzen\u003c/p>\n\u003cp>Selbstbewusstes, direktes und durchsetzungsstarkes Auftreten.\u003c/p>\n\u003chr />\n\u003ch3>Zukunftsorientierung\u003c/h3>\n\u003cp>Ausmaß, in dem Individuen zukunftsorientierte Verhalten zeigen.\u003c/p>\n\u003cul>\n\u003cli>Planung\u003c/li>\n\u003cli>Investitionen\u003c/li>\n\u003c/ul>\n\u003cp>→ Planen\u003c/p>\n\u003cp>Fokus auf langfristige Planung, Investitionen und zukünftigen Erfolg.\u003c/p>\n\u003chr />\n\u003ch3>Leistungsorientierung\u003c/h3>\n\u003cp>Ausmaß, in dem Individuen für Leistungssteigerung oder Innovation belohnt werden.\u003c/p>\n\u003cp>→ Leistung\u003c/p>\n\u003cp>Leistung, Erfolg und Innovation werden anerkannt und belohnt.\u003c/p>\n\u003chr />\n\u003ch3>Soziale Orientierung\u003c/h3>\n\u003cp>Ausmaß, in dem faires und altruistisches Verhalten belohnt wird.\u003c/p>\n\u003cp>→ Hilfsbereitschaft\u003c/p>\n\u003cp>Freundlichkeit, Fairness und hilfsbereites Verhalten werden gefördert.\u003c/p>\n\u003chr />\n\u003c/div>\u003c/details>\n\u003cdetails class=\"note-section\">\u003csummary>Führungsdimensionen GLOBE\u003c/summary>\u003cdiv>\u003ch3>Charismatic / value-based\u003c/h3>\n\u003cp>Fähigkeit, andere zu motivieren / inspirieren.\u003c/p>\n\u003cp>Führungskraft motiviert und inspiriert andere durch Visionen und Werte.\u003c/p>\n\u003chr />\n\u003ch3>Team oriented\u003c/h3>\n\u003cp>Effektive Teambildung, Schaffung gemeinsamer Ziele.\u003c/p>\n\u003cp>Fördert Teamarbeit, Zusammenarbeit und gemeinsame Ziele.\u003c/p>\n\u003chr />\n\u003ch3>Participative\u003c/h3>\n\u003cp>Beteiligung anderer an Entscheidungen usw.\u003c/p>\n\u003cp>Bezieht Mitarbeitende aktiv in Entscheidungen ein.\u003c/p>\n\u003chr />\n\u003ch3>Human oriented\u003c/h3>\n\u003cp>Unterstützend, rücksichtsvoll, großzügig.\u003c/p>\n\u003cp>Handelt unterstützend, fürsorglich, rücksichtsvoll und großzügig.\u003c/p>\n\u003chr />\n\u003ch3>Autonomous\u003c/h3>\n\u003cp>Individualistisches, unabhängiges Verhalten.\u003c/p>\n\u003cp>Führt unabhängig und eigenständig.\u003c/p>\n\u003cp>Legt Wert auf Individualität.\u003c/p>\n\u003chr />\n\u003ch3>Self-protective\u003c/h3>\n\u003cp>Sicherheit des Individuums steht im Mittelpunkt.\u003c/p>\n\u003cp>Schützt sich selbst sowie den eigenen Status und achtet auf Sicherheit und Ansehen.\u003c/p>\n\u003c/div>\u003c/details>"};
+const STORAGE_KEY = 'arbeitsorgi-progress-v2';
+const state = {
+  vl: 1,
+  view: 'lernen',
+  topicIndex: 0,
+  mastered: {},
+  cardIndex: 0,
+  cardRevealed: false,
+  cardOrder: [],
+  quizIndex: 0,
+  quizOrder: [],
+  quizAnswered: false,
+  quizChoice: null,
+  quizScore: 0,
+  quizWrong: []
+};
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+function topicsFor(vl) { return TOPICS.filter(topic => topic.vl === vl); }
+function quizFor(vl) { return QUIZ.filter(question => question.vl === vl); }
+function countDone(vl) { return topicsFor(vl).filter(topic => !!state.mastered[topic.id]).length; }
+function shuffle(items) {
+  const result = items.slice();
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+function saveProgress() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.mastered)); } catch (_) {}
+}
+function loadProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    if (saved && typeof saved === 'object' && !Array.isArray(saved)) state.mastered = saved;
+  } catch (_) {}
+}
+function resetCard() {
+  state.cardOrder = topicsFor(state.vl);
+  state.cardIndex = 0;
+  state.cardRevealed = false;
+}
+function resetQuiz() {
+  state.quizOrder = shuffle(quizFor(state.vl));
+  state.quizIndex = 0;
+  state.quizAnswered = false;
+  state.quizChoice = null;
+  state.quizScore = 0;
+  state.quizWrong = [];
+}
+function setLecture(vl) {
+  if (!VL_LABELS[vl]) return;
+  state.vl = vl;
+  state.topicIndex = 0;
+  resetCard();
+  resetQuiz();
+  render();
+  window.scrollTo(0,0);
+}
+
+function renderNav() {
+  return `<aside class="lecture-nav" aria-label="Vorlesungen">
+    <h2 class="nav-heading">Vorlesungen</h2>
+    <div class="lecture-list">${Object.keys(VL_LABELS).map(key => {
+      const vl = Number(key);
+      return `<button type="button" class="lecture-button" data-action="lecture" data-vl="${vl}" aria-current="${vl === state.vl}">
+        <span class="lecture-button__main"><span class="lecture-button__number">VL ${String(vl).padStart(2,'0')}</span><span class="lecture-button__title">${escapeHtml(VL_LABELS[vl])}</span></span>
+        <span class="lecture-button__count">${countDone(vl)}/${topicsFor(vl).length}</span>
+      </button>`;
+    }).join('')}</div>
+    <button type="button" class="reset" data-action="reset">Lernstand zurücksetzen</button>
+  </aside>`;
+}
+function renderMobileLecture() {
+  return `<div class="mobile-lecture"><label for="lecture-select">Vorlesung wählen</label>
+    <select class="selector" id="lecture-select">${Object.keys(VL_LABELS).map(key => {
+      const vl = Number(key);
+      return `<option value="${vl}" ${vl === state.vl ? 'selected':''}>VL ${vl}: ${escapeHtml(VL_LABELS[vl])}</option>`;
+    }).join('')}</select></div>`;
+}
+function renderLearning() {
+  const topics = topicsFor(state.vl);
+  const index = Math.min(state.topicIndex, topics.length - 1);
+  const topic = topics[index];
+  if (!topic) return `<div class="empty">Für diese Vorlesung sind keine Themen vorhanden.</div>`;
+  const done = !!state.mastered[topic.id];
+  return `<div class="learning-grid">
+    <div class="topic-panel"><div class="topic-heading"><span>Themen</span><span>${topics.length}</span></div>
+      <div class="topic-list">${topics.map((item,i) => `<button type="button" class="topic-button" data-action="topic" data-index="${i}" aria-current="${i === index}">
+        <span class="topic-num">${String(i+1).padStart(2,'0')}</span><span class="topic-name">${escapeHtml(item.title)}</span>${state.mastered[item.id] ? '<span class="topic-done" aria-label="Gelernt">✓</span>':''}</button>`).join('')}</div>
+    </div>
+    <div>
+      <div class="mobile-topic"><label for="topic-select">Thema wählen</label><select class="selector" id="topic-select">${topics.map((item,i) => `<option value="${i}" ${i === index ? 'selected':''}>${i+1}. ${escapeHtml(item.title)}</option>`).join('')}</select></div>
+      <article class="study-card" aria-labelledby="study-title">
+        <div class="topic-index">Thema ${index+1} von ${topics.length}</div>
+        <h3 class="study-title" id="study-title">${escapeHtml(topic.title)}</h3>
+        <p class="study-lead">${topic.def}</p>
+        <div class="key-points"><h3>Das ist wichtig</h3><ul>${topic.points.map(point => `<li>${point}</li>`).join('')}</ul></div>
+        ${topic.tag ? `<p class="source-tag">Quelle in den Notizen: ${escapeHtml(topic.tag)}</p>`:''}
+        <div class="card-footer">
+          <div class="card-nav"><button type="button" class="quiet-button" data-action="prev-topic" ${index === 0 ? 'disabled':''}>← Zurück</button>
+          <button type="button" class="quiet-button" data-action="next-topic" ${index === topics.length - 1 ? 'disabled':''}>Weiter →</button></div>
+          <button type="button" class="${done ? 'success-button':'primary-button'}" data-action="toggle-done" aria-pressed="${done}">${done ? '✓ Als gelernt markiert':'Als gelernt markieren'}</button>
+        </div>
+      </article>
+    </div>
+  </div>
+  <details class="notes-panel"><summary>Alle Notizen zu VL ${state.vl} lesen</summary>
+    <p class="notes-help">Die vollständigen Notizen sind hier nach der Vorlesung geordnet. Die kurze Erklärung oben hilft beim Einstieg.</p>
+    <div class="notes-content">${NOTE_HTML[state.vl] || ''}</div></details>`;
+}
+function renderCards() {
+  const order = state.cardOrder;
+  const i = state.cardIndex;
+  if (i >= order.length) return `<div class="single-layout"><div class="single-card"><span class="eyebrow">Karteikarten</span><h3 class="study-title">Alle Karten durchgearbeitet</h3><p class="study-lead">Du kannst die Karten erneut durchgehen oder eine andere Vorlesung wählen.</p><button type="button" class="primary-button" data-action="restart-cards">Erneut lernen</button></div></div>`;
+  const topic = order[i];
+  return `<div class="single-layout"><div class="single-meta"><span>Karte ${i+1} von ${order.length}</span><span>VL ${state.vl}</span></div>
+    <div class="single-card"><span class="eyebrow">Erkläre dir selbst</span><h3 class="flash-prompt">${escapeHtml(topic.title)}</h3>
+      ${state.cardRevealed ? `<div class="flash-answer"><p>${topic.def}</p><ul>${topic.points.map(point => `<li>${point}</li>`).join('')}</ul></div>` : `<p class="flash-hint">Überlege kurz, was du noch weißt. Dann decke die Antwort auf.</p>`}
+    </div><div class="action-row">${state.cardRevealed ? `<button type="button" class="quiet-button" data-action="card-again">Noch üben</button><button type="button" class="primary-button" data-action="card-know">Gewusst</button>` : `<button type="button" class="primary-button" data-action="reveal-card">Antwort zeigen</button>`}
+      <button type="button" class="quiet-button" data-action="next-card">Überspringen →</button></div>
+    <div class="action-row"><button type="button" class="quiet-button" data-action="shuffle-cards">Karten mischen</button></div>
+  </div>`;
+}
+function renderQuiz() {
+  const order = state.quizOrder;
+  if (!order.length) return `<div class="empty">Für diese Vorlesung sind keine Quizfragen vorhanden.</div>`;
+  if (state.quizIndex >= order.length) return `<div class="single-layout"><div class="single-card"><span class="eyebrow">Quiz beendet</span><h3 class="study-title">${state.quizScore} von ${order.length} richtig</h3>
+    <p class="study-lead">${state.quizWrong.length ? 'Diese Fragen kannst du noch einmal üben:' : 'Du hast alle Fragen richtig beantwortet.'}</p>
+    ${state.quizWrong.length ? `<ul>${state.quizWrong.map(q => `<li>${escapeHtml(q.q)}</li>`).join('')}</ul>`:''}
+    <button type="button" class="primary-button" data-action="restart-quiz">Quiz wiederholen</button></div></div>`;
+  const question = order[state.quizIndex];
+  const letters = ['A','B','C','D'];
+  return `<div class="single-layout"><div class="single-meta"><span>Frage ${state.quizIndex+1} von ${order.length}</span><span>${state.quizScore} richtig</span></div>
+    <div class="single-card"><span class="eyebrow">VL ${state.vl} · Wissenscheck</span><h3 class="flash-prompt">${escapeHtml(question.q)}</h3>
+      <div class="option-list">${question.opts.map((option,i) => {
+        let cls = '';
+        if (state.quizAnswered && i === question.correct) cls = ' correct';
+        else if (state.quizAnswered && i === state.quizChoice) cls = ' incorrect';
+        return `<button type="button" class="option${cls}" data-action="answer" data-index="${i}" ${state.quizAnswered ? 'disabled':''}><span class="option-letter">${letters[i]}</span><span>${escapeHtml(option)}</span></button>`;
+      }).join('')}</div>
+      ${state.quizAnswered ? `<div class="feedback"><strong>${state.quizChoice === question.correct ? 'Richtig.':'Die richtige Antwort ist markiert.'}</strong>${question.note ? ' '+escapeHtml(question.note):''}</div>
+      <div class="action-row"><button type="button" class="primary-button" data-action="next-question">${state.quizIndex === order.length-1 ? 'Ergebnis ansehen':'Nächste Frage →'}</button></div>`:''}
+    </div></div>`;
+}
+function render() {
+  const total = TOPICS.length;
+  const done = TOPICS.filter(topic => !!state.mastered[topic.id]).length;
+  const percent = Math.round(done / total * 100);
+  const lectureTotal = topicsFor(state.vl).length;
+  const lectureDone = countDone(state.vl);
+  const app = document.getElementById('app');
+  app.innerHTML = `<div class="app-shell"><header class="site-header"><div><div class="brand-kicker">Arbeitsorganisation</div><h1 class="brand-title">Lernen, Schritt für Schritt.</h1></div>
+    <div class="overall" aria-label="${done} von ${total} Themen gelernt"><span class="progress-ring" style="--angle:${percent}%"></span><span class="overall-copy"><strong>${percent}%</strong><span>${done} von ${total} Themen</span></span></div></header>
+    <div class="layout">${renderNav()}<main class="main">${renderMobileLecture()}
+      <div class="lecture-intro"><div><span class="eyebrow">Vorlesung ${String(state.vl).padStart(2,'0')} von 13</span><h2 class="lecture-title">${escapeHtml(VL_LABELS[state.vl])}</h2><p class="lecture-sub">Ein Thema nach dem anderen. In deinem Tempo.</p></div>
+      <div class="lecture-progress"><strong>${lectureDone} / ${lectureTotal}</strong>gelernt<div class="mini-bar"><span style="width:${lectureTotal ? Math.round(lectureDone/lectureTotal*100):0}%"></span></div></div></div>
+      <div class="mode-tabs" role="tablist" aria-label="Lernmodus">${[['lernen','Lernen'],['karten','Karteikarten'],['quiz','Quiz']].map(([value,label]) => `<button type="button" role="tab" class="mode-tab" data-action="view" data-view="${value}" aria-selected="${state.view===value}">${label}</button>`).join('')}</div>
+      <div id="view-content">${state.view === 'lernen' ? renderLearning():state.view === 'karten' ? renderCards():renderQuiz()}</div>
+    </main></div></div>`;
+}
+
+document.getElementById('app').addEventListener('click', event => {
+  const button = event.target.closest('[data-action]');
+  if (!button) return;
+  const action = button.dataset.action;
+  const topics = topicsFor(state.vl);
+  if (action === 'lecture') setLecture(Number(button.dataset.vl));
+  else if (action === 'view') { state.view = button.dataset.view; render(); }
+  else if (action === 'topic') { state.topicIndex = Number(button.dataset.index); render(); }
+  else if (action === 'prev-topic') { state.topicIndex = Math.max(0,state.topicIndex-1); render(); }
+  else if (action === 'next-topic') { state.topicIndex = Math.min(topics.length-1,state.topicIndex+1); render(); }
+  else if (action === 'toggle-done') {
+    const id = topics[state.topicIndex].id;
+    if (state.mastered[id]) delete state.mastered[id]; else state.mastered[id] = true;
+    saveProgress(); render();
+  }
+  else if (action === 'reset') {
+    if (confirm('Den gesamten Lernstand wirklich zurücksetzen?')) { state.mastered = {}; saveProgress(); render(); }
+  }
+  else if (action === 'reveal-card') { state.cardRevealed = true; render(); }
+  else if (action === 'card-again' || action === 'card-know' || action === 'next-card') {
+    if (action !== 'next-card') {
+      const id = state.cardOrder[state.cardIndex].id;
+      if (action === 'card-know') state.mastered[id] = true; else delete state.mastered[id];
+      saveProgress();
+    }
+    state.cardIndex++; state.cardRevealed = false; render();
+  }
+  else if (action === 'shuffle-cards') { state.cardOrder = shuffle(topics); state.cardIndex = 0; state.cardRevealed = false; render(); }
+  else if (action === 'restart-cards') { resetCard(); render(); }
+  else if (action === 'answer' && !state.quizAnswered) {
+    state.quizChoice = Number(button.dataset.index);
+    state.quizAnswered = true;
+    const question = state.quizOrder[state.quizIndex];
+    if (state.quizChoice === question.correct) state.quizScore++;
+    else state.quizWrong.push(question);
+    render();
+  }
+  else if (action === 'next-question' && state.quizAnswered) {
+    state.quizIndex++; state.quizChoice = null; state.quizAnswered = false; render();
+  }
+  else if (action === 'restart-quiz') { resetQuiz(); render(); }
+});
+document.getElementById('app').addEventListener('change', event => {
+  if (event.target.id === 'lecture-select') setLecture(Number(event.target.value));
+  if (event.target.id === 'topic-select') { state.topicIndex = Number(event.target.value); render(); }
+});
+loadProgress();
+resetCard();
+resetQuiz();
+render();
+
+</script>
+</body>
+</html>
