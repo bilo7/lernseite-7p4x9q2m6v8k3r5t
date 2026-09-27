@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#030609">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex,nofollow">
+<title>Arbeitsorganisation lernen</title>
+<style>:root{color-scheme:dark;--bg:#030609;--line:#273642;--text:#f5f8fa;--soft:#cbd7de;--accent:#a5ead3;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+*{box-sizing:border-box}
+html{background:var(--bg);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;appearance:none;-webkit-appearance:none}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.app{min-height:100vh;min-height:100dvh;max-width:660px;margin:0 auto;padding:0 20px calc(92px + env(safe-area-inset-bottom))}
+
+/* Chip-Leiste: Vorlesung wechseln ohne Dropdown, ohne Zurück-Taste */
+.chipbar{position:sticky;top:0;z-index:3;display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:16px 0 12px;margin:0 -20px;background:var(--bg);border-bottom:1px solid var(--line)}
+.chipbar::before,.chipbar::after{content:"";flex:none;width:20px}
+.chipbar::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:42px;padding:9px 15px;border-radius:999px;border:1px solid #344551;background:#101922;color:var(--soft);font-size:.86rem;font-weight:750;white-space:nowrap}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#09231c}
+
+.kicker{display:block;color:var(--accent);font-size:.72rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+.lecture-head{padding:22px 0 8px}
+.lecture-head h1{font-size:clamp(1.5rem,6vw,2rem);margin:6px 0 4px;letter-spacing:-.03em;line-height:1.18}
+.lecture-head p{color:#b9c9d2;font-size:.9rem;margin:0}
+
+/* Themen als Akkordeon: aufklappen statt umblättern */
+.acc{border-top:1px solid var(--line);margin-top:6px}
+.acc-item{border-bottom:1px solid var(--line)}
+.acc-header{display:grid;grid-template-columns:34px minmax(0,1fr) 20px;align-items:center;gap:10px;width:100%;min-height:60px;padding:11px 2px;border:0;background:none;color:var(--text);text-align:left}
+.acc-header:hover{background:#0e1720}
+.acc-number{color:var(--accent);font-size:.8rem;font-weight:800}
+.acc-title{font-size:.98rem;font-weight:680;line-height:1.32;overflow-wrap:anywhere}
+.acc-chevron{color:var(--accent);font-size:1.2rem;transition:transform .15s ease;justify-self:end}
+.acc-item.open .acc-chevron{transform:rotate(90deg)}
+.acc-body{padding:0 26px 24px 0;overflow-wrap:anywhere}
+
+.source{color:var(--accent);font-size:.77rem;font-weight:700;margin:2px 0 10px}
+.definition{color:#f1f5f7;font-size:1.05rem;line-height:1.55;font-weight:680;margin:0 0 16px}
+.points{color:var(--soft);font-size:1rem;line-height:1.6;margin:0;padding-left:20px}
+.points li{padding-left:2px;margin:9px 0}
+.points li::marker{color:#87d2ba}
+.points strong{color:var(--text);font-weight:760}
+
+.primary{display:block;width:100%;min-height:52px;padding:11px 18px;border:0;border-radius:12px;background:var(--accent);color:#09231c;font-size:1rem;font-weight:800;text-align:center}
+.primary:hover{background:#baf2df}
+.plain{display:block;width:100%;min-height:48px;margin-top:9px;border:0;background:none;color:var(--accent);font-weight:750;text-align:center}
+
+.quiz{padding:20px 0 20px}
+.quiz h1{font-size:clamp(1.4rem,5.7vw,1.85rem);margin:12px 0 25px;letter-spacing:-.03em;line-height:1.22}
+.answers{display:grid;gap:9px;margin:0 0 22px}
+.answer{display:flex;align-items:flex-start;gap:13px;width:100%;min-height:57px;padding:14px 15px;border:1px solid #344551;border-radius:12px;background:#101922;color:var(--text);font-size:.98rem;line-height:1.45;text-align:left}
+.answer:hover:not(:disabled){border-color:var(--accent)}
+.answer:disabled{opacity:1;cursor:default}
+.answer-letter{display:grid;place-items:center;flex:none;width:25px;height:25px;border-radius:6px;background:#233542;color:#c8d7df;font-size:.76rem;font-weight:800}
+.answer.correct{background:#153d31;border-color:#79c9aa}
+.answer.wrong{background:#442526;border-color:#d29a94}
+.feedback{color:#e3eaf0;line-height:1.55;margin:0 0 23px}
+.feedback strong{color:var(--accent)}
+.feedback p{color:#c3d0da;margin:9px 0 0}
+.result{padding:30px 0 20px}
+.result h1{font-size:2rem;margin:10px 0 12px;letter-spacing:-.03em}
+.result p{color:#c2cfd9;margin:0 0 26px}
+
+/* feste Tab-Leiste unten: 1 Tipp zum Wechseln, immer sichtbar */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:4;display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);background:var(--bg);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tab-btn{min-height:66px;border:0;background:none;color:#8fa2ac;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.tab-btn .tab-icon{font-size:1.3rem;line-height:1}
+.tab-btn .tab-label{font-size:.8rem;font-weight:750}
+.tab-btn.active{color:var(--accent)}
+
+@media(min-width:700px){.app{padding-left:30px;padding-right:30px}.chipbar{margin:0 -30px;padding-left:10px;padding-right:10px}.chipbar::before,.chipbar::after{width:10px}}
+@media(max-width:380px){.app{padding-left:17px;padding-right:17px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const VL_LABELS = {
+  1:'Karriere & Wohlbefinden', 2:'Befragung & Itemkonstruktion', 3:'Arbeitsleistung, OCB & Commitment',
+  4:'Motivation & Zielsetzung', 5:'Humane Arbeitsgestaltung', 6:'Zukunft der Arbeit & Empowerment',
+  7:'Stress & Beanspruchung', 8:'Selbst- & Zeitmanagement', 9:'Achtsamkeit & Trainingsevaluation',
+  10:'Gruppenleistung & Gruppendenken', 11:'Teams: Rollen & Entwicklung', 12:'Konfliktmanagement',
+  13:'Interkulturelle Psychologie'
+};
+
+const TOPICS = [
+{id:'vl1-karriere-messung', vl:1, title:`Karriereerfolg messen`, tag:`Spurk, 2019`,
+ def:`Erfolg bedeutet nicht für alle dasselbe. Es gibt zwei Wege, ihn zu messen.`,
+ points:[
+  `<strong>Top-down:</strong> Die Wissenschaft legt vorher fest, was zählt.`,
+  `Objektiv: Gehalt, Karrierestufe, Beförderungen – das kann man von außen sehen.`,
+  `Subjektiv: Bist du selbst zufrieden und stolz auf deine Karriere?`,
+  `<strong>Bottom-up:</strong> Du sagst selbst, was für dich Erfolg bedeutet, z. B. Familie oder Gesundheit.`
+ ]},
+{id:'vl1-hedonistische-adaption', vl:1, title:`Hedonistische Adaption`, tag:`Helson, 1964`,
+ def:`Du gewöhnst dich an fast alles – an Gutes und an Schlechtes.`,
+ points:[
+  `Nach einem großen Ereignis wie Lottogewinn oder Unfall fühlst du dich nach einiger Zeit wieder fast so wie vorher.`,
+  `<strong>Lifestyle Inflation:</strong> Deine Ansprüche wachsen immer weiter (erst ein AMG, dann ein Porsche). Dein Glück wächst dabei aber kaum mit.`
+ ]},
+{id:'vl2-befragungsmethoden', vl:2, title:`Befragungsmethoden`, tag:`Frieling & Sonntag, 1999`,
+ def:`Es gibt zwei Arten, Menschen zu befragen.`,
+ points:[
+  `<strong>Qualitativ:</strong> offene Fragen, wenige Personen, dafür viel Tiefe – aber aufwendig.`,
+  `<strong>Quantitativ:</strong> feste Antworten, viele Personen, gut vergleichbar – aber wenig Tiefe.`
+ ]},
+{id:'vl2-item-richtlinien', vl:2, title:`Gute Fragebogen-Fragen (Items) schreiben`,
+ def:`So formulierst du gute Fragen für einen Fragebogen – und das solltest du vermeiden.`,
+ points:[
+  `<strong>Gut:</strong> Alle verstehen die Frage gleich, sie passt zum Thema, nur eine Sache pro Frage, klare Sprache.`,
+  `<strong>Schlecht:</strong> doppelte Verneinung, Fremdwörter, mehrere Themen in einer Frage, verschachtelte Sätze, Suggestivfragen.`
+ ]},
+{id:'vl3-ocb-modell', vl:3, title:`OCB-Modell (Extra-Rollenverhalten)`, tag:`Organ, 1988`,
+ def:`OCB bedeutet: Du hilfst freiwillig, ohne dass es verlangt oder bezahlt wird.`,
+ points:[
+  `<strong>Altruism:</strong> Du hilfst einem Kollegen direkt, z. B. beim Einarbeiten.`,
+  `<strong>Conscientiousness:</strong> Du bist besonders zuverlässig und pünktlich.`,
+  `<strong>Courtesy:</strong> Du nimmst Rücksicht und informierst andere rechtzeitig.`,
+  `<strong>Sportsmanship:</strong> Du nimmst kleine Nachteile hin, ohne ständig zu meckern.`,
+  `<strong>Civic Virtue:</strong> Du engagierst dich aktiv, z. B. in Meetings.`
+ ]},
+{id:'vl3-struktur-arbeitsverhalten', vl:3, title:`4 Formen von Arbeitsverhalten`,
+ def:`Verhalten bei der Arbeit unterscheidet sich in zwei Fragen: Hilft es der Firma? Hält es sich an Regeln?`,
+ points:[
+  `<strong>Nach Vorschrift:</strong> Du machst genau deinen Job – nicht mehr und nicht weniger.`,
+  `<strong>Extraproduktiv</strong> (= OCB): Du machst freiwillig mehr und hältst dich an Regeln.`,
+  `<strong>Kontraproduktiv:</strong> Du brichst Regeln und schadest der Firma, z. B. durch Diebstahl.`,
+  `<strong>Intrapreneurship:</strong> Du denkst wie ein Unternehmer in der Firma und findest kreative Lösungen – auch wenn du dafür Regeln mal dehnst.`
+ ]},
+{id:'vl3-mcclelland-motive', vl:3, title:`Motivklassen – McClelland`, tag:`McClelland, 1964`,
+ def:`Drei Antriebe stecken in jedem von uns – nur unterschiedlich stark.`,
+ points:[
+  `<strong>Leistungsmotiv:</strong> Du willst schwierige Aufgaben schaffen (Hoffnung auf Erfolg oder Angst vor Misserfolg).`,
+  `<strong>Machtmotiv:</strong> Du willst führen und entscheiden (Hoffnung auf Kontrolle oder Angst, sie zu verlieren).`,
+  `<strong>Anschlussmotiv:</strong> Du willst dazugehören (Hoffnung auf Nähe oder Angst vor Ablehnung).`
+ ]},
+{id:'vl3-commitment-modell', vl:3, title:`Drei-Komponenten-Modell des Commitment`,
+ def:`Drei Gründe, warum Menschen in ihrem Job bleiben.`,
+ points:[
+  `<strong>Affektiv</strong> – „Ich will bleiben": Du fühlst dich emotional verbunden.`,
+  `<strong>Kalkulatorisch</strong> – „Ich muss bleiben": Ein Wechsel wäre zu teuer oder riskant.`,
+  `<strong>Normativ</strong> – „Ich soll bleiben": Du fühlst dich verpflichtet, z. B. aus Dankbarkeit.`
+ ]},
+{id:'vl4-determinanten-verhalten', vl:4, title:`Determinanten des Verhaltens`,
+ def:`Damit du etwas tust, brauchst du drei Dinge gleichzeitig.`,
+ points:[
+  `<strong>Wollen:</strong> Hast du überhaupt Lust dazu?`,
+  `<strong>Können:</strong> Hast du die nötigen Fähigkeiten?`,
+  `<strong>Dürfen:</strong> Ist es erlaubt, hast du die nötigen Mittel?`
+ ]},
+{id:'vl4-motiv-anreiz-motivation', vl:4, title:`Motiv – Anreiz – Motivation`,
+ def:`Motivation entsteht, wenn ein innerer Wunsch auf einen passenden Reiz von außen trifft.`,
+ points:[
+  `<strong>Motiv:</strong> das, was in dir steckt – z. B. Ehrgeiz.`,
+  `<strong>Anreiz:</strong> das, was von außen lockt – z. B. Lob oder Prämie.`,
+  `Motivation = Motiv trifft Anreiz. Fehlt eins von beiden, passiert wenig.`
+ ]},
+{id:'vl4-maslow-pyramide', vl:4, title:`Bedürfnispyramide nach Maslow`,
+ def:`Erst die Grundbedürfnisse, dann zählen die höheren Bedürfnisse mehr.`,
+ points:[
+  `1. Körperlich: Essen, Trinken, Schlafen.`,
+  `2. Sicherheit: sicherer Job, sicheres Zuhause.`,
+  `3. Soziales: Familie, Freunde, Zugehörigkeit.`,
+  `4. Ich-Bedürfnisse: Status, Erfolg, Anerkennung.`,
+  `5. Selbstverwirklichung: dein eigenes Potenzial ausschöpfen.`
+ ]},
+{id:'vl4-heckhausen-rubikon', vl:4, title:`Handlungstheorie nach Heckhausen (Rubikon-Modell)`,
+ def:`So wird aus einer Idee eine Tat – in vier Schritten.`,
+ points:[
+  `1. <strong>Wählen:</strong> Du entscheidest dich, was du willst.`,
+  `<strong>Der Rubikon:</strong> der Moment der Entscheidung. Danach planst du, wie du es erreichst.`,
+  `2. <strong>Planen:</strong> Du legst genau fest, wann und wie.`,
+  `3. <strong>Handeln:</strong> Du setzt es um.`,
+  `4. <strong>Bewerten:</strong> Du prüfst, ob es geklappt hat.`
+ ]},
+{id:'vl4-job-characteristics-model', vl:4, title:`Job Characteristics Model`,
+ def:`Wie du deine Arbeit erlebst, entscheidet über deine Motivation.`,
+ points:[
+  `5 Merkmale guter Arbeit: Abwechslung, eine ganze Aufgabe, Bedeutung, Selbstständigkeit, Feedback.`,
+  `Diese lösen aus: Du erlebst Sinn, Verantwortung und weißt, wie gut du bist.`,
+  `Ergebnis: mehr Motivation, Zufriedenheit und bessere Leistung.`
+ ]},
+{id:'vl4-zielsetzungstheorie', vl:4, title:`Theorie der Zielsetzung`,
+ def:`Klare, konkrete Ziele bringen mehr als vage Wünsche.`,
+ points:[
+  `Gute Ziele sind konkret und schwer – aber noch schaffbar.`,
+  `Bsp.: nicht „ich lerne mal", sondern „heute 20 Aufgaben".`,
+  `<strong>Warum es wirkt:</strong> Du achtest mehr darauf, gibst mehr Einsatz, hältst länger durch.`,
+  `<strong>Wie stark es wirkt,</strong> hängt ab von: wie sehr du das Ziel willst, Feedback, wie schwer die Aufgabe ist.`
+ ]},
+{id:'vl4-self-determination-theory', vl:4, title:`Self-Determination Theory`,
+ def:`Drei Grundbedürfnisse machen dich wirklich motiviert.`,
+ points:[
+  `<strong>Autonomie:</strong> Du entscheidest selbst, was und wie du arbeitest.`,
+  `<strong>Kompetenz:</strong> Du fühlst dich fähig, die Aufgabe zu schaffen.`,
+  `<strong>Soziale Eingebundenheit:</strong> Du fühlst dich zugehörig und wertgeschätzt.`
+ ]},
+{id:'vl5-hacker-kriterien', vl:5, title:`Kriterien humaner Arbeitsgestaltung`, tag:`Hacker, 1980`,
+ def:`Vier Regeln, die gesunde und gute Arbeit ausmachen.`,
+ points:[
+  `<strong>Ausführbarkeit:</strong> Du kannst die Aufgabe mit deinen Fähigkeiten schaffen.`,
+  `<strong>Schädigungslosigkeit:</strong> Die Arbeit darf deiner Gesundheit nicht schaden.`,
+  `<strong>Beeinträchtigungsfreiheit:</strong> keine unnötige Belastung, körperlich oder psychisch.`,
+  `<strong>Persönlichkeitsförderlichkeit:</strong> Die Arbeit hilft dir, zu lernen und dich weiterzuentwickeln.`
+ ]},
+{id:'vl5-smart-modell', vl:5, title:`SMART-Modell der Arbeitsgestaltung`,
+ def:`Fünf Merkmale, die gute Arbeit ausmachen.`,
+ points:[
+  `<strong>S – Stimulierend:</strong> abwechslungsreich und herausfordernd.`,
+  `<strong>M – Mastery:</strong> du lernst dabei dazu und entwickelst dich weiter.`,
+  `<strong>A – Agency:</strong> du hast Einfluss und kannst mitentscheiden.`,
+  `<strong>R – Relational:</strong> gute Beziehungen und Unterstützung durch Kollegen.`,
+  `<strong>T – Tolerable:</strong> die Anforderungen passen zu deinen Kräften.`
+ ]},
+{id:'vl5-job-enlargement-enrichment', vl:5, title:`Job Enlargement und Job Enrichment`,
+ def:`Zwei Wege, um Arbeitsaufgaben interessanter zu machen.`,
+ points:[
+  `<strong>Enlargement</strong> (horizontal): mehr verschiedene Aufgaben auf gleicher Ebene – wenig zusätzliche Motivation.`,
+  `<strong>Enrichment</strong> (vertikal): mehr Verantwortung und Entscheidungsfreiheit – wirkt stärker auf die Motivation.`
+ ]},
+{id:'vl6-vuca', vl:6, title:`VUCA`,
+ def:`Vier Wörter, die die moderne Arbeitswelt beschreiben.`,
+ points:[
+  `<strong>Volatilität:</strong> Alles verändert sich ständig und unvorhersehbar.`,
+  `<strong>Unsicherheit:</strong> Man weiß nie genug oder zu viel Widersprüchliches.`,
+  `<strong>Komplexität:</strong> Zu viele Zusammenhänge, schwer zu durchschauen.`,
+  `<strong>Ambiguität:</strong> Es gibt keine eindeutig richtige Antwort.`
+ ]},
+{id:'vl6-psychologisches-empowerment', vl:6, title:`Psychologisches Empowerment`,
+ def:`Das Gefühl, deine Arbeit wirklich im Griff zu haben.`,
+ points:[
+  `<strong>Kompetenz:</strong> „Ich kann meine Arbeit gut erledigen."`,
+  `<strong>Bedeutsamkeit:</strong> „Meine Arbeit ist wichtig und sinnvoll."`,
+  `<strong>Einfluss:</strong> „Ich kann etwas bewirken."`,
+  `<strong>Selbstbestimmung:</strong> „Ich entscheide selbst, wie ich arbeite."`
+ ]},
+{id:'vl7-yerkes-dodson', vl:7, title:`Yerkes-Dodson-Gesetz`,
+ def:`Ein bisschen Stress hilft dir, zu viel schadet.`,
+ points:[
+  `Zu wenig Erregung: Langeweile und schlechte Leistung.`,
+  `Mittlere Erregung: beste Konzentration und beste Leistung.`,
+  `Zu viel Erregung: Panik, die Leistung bricht ein – z. B. starke Prüfungsangst.`
+ ]},
+{id:'vl7-transaktionales-stressmodell', vl:7, title:`Transaktionales Stressmodell`, tag:`Lazarus`,
+ def:`Nicht die Situation selbst macht Stress – deine Bewertung davon.`,
+ points:[
+  `<strong>Erste Bewertung:</strong> Ist diese Situation gefährlich oder wichtig für mich?`,
+  `<strong>Zweite Bewertung:</strong> Habe ich genug Kraft und Mittel, um damit klarzukommen?`,
+  `Fühlst du dich überfordert, entsteht Stress – im schlimmsten Fall Burnout.`,
+  `Fühlst du dich der Sache gewachsen, wächst dein Selbstvertrauen.`
+ ]},
+{id:'vl7-demand-control-modell', vl:7, title:`Demand-Control-Modell`,
+ def:`Am meisten Stress hast du bei viel Druck und wenig Mitbestimmung.`,
+ points:[
+  `Viele Anforderungen + wenig Kontrolle = viel Stress. Bsp.: Fließbandarbeit unter Zeitdruck.`,
+  `Viele Anforderungen + viel Kontrolle = weniger Stress. Bsp.: Ingenieur mit Eigenverantwortung.`
+ ]},
+{id:'vl7-jdr-modell', vl:7, title:`Job Demands-Resources Modell`,
+ def:`Jeder Job hat zwei Seiten: Was dich auslaugt, was dir Kraft gibt.`,
+ points:[
+  `<strong>Demands</strong> laugen dich aus: Zeitdruck, viel Arbeit – zu viel davon führt zu Burnout.`,
+  `<strong>Resources</strong> geben dir Kraft: Selbstständigkeit, Unterstützung – mehr davon steigert die Motivation.`,
+  `Genug Ressourcen können hohe Anforderungen abfedern.`
+ ]},
+{id:'vl8-eisenhower-matrix', vl:8, title:`Eisenhower-Matrix`,
+ def:`Sortiere deine Aufgaben nach wichtig und dringend.`,
+ points:[
+  `Wichtig + dringend: sofort erledigen.`,
+  `<strong>Wichtig + nicht dringend:</strong> fest einplanen – hier entsteht dein langfristiger Erfolg.`,
+  `Nicht wichtig + dringend: nach Möglichkeit abgeben.`,
+  `Nicht wichtig + nicht dringend: einfach weglassen.`
+ ]},
+{id:'vl8-gantt-chart', vl:8, title:`Gantt-Chart & Methodenwahl`,
+ def:`Ein Balkenplan zeigt dir, wann welche Aufgabe beginnt und endet.`,
+ points:[
+  `Sinnvoll bei Projekten mit mehreren Phasen und festen Terminen.`,
+  `Faustregel: lohnt sich ab 2 Wochen Dauer mit mindestens 3 Arbeitspaketen.`,
+  `Nachteil: wirkt genauer, als es ist, und braucht ständige Pflege.`
+ ]},
+{id:'vl9-mbsr', vl:9, title:`MBSR (Mindfulness-Based Stress Reduction)`, tag:`Jon Kabat-Zinn, 1979`,
+ def:`Ein 8-wöchiges Achtsamkeitstraining – wissenschaftlich, nicht religiös.`,
+ points:[
+  `Entwickelt von Jon Kabat-Zinn.`,
+  `Etwa 2,5 Stunden pro Woche, plus tägliches Üben zuhause.`,
+  `Heute weit verbreitet: bei der Arbeit, in der Schule, in der Klinik.`
+ ]},
+{id:'vl9-kirkpatrick', vl:9, title:`Trainingsevaluation nach Kirkpatrick`,
+ def:`Vier Fragen, um zu prüfen, ob ein Training etwas gebracht hat.`,
+ points:[
+  `1. <strong>Reaktion:</strong> Wie zufrieden waren die Teilnehmenden?`,
+  `2. <strong>Lernen:</strong> Wurde tatsächlich etwas gelernt?`,
+  `3. <strong>Verhalten:</strong> Wird das Gelernte im Alltag angewendet?`,
+  `4. <strong>Ergebnisse:</strong> Bringt es der Firma etwas, z. B. weniger Krankheitstage?`
+ ]},
+{id:'vl9-kraiger', vl:9, title:`Trainingsziele formulieren nach Kraiger`,
+ def:`Kraiger fragt genauer: WAS genau wurde gelernt?`,
+ points:[
+  `<strong>Kognitiv</strong> (Denken): neues Wissen, besseres Verständnis.`,
+  `<strong>Fertigkeitsbezogen</strong> (Können): eine neue Fähigkeit, die du wirklich anwenden kannst.`,
+  `<strong>Affektiv</strong> (Fühlen): eine neue Einstellung oder mehr Selbstvertrauen.`,
+  `Kirkpatrick fragt nach dem Erfolg des Trainings. Kraiger fragt, was genau gelernt wurde.`
+ ]},
+{id:'vl10-steiners-formel', vl:10, title:`Steiners Formel`,
+ def:`Eine Gruppe schöpft ihr Potenzial fast nie voll aus.`,
+ points:[
+  `Tatsächliche Gruppenleistung = mögliche Leistung minus Prozessverluste.`,
+  `Verluste entstehen z. B. durch schlechte Motivation oder schlechte Abstimmung.`,
+  `Bsp.: Alle ziehen am Seil, aber nicht gleichzeitig.`
+ ]},
+{id:'vl10-erleichterung-faulenzen', vl:10, title:`Soziale Erleichterung vs. Soziales Faulenzen`,
+ def:`Sieht man deine Leistung, gibst du oft mehr. Sieht man sie nicht, gibst du oft weniger.`,
+ points:[
+  `<strong>Soziale Erleichterung:</strong> Man sieht, was du leistest → du strengst dich mehr an.`,
+  `<strong>Soziales Faulenzen:</strong> Man sieht nicht, was du leistest → du lässt eher locker. Bsp.: ein Auto gemeinsam schieben.`
+ ]},
+{id:'vl10-gruppendenken-janis', vl:10, title:`Prozessmodell des Gruppendenkens`, tag:`Janis, 1982`,
+ def:`Zu viel Harmonie kann zu schlechten Entscheidungen führen.`,
+ points:[
+  `Ursache: alle wollen sich einig sein, keiner will widersprechen.`,
+  `Warnzeichen: man fühlt sich unangreifbar, Kritiker werden unter Druck gesetzt, man denkt, alle sind sich einig, man hält die eigene Meinung zurück.`,
+  `Folge: Die Gruppe sucht nicht mehr wirklich nach der besten Lösung.`
+ ]},
+{id:'vl10-gruppendenken-vermeiden', vl:10, title:`Strategien gegen Gruppendenken`,
+ def:`So kannst du Gruppendenken gezielt verhindern.`,
+ points:[
+  `Eine Person übernimmt bewusst die Rolle des Kritikers.`,
+  `Unabhängige Experten von außen dazuholen.`,
+  `Die Gruppe in kleinere Untergruppen aufteilen, die getrennt diskutieren.`,
+  `Sich nicht zu früh festlegen, sondern erst alle anhören.`
+ ]},
+{id:'vl11-belbin-teamrollen', vl:11, title:`Teamrollen nach Belbin`,
+ def:`Ein gutes Team braucht unterschiedliche, sich ergänzende Rollen-Typen.`,
+ points:[
+  `<strong>Handlungsorientiert</strong> (anpacken): Macher, Umsetzer, Perfektionist.`,
+  `<strong>Wissensorientiert</strong> (Ideen liefern): Erfinder, Beobachter, Spezialist.`,
+  `<strong>Kommunikationsorientiert</strong> (zusammenhalten): Koordinator, Teamarbeiter, Weichensteller.`
+ ]},
+{id:'vl11-tuckman-phasen', vl:11, title:`Teamentwicklungsphasen nach Tuckman`,
+ def:`Fünf typische Phasen, die ein Team durchlebt.`,
+ points:[
+  `<strong>Forming:</strong> Man lernt sich kennen. Führung gibt Orientierung.`,
+  `<strong>Storming:</strong> Es kommt zu Konflikten. Führung moderiert, statt sie zu unterdrücken.`,
+  `<strong>Norming:</strong> Das Team findet gemeinsame Regeln. Führung zieht sich zurück.`,
+  `<strong>Performing:</strong> Das Team arbeitet selbstständig. Führung vertraut und lässt los.`,
+  `<strong>Adjourning:</strong> Das Projekt endet. Führung feiert Erfolge und sichert Wissen.`
+ ]},
+{id:'vl11-teamentwicklungsprozess', vl:11, title:`Schritte der gezielten Teamentwicklung`,
+ def:`So entwickelst du ein Team gezielt – Schritt für Schritt.`,
+ points:[
+  `1. Kontakt: Ziele und Ablauf gemeinsam klären.`,
+  `2. Diagnose: Den aktuellen Zustand des Teams erfassen.`,
+  `3. Planung: Passende Übungen und Maßnahmen auswählen.`,
+  `4. Durchführung: Die Maßnahmen umsetzen.`,
+  `5. Evaluation: Erst 1–3 Monate später prüfen, was es gebracht hat.`
+ ]},
+{id:'vl11-teamentwicklung-ansaetze', vl:11, title:`Ansätze der Teamentwicklung`,
+ def:`Vier unterschiedliche Wege, um ein Team gezielt zu stärken.`,
+ points:[
+  `<strong>Outdoor-Training:</strong> gemeinsame Aktivitäten in ungewohnter Umgebung.`,
+  `<strong>Survey-Feedback:</strong> Befragungsergebnisse gemeinsam besprechen.`,
+  `<strong>Teamreflexivität:</strong> regelmäßig über die eigene Zusammenarbeit nachdenken.`,
+  `<strong>Teamcoaching:</strong> langfristige, professionelle Begleitung von außen.`
+ ]},
+{id:'vl12-konflikttypen', vl:12, title:`Konflikttypen`,
+ def:`Drei unterschiedliche Gründe, warum es im Team kracht.`,
+ points:[
+  `<strong>Sachkonflikt:</strong> Man ist sich bei der Sache selbst uneinig.`,
+  `<strong>Beziehungskonflikt:</strong> Man hat persönlich ein Problem miteinander.`,
+  `<strong>Prozesskonflikt:</strong> Man streitet über Zuständigkeiten und Abläufe.`
+ ]},
+{id:'vl12-konflikte-brauchen-wir', vl:12, title:`Brauchen wir Konflikte?`,
+ def:`Streit über die Sache kann die Leistung sogar fördern.`,
+ points:[
+  `Das klappt nur, wenn es nicht persönlich wird.`,
+  `Dafür brauchst du: gemeinsame Ziele, gegenseitiges Vertrauen, eine gute Streitkultur.`
+ ]},
+{id:'vl12-glasl-eskalation', vl:12, title:`Eskalationsstufen nach Glasl`,
+ def:`Je heftiger ein Streit wird, desto schwerer lösen ihn die Beteiligten allein.`,
+ points:[
+  `<strong>Stufen 1–3 (Win-Win):</strong> erste Spannungen, noch selbst lösbar.`,
+  `<strong>Stufen 4–6 (Win-Lose):</strong> es bilden sich Lager, Hilfe von außen ist nötig.`,
+  `<strong>Stufen 7–9 (Lose-Lose):</strong> beide verlieren, nur noch eine Entscheidung von oben hilft.`
+ ]},
+{id:'vl12-moderator-mediator', vl:12, title:`Moderator und Mediator`,
+ def:`Zwei Rollen, die oft verwechselt werden.`,
+ points:[
+  `<strong>Moderator:</strong> leitet ein Gespräch neutral und gibt ihm Struktur.`,
+  `<strong>Mediator:</strong> hilft Streitenden, selbst eine gemeinsame Lösung zu finden.`
+ ]},
+{id:'vl12-konfliktmanagement-team', vl:12, title:`Konfliktmanagement im Team`,
+ def:`Drei Arten, wie Teams mit Konflikten umgehen.`,
+ points:[
+  `<strong>Kooperativ:</strong> gemeinsam nach einer Lösung suchen, beide gewinnen.`,
+  `<strong>Kompetitiv:</strong> sich durchsetzen, eine Seite gewinnt, die andere verliert.`,
+  `<strong>Vermeidend:</strong> dem Konflikt aus dem Weg gehen.`
+ ]},
+{id:'vl12-konfliktmanagement-individuell', vl:12, title:`Konfliktmanagement als Einzelperson`,
+ def:`Kämpfst du für dich – oder für den anderen?`,
+ points:[
+  `Nur für dich: <strong>Durchsetzen.</strong>`,
+  `Nur für den anderen: <strong>Nachgeben.</strong>`,
+  `Für keinen von beiden: <strong>Vermeiden.</strong>`,
+  `Für beide ein bisschen: <strong>Kompromiss.</strong>`,
+  `Für beide ganz: <strong>Integration</strong> – gemeinsam eine Lösung finden, die beide Seiten berücksichtigt.`
+ ]},
+{id:'vl12-sag-es', vl:12, title:`Konflikte ansprechen: SAG ES!`,
+ def:`Ein Gesprächsleitfaden, um Konflikte konstruktiv anzusprechen.`,
+ points:[
+  `<strong>S – Sichtweise:</strong> Was hast du beobachtet? Neutral, ohne Wertung.`,
+  `<strong>A – Auswirkung:</strong> Was hat das konkret bei dir ausgelöst?`,
+  `<strong>G – Gefühl:</strong> Wie hat sich das für dich angefühlt?`,
+  `<strong>E – Erfragen:</strong> Wie sieht die andere Person das?`,
+  `<strong>S – Schlussfolgerung:</strong> Was soll sich künftig ändern?`
+ ]},
+{id:'vl12-konstruktive-kontroverse', vl:12, title:`Konstruktive Kontroverse`, tag:`Johnson & Johnson, 1979/2015`,
+ def:`Ihr erarbeitet bewusst gegensätzliche Positionen, um die beste Lösung zu finden.`,
+ points:[
+  `1. Zwei Untergruppen erarbeiten je eine gut begründete Position.`,
+  `2. Sie stellen sie vor – die andere Seite hört nur aktiv zu.`,
+  `3. Dann tauschen sie die Seiten – das erzwingt echtes Verstehen.`,
+  `4. Synthese: Gemeinsam wird die bestmögliche Lösung erarbeitet.`
+ ]},
+{id:'vl13-halls-konzept', vl:13, title:`Halls Konzept`, tag:`Hall, 1983`,
+ def:`Kultur steckt tief in dir, ohne dass du es merkst.`,
+ points:[
+  `Erst im Kontakt mit Fremdem merkst du, was für dich eigentlich normal ist.`,
+  `Wir verhalten uns automatisch nach den Normen unserer eigenen Kultur.`
+ ]},
+{id:'vl13-kulturzwiebel', vl:13, title:`Hofstedes Kulturzwiebelmodell`,
+ def:`Kultur ist wie eine Zwiebel – mit mehreren Schichten.`,
+ points:[
+  `Außen: <strong>Symbole</strong> – Wörter, Farben, Dinge mit besonderer Bedeutung.`,
+  `Dann: <strong>Helden</strong> – bewunderte Personen, die als Vorbild dienen.`,
+  `Dann: <strong>Rituale</strong> – die Art, wie man grüßt und Respekt zeigt.`,
+  `Im Kern: <strong>Werte</strong> – was einem wichtiger ist als anderes.`
+ ]},
+{id:'vl13-eisberg-konzept', vl:13, title:`Eisberg-Konzept`,
+ def:`Kultur ist wie ein Eisberg – das meiste bleibt unsichtbar.`,
+ points:[
+  `<strong>Sichtbar:</strong> Essen, Kleidung, Sprache, Musik, Begrüßungsrituale.`,
+  `<strong>Unsichtbar:</strong> Werte, Erwartungen, Gefühle, Kommunikationsstil.`
+ ]},
+{id:'vl13-hofstede-dimensionen', vl:13, title:`Kulturdimensionen nach Hofstede`,
+ def:`Sechs Regler, mit denen du Kulturen vergleichen kannst.`,
+ points:[
+  `<strong>Individualismus vs. Kollektivismus:</strong> Zählt eher das Ich oder das Wir?`,
+  `<strong>Machtdistanz:</strong> Werden Hierarchien akzeptiert oder eher Gleichheit bevorzugt?`,
+  `<strong>Maskulinität vs. Feminität:</strong> Zählt Wettbewerb mehr oder Fürsorge?`,
+  `<strong>Unsicherheitsvermeidung:</strong> Wunsch nach klaren Regeln oder Offenheit für Neues?`,
+  `<strong>Zeitliche Orientierung:</strong> Ist die Zukunft wichtiger oder die Gegenwart?`,
+  `<strong>Nachgiebigkeit vs. Beherrschung:</strong> Werden Genuss und freie Bedürfnisse eher zugelassen oder durch soziale Regeln begrenzt?`
+ ]},
+{id:'vl13-globe-kultur', vl:13, title:`Kulturdimensionen des GLOBE-Projekts`,
+ def:`Ähnlich wie Hofstede, nur mit neun statt sechs Reglern.`,
+ points:[
+  `<strong>Unsicherheitsvermeidung:</strong> Wie sehr hält man sich an feste Regeln?`,
+  `<strong>Machtdistanz:</strong> Wie akzeptiert ist ungleich verteilte Macht?`,
+  `<strong>Institutional Collectivism:</strong> Wie sehr wird Teamarbeit gefördert und belohnt?`,
+  `<strong>Intra-Gruppen-Kollektivismus:</strong> Wie loyal ist man zu Familie und Firma?`,
+  `<strong>Geschlechtergleichheit:</strong> Wie ausgeglichen sind die Geschlechterrollen?`,
+  `<strong>Bestimmtheit:</strong> Wie direkt und durchsetzungsstark tritt man auf?`,
+  `<strong>Zukunftsorientierung:</strong> Wie sehr wird langfristig geplant?`,
+  `<strong>Leistungsorientierung:</strong> Wie stark wird Leistung belohnt?`,
+  `<strong>Soziale Orientierung:</strong> Wie wichtig sind Fairness und Hilfsbereitschaft?`
+ ]},
+{id:'vl13-globe-fuehrung', vl:13, title:`Führungsdimensionen des GLOBE-Projekts`,
+ def:`Sechs Führungsstile, die je nach Kultur unterschiedlich gut ankommen.`,
+ points:[
+  `<strong>Charismatic:</strong> motiviert und inspiriert andere durch Visionen.`,
+  `<strong>Team oriented:</strong> baut effektive Teams auf, schafft gemeinsame Ziele.`,
+  `<strong>Participative:</strong> bezieht Mitarbeitende aktiv in Entscheidungen ein.`,
+  `<strong>Human oriented:</strong> handelt fürsorglich, unterstützend, großzügig.`,
+  `<strong>Autonomous:</strong> führt unabhängig und eigenständig.`,
+  `<strong>Self-protective:</strong> schützt vor allem sich selbst und den eigenen Status.`
+ ]}
+];
+
+const QUIZ = [
+{vl:1, q:`Welche zwei Arten von Karriereerfolg unterscheidet der Top-down-Ansatz (Spurk, 2019)?`,
+ opts:[`Qualitativer und quantitativer Erfolg`,`Objektiver und subjektiver Karriereerfolg`,`Individueller und kollektiver Erfolg`,`Intrinsischer und extrinsischer Erfolg`], correct:1},
+{vl:1, q:`Was besagt die Hedonistische Adaption nach Helson (1964)?`,
+ opts:[`Du gewöhnst dich an Veränderungen; dein Wohlbefinden nähert sich wieder deinem gewohnten Niveau an`,`Erfolge machen dich dauerhaft glücklicher`,`Schlechte Ereignisse wirken immer langfristig`,`Glück hängt nie vom eigenen Bezugspunkt ab`], correct:0},
+{vl:2, q:`Was trifft auf die qualitative Befragung zu?`,
+ opts:[`Große Stichproben, feste Fragen`,`Offene Fragen, wenige Personen, viel Tiefe`,`Im Vordergrund steht die Statistik`,`Schnell auswertbar, aber wenig Tiefe`], correct:1},
+{vl:2, q:`Was ist ein Fehler bei der Konstruktion von Fragebogen-Items?`,
+ opts:[`Bedeutungsäquivalenz`,`Homogenität`,`Verschachtelter Satzbau`,`Sprachliche Klarheit`], correct:2},
+{vl:3, q:`Wie viele Dimensionen hat das OCB-Modell nach Organ (1988)?`,
+ opts:[`3`,`4`,`5`,`6`], correct:2},
+{vl:3, q:`Welches Verhalten gehört zu „Courtesy" im OCB-Modell?`,
+ opts:[`Neue Mitarbeitende einarbeiten`,`Kollegen rechtzeitig informieren, um Missverständnisse zu vermeiden`,`Pünktlich sein`,`Verbesserungsvorschläge einbringen`], correct:1, note:`Altruism = helfen/einarbeiten, Conscientiousness = pünktlich sein, Civic Virtue = Verbesserungsvorschläge.`},
+{vl:3, q:`Welche der 4 Verhaltensformen beschreibt Regelbruch, der der Firma schadet?`,
+ opts:[`Extraproduktives Verhalten`,`Kontraproduktives Verhalten`,`Intrapreneurship`,`Verhalten nach Vorschrift`], correct:1},
+{vl:3, q:`Welches Commitment bedeutet „Ich muss bleiben"?`,
+ opts:[`Affektives Commitment`,`Normatives Commitment`,`Kalkulatorisches Commitment`,`Emotionales Commitment`], correct:2},
+{vl:4, q:`Welche drei Fragen erklären im Modell dein Verhalten?`,
+ opts:[`Was, wann und wo?`,`Will ich, kann ich und darf ich?`,`Wie viel, wie oft und wie lange?`,`Planen, handeln und bewerten?`], correct:1},
+{vl:4, q:`In welcher Reihenfolge stehen die Ebenen der Maslow-Pyramide, von unten nach oben?`,
+ opts:[`Sicherheit, Physiologie, Soziale, Ich, Selbstverwirklichung`,`Physiologie, Sicherheit, Soziale, Ich-Bedürfnisse, Selbstverwirklichung`,`Physiologie, Soziale, Sicherheit, Selbstverwirklichung, Ich`,`Sicherheit, Soziale, Physiologie, Ich, Selbstverwirklichung`], correct:1},
+{vl:4, q:`Was markiert der „Rubikon" im Modell von Heckhausen?`,
+ opts:[`Den Übergang vom Planen zum Handeln`,`Den Übergang vom Wählen zum Planen – aus dem Wunsch wird eine feste Entscheidung`,`Den Abschluss der Handlung`,`Die Bewertung des Ergebnisses`], correct:1},
+{vl:4, q:`Welche drei Dinge löst das Job Characteristics Model in dir aus?`,
+ opts:[`Motivation, Zufriedenheit, Leistung`,`Erlebte Sinnhaftigkeit, erlebte Verantwortung, Wissen über die eigenen Ergebnisse`,`Autonomie, Kompetenz, Verbundenheit`,`Abwechslung, Ganzheitlichkeit, Bedeutsamkeit`], correct:1},
+{vl:4, q:`Wie sollten Ziele laut der Zielsetzungstheorie sein?`,
+ opts:[`allgemein und leicht`,`konkret und anspruchsvoll, aber machbar`,`langfristig und vage`,`von außen vorgegeben und unveränderlich`], correct:1},
+{vl:4, q:`Welche drei Grundbedürfnisse nennt die Self-Determination Theory?`,
+ opts:[`Sicherheit, Zugehörigkeit, Anerkennung`,`Autonomie, Kompetenz, soziale Eingebundenheit`,`Leistung, Macht, Anschluss`,`Wollen, Können, Dürfen`], correct:1},
+{vl:5, q:`Welches Kriterium nach Hacker (1980) sagt, dass Arbeit dich weiterbringen soll?`,
+ opts:[`Ausführbarkeit`,`Schädigungslosigkeit`,`Beeinträchtigungsfreiheit`,`Persönlichkeitsförderlichkeit`], correct:3},
+{vl:5, q:`Job Enlargement ist eine … Erweiterung, Job Enrichment eine … Erweiterung.`,
+ opts:[`horizontale / vertikale`,`vertikale / horizontale`,`qualitative / quantitative`,`kurzfristige / langfristige`], correct:0},
+{vl:6, q:`Welche 4 Wörter stehen für VUCA?`,
+ opts:[`Volatilität, Unsicherheit, Komplexität, Ambiguität`,`Variabilität, Unklarheit, Kontrolle, Autonomie`,`Volatilität, Umwelt, Kompetenz, Autorität`,`Vielfalt, Unsicherheit, Change, Agilität`], correct:0},
+{vl:6, q:`Welche 4 Teile hat Psychologisches Empowerment?`,
+ opts:[`Kompetenz, Bedeutsamkeit, Einfluss, Selbstbestimmung`,`Autonomie, Kompetenz, Relatedness, Motivation`,`Wollen, Können, Dürfen, Handeln`,`Motiv, Anreiz, Motivation, Ziel`], correct:0},
+{vl:7, q:`Was sagt das Yerkes-Dodson-Gesetz über schwierige Aufgaben?`,
+ opts:[`Je mehr Erregung, desto besser die Leistung`,`Mittlere Erregung ist oft gut; das beste Niveau hängt von der Aufgabe ab`,`Erregung spielt keine Rolle`,`Nur sehr wenig Erregung hilft`], correct:1},
+{vl:7, q:`Was prüft die zweite Bewertung im transaktionalen Stressmodell?`,
+ opts:[`Ob die Situation wichtig oder gefährlich ist`,`Ob du genug Mittel hast, um damit klarzukommen`,`Ob die Situation kontrollierbar ist`,`Ob schon ein Schaden entstanden ist`], correct:1},
+{vl:7, q:`Wann entsteht laut Demand-Control-Modell am meisten Stress?`,
+ opts:[`Bei wenig Anforderungen und viel Kontrolle`,`Bei vielen Anforderungen und wenig Kontrolle`,`Bei vielen Anforderungen und viel Kontrolle`,`Bei wenig Anforderungen und wenig Kontrolle`], correct:1},
+{vl:7, q:`Wozu führen im Job Demands-Resources Modell viele Ressourcen?`,
+ opts:[`Stress und Burnout`,`Motivation, Engagement, bessere Leistung`,`Erschöpfung`,`Geringere Leistung`], correct:1},
+{vl:8, q:`Was machst du mit wichtigen, aber nicht dringenden Aufgaben (Eisenhower-Matrix)?`,
+ opts:[`Sofort alles andere liegen lassen`,`Einen festen Termin dafür einplanen`,`Immer abgeben`,`Ohne Prüfung streichen`], correct:1},
+{vl:8, q:`Ab wann lohnt sich laut Faustregel ein Gantt-Chart?`,
+ opts:[`Ab 2 Wochen Dauer mit mindestens 3 Arbeitspaketen`,`Ab 1 Woche mit 1 Arbeitspaket`,`Nur bei agilen Projekten`,`Ab 6 Monaten Dauer`], correct:0},
+{vl:9, q:`Wer hat MBSR entwickelt, und wann?`,
+ opts:[`Jon Kabat-Zinn, 1979`,`Richard Lazarus, 1984`,`Abraham Maslow, 1954`,`Kurt Lewin, 1951`], correct:0},
+{vl:9, q:`Welche 4 Ebenen hat das Trainingsevaluationsmodell nach Kirkpatrick?`,
+ opts:[`Reaktion, Lernen, Verhalten, Ergebnisse`,`Affektiv, Kognitiv, Behavioral, Sozial`,`Planung, Durchführung, Kontrolle, Transfer`,`Wissen, Fähigkeiten, Einstellung, Motivation`], correct:0},
+{vl:9, q:`Welche drei Arten von Lernergebnissen nennt Kraiger?`,
+ opts:[`Reaktion, Lernen, Verhalten`,`Kognitiv, fertigkeitsbezogen, affektiv`,`Wissen, Können, Wollen`,`Motivation, Kompetenz, Autonomie`], correct:1},
+{vl:10, q:`Wie lautet Steiners Formel?`,
+ opts:[`Tatsächliche Leistung = mögliche Leistung − Prozessverluste`,`Mögliche Leistung = tatsächliche Leistung + Motivationsgewinne`,`Gruppenleistung = Anzahl Mitglieder × Einzelleistung`,`Leistung = Motivation × Fähigkeit`], correct:0},
+{vl:10, q:`Wann kann die Anwesenheit anderer deine Leistung verbessern?`,
+ opts:[`Immer, wenn viele zusehen`,`Bei einfachen oder gut geübten Aufgaben`,`Nur wenn dein Beitrag unsichtbar bleibt`,`Bei jeder neuen, schwierigen Aufgabe`], correct:1},
+{vl:10, q:`Was ist eher eine Gegenstrategie als ein Symptom von Gruppendenken?`,
+ opts:[`Illusion der Einstimmigkeit`,`Selbstzensur`,`Unabhängige Experten hinzuziehen`,`Sich unangreifbar fühlen`], correct:2},
+{vl:11, q:`Welche 3 Kategorien haben die 9 Teamrollen nach Belbin?`,
+ opts:[`Handlungsorientiert, Wissensorientiert, Kommunikationsorientiert`,`Macher, Denker, Fühler`,`Führung, Fachwissen, Organisation`,`Introvertiert, Extrovertiert, Ambivertiert`], correct:0},
+{vl:11, q:`In welcher Reihenfolge laufen die Phasen nach Tuckman?`,
+ opts:[`Storming, Forming, Norming, Performing, Adjourning`,`Forming, Storming, Norming, Performing, Adjourning`,`Forming, Norming, Storming, Performing, Adjourning`,`Forming, Storming, Performing, Norming, Adjourning`], correct:1},
+{vl:11, q:`Welche Führungsrolle passt zur Storming-Phase?`,
+ opts:[`Loslassen und delegieren`,`Konflikte moderieren, statt sie zu vermeiden`,`Orientierung geben und Struktur schaffen`,`Erfolge feiern und Wissen sichern`], correct:1},
+{vl:12, q:`Welche 3 Konflikttypen gibt es?`,
+ opts:[`Sach-, Beziehungs-, Prozesskonflikte`,`Interne, externe, strukturelle Konflikte`,`Emotionale, rationale, soziale Konflikte`,`Macht-, Rollen-, Ressourcenkonflikte`], correct:0},
+{vl:12, q:`In wie viele Stufen und Phasen teilt Glasl einen Konflikt ein?`,
+ opts:[`9 Stufen in 3 Phasen (Win-Win, Win-Lose, Lose-Lose)`,`5 Stufen in 2 Phasen`,`7 Stufen in 3 Phasen`,`9 Stufen in 4 Phasen`], correct:0},
+{vl:12, q:`Was macht ein Mediator anders als ein Moderator?`,
+ opts:[`Leitet ein Gespräch neutral und gibt Struktur`,`Hilft den Streitenden, selbst eine Lösung zu finden, ohne eine eigene vorzugeben`,`Trifft die endgültige Entscheidung`,`Vertritt eine der beiden Seiten`], correct:1},
+{vl:12, q:`Wofür stehen die Buchstaben bei SAG ES!?`,
+ opts:[`Sichtweise, Auswirkung, Gefühl, Erfragen, Schlussfolgerung`,`Situation, Analyse, Grund, Erklärung, Strategie`,`Sicherheit, Achtsamkeit, Geduld, Empathie, Struktur`,`Sachlichkeit, Argumente, Grenzen, Empathie, Support`], correct:0},
+{vl:12, q:`Was ist das Ziel der „Konstruktiven Kontroverse" nach Johnson & Johnson?`,
+ opts:[`Eine Seite soll gewinnen`,`Schnelle Einigung um jeden Preis`,`Durch Widerspruch zur bestmöglichen Lösung kommen`,`Konflikte ganz vermeiden`], correct:2},
+{vl:13, q:`Was sagt Halls Konzept (1983) über Kultur?`,
+ opts:[`Kultur wirkt meist bewusst und wird aktiv gesteuert`,`Kultur wirkt meist unbewusst und steuert dein Verhalten, ohne dass du es merkst`,`Kultur hat keinen Einfluss auf dein Verhalten`,`Kultur wird nur durch Erziehung bewusst`], correct:1},
+{vl:13, q:`Wie ist die Reihenfolge in Hofstedes Kulturzwiebel, von außen nach innen?`,
+ opts:[`Werte, Rituale, Helden, Symbole`,`Symbole, Helden, Rituale, Werte`,`Rituale, Symbole, Werte, Helden`,`Helden, Symbole, Werte, Rituale`], correct:1},
+{vl:13, q:`Welche Dimension gehört zu GLOBE, aber nicht zu Hofstedes 6 Kulturdimensionen?`,
+ opts:[`Machtdistanz`,`Individualismus`,`Zukunftsorientierung`,`Unsicherheitsvermeidung`], correct:2},
+{vl:13, q:`Welche GLOBE-Führungsdimension motiviert andere durch Visionen?`,
+ opts:[`Team oriented`,`Charismatic / value-based`,`Participative`,`Autonomous`], correct:1}
+];
+
+const state = {
+  tab: 'lernen',
+  vl: 1,
+  openTopic: null,
+  quiz: { vl: null, questions: [], index: 0, choice: null, score: 0 }
+};
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+
+function topicsFor(vl) { return TOPICS.filter(topic => topic.vl === vl); }
+function questionsFor(vl) { return QUIZ.filter(question => question.vl === vl); }
+function scrollTop() { window.scrollTo(0, 0); }
+
+function startQuiz(vl) {
+  const questions = questionsFor(vl).slice();
+  for (let i = questions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [questions[i], questions[j]] = [questions[j], questions[i]];
+  }
+  state.quiz = { vl, questions, index: 0, choice: null, score: 0 };
+}
+
+function selectVl(vl) {
+  if (!VL_LABELS[vl] || vl === state.vl) {
+    if (state.tab === 'quiz' && state.quiz.vl === vl) return;
+  }
+  state.vl = vl;
+  state.openTopic = null;
+  if (state.tab === 'quiz') startQuiz(vl);
+  render();
+  scrollTop();
+}
+
+function selectTab(tab) {
+  if (tab === state.tab) return;
+  state.tab = tab;
+  if (tab === 'quiz' && state.quiz.vl !== state.vl) startQuiz(state.vl);
+  render();
+  scrollTop();
+}
+
+function toggleTopic(id) {
+  state.openTopic = state.openTopic === id ? null : id;
+  render();
+}
+
+function renderChipBar() {
+  return `<nav class="chipbar" aria-label="Vorlesung wählen">${Object.keys(VL_LABELS).map(key => {
+    const vl = Number(key);
+    return `<button type="button" class="chip${vl === state.vl ? ' active' : ''}" data-action="chip" data-vl="${vl}">VL ${vl}</button>`;
+  }).join('')}</nav>`;
+}
+
+function renderTabbar() {
+  return `<nav class="tabbar" aria-label="Bereich wählen">
+    <button type="button" class="tab-btn${state.tab === 'lernen' ? ' active' : ''}" data-action="tab" data-tab="lernen">
+      <span class="tab-icon" aria-hidden="true">📖</span><span class="tab-label">Lernen</span>
+    </button>
+    <button type="button" class="tab-btn${state.tab === 'quiz' ? ' active' : ''}" data-action="tab" data-tab="quiz">
+      <span class="tab-icon" aria-hidden="true">✅</span><span class="tab-label">Quiz</span>
+    </button>
+  </nav>`;
+}
+
+function renderLernen() {
+  const topics = topicsFor(state.vl);
+  return `<header class="lecture-head"><span class="kicker">VL ${state.vl}</span>
+    <h1>${escapeHtml(VL_LABELS[state.vl])}</h1>
+    <p>Tippe ein Thema an, um es zu lesen.</p></header>
+    <div class="acc" aria-label="Themen zu VL ${state.vl}">
+      ${topics.map((topic, index) => {
+        const open = state.openTopic === topic.id;
+        return `<div class="acc-item${open ? ' open' : ''}">
+          <button type="button" class="acc-header" data-action="topic-toggle" data-id="${topic.id}">
+            <span class="acc-number">${String(index + 1).padStart(2,'0')}</span>
+            <span class="acc-title">${escapeHtml(topic.title)}</span>
+            <span class="acc-chevron" aria-hidden="true">›</span>
+          </button>
+          ${open ? `<div class="acc-body">
+            ${topic.tag ? `<p class="source">${escapeHtml(topic.tag)}</p>` : ''}
+            <p class="definition">${escapeHtml(topic.def)}</p>
+            <ul class="points">${topic.points.map(point => `<li>${point}</li>`).join('')}</ul>
+          </div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function renderQuiz() {
+  if (state.quiz.vl !== state.vl) startQuiz(state.vl);
+  const { questions, index, choice, score } = state.quiz;
+
+  if (!questions.length) {
+    return `<header class="lecture-head"><span class="kicker">VL ${state.vl}</span><h1>${escapeHtml(VL_LABELS[state.vl])}</h1></header>
+      <p>Für diese Vorlesung gibt es noch kein Quiz.</p>`;
+  }
+
+  if (index >= questions.length) {
+    return `<section class="result">
+      <span class="kicker">Quiz beendet · VL ${state.vl}</span>
+      <h1>${score} von ${questions.length} richtig</h1>
+      <p>Lies die Themen noch einmal oder wiederhole das Quiz.</p>
+      <button type="button" class="primary" data-action="retry-quiz">Quiz wiederholen</button>
+      <button type="button" class="plain" data-action="tab" data-tab="lernen">Zu den Themen</button>
+    </section>`;
+  }
+
+  const question = questions[index];
+  const letters = ['A','B','C','D'];
+  const answered = choice !== null;
+  return `<main class="quiz"><span class="kicker">VL ${state.vl} · Frage ${index + 1} von ${questions.length}</span>
+    <h1>${escapeHtml(question.q)}</h1><div class="answers">
+      ${question.opts.map((option, i) => {
+        const result = answered ? (i === question.correct ? ' correct' : (i === choice ? ' wrong' : '')) : '';
+        return `<button type="button" class="answer${result}" data-action="answer" data-index="${i}" ${answered ? 'disabled' : ''}>
+          <span class="answer-letter">${letters[i]}</span><span>${escapeHtml(option)}</span>
+        </button>`;
+      }).join('')}</div>
+      ${answered ? `<div class="feedback"><strong>${choice === question.correct ? 'Richtig.' : 'Richtig ist:'}</strong>
+        ${choice === question.correct ? '' : escapeHtml(question.opts[question.correct])}
+        ${question.note ? `<p>${escapeHtml(question.note)}</p>` : ''}</div>
+        <button type="button" class="primary" data-action="next">${index + 1 === questions.length ? 'Ergebnis ansehen' : 'Nächste Frage'}</button>` : ''}
+    </main>`;
+}
+
+function render() {
+  document.getElementById('app').innerHTML = `<div class="app">
+    ${renderChipBar()}
+    ${state.tab === 'lernen' ? renderLernen() : renderQuiz()}
+    ${renderTabbar()}
+  </div>`;
+}
+
+document.getElementById('app').addEventListener('click', event => {
+  const button = event.target.closest('[data-action]');
+  if (!button) return;
+  const action = button.dataset.action;
+
+  if (action === 'chip') selectVl(Number(button.dataset.vl));
+  else if (action === 'tab') selectTab(button.dataset.tab);
+  else if (action === 'topic-toggle') toggleTopic(button.dataset.id);
+  else if (action === 'retry-quiz') { startQuiz(state.vl); render(); scrollTop(); }
+  else if (action === 'answer' && state.quiz.choice === null) {
+    const index = Number(button.dataset.index);
+    const question = state.quiz.questions[state.quiz.index];
+    if (!question || index < 0 || index >= question.opts.length) return;
+    state.quiz.choice = index;
+    if (index === question.correct) state.quiz.score++;
+    render();
+  }
+  else if (action === 'next' && state.quiz.choice !== null) {
+    state.quiz.index++;
+    state.quiz.choice = null;
+    render();
+    scrollTop();
+  }
+});
+
+render();
+</script>
+</body>
+</html>
