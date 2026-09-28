@@ -72,6 +72,36 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .tab-btn .tab-label{font-size:.8rem;font-weight:750}
 .tab-btn.active{color:var(--accent)}
 
+.search-trigger{position:sticky;left:20px;z-index:2;display:grid;place-items:center;flex:none;width:42px;height:42px;padding:0;border:1px solid #344551;border-radius:999px;background:#101922;color:var(--accent)}
+.search-trigger:hover{border-color:var(--accent);background:#14231e}
+.search-trigger svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.search-overlay{position:fixed;inset:0;z-index:20;overflow-y:auto;background:var(--bg);padding:calc(18px + env(safe-area-inset-top,0px)) max(18px,calc((100vw - 620px)/2)) calc(28px + env(safe-area-inset-bottom,0px))}
+.search-shell{max-width:620px;margin:0 auto}
+.search-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.search-heading h1{margin:0;font-size:1.55rem;letter-spacing:-.03em;line-height:1.2}
+.search-close{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid #344551;border-radius:12px;background:#101922;color:var(--text);font-size:1.55rem;line-height:1}
+.search-close:hover{border-color:var(--accent);color:var(--accent)}
+.search-form{margin:20px 0 10px}
+.search-field{display:flex;align-items:center;gap:11px;min-height:56px;padding:0 13px;border:2px solid var(--accent);border-radius:14px;background:#101922}
+.search-field>svg{width:20px;height:20px;flex:none;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round}
+.search-field input{width:100%;min-width:0;min-height:50px;padding:0;border:0;outline:0;background:transparent;color:var(--text);font:inherit;font-size:1rem}
+.search-field input::placeholder{color:#91a2ac;opacity:1}
+.search-field input::-webkit-search-cancel-button{display:none}
+.search-clear{display:grid;place-items:center;flex:none;width:34px;height:34px;border:0;border-radius:50%;background:#233542;color:var(--text);font-size:1.1rem}
+.search-help{margin:0 0 22px;color:#9fb0b9;font-size:.84rem}
+.search-summary{min-height:25px;margin:0 0 8px;color:var(--accent);font-size:.82rem;font-weight:750}
+.search-results{display:grid;gap:10px}
+.search-result{display:grid;gap:5px;width:100%;padding:13px 14px;border:1px solid #344551;border-radius:13px;background:#101922;color:var(--text);text-align:left}
+.search-result:hover,.search-result:focus-visible{border-color:var(--accent);background:#13201e}
+.search-result-meta{color:var(--accent);font-size:.72rem;font-weight:800;letter-spacing:.04em}
+.search-result-title{font-size:.98rem;font-weight:760;line-height:1.35;overflow-wrap:anywhere}
+.search-result-excerpt{color:var(--soft);font-size:.88rem;line-height:1.45;overflow-wrap:anywhere}
+.search-result-excerpt mark{border-radius:3px;background:#21493e;color:#e5fff5;font-weight:800}
+.search-result-action{justify-self:end;color:#a6b7c0;font-size:.77rem;font-weight:700}
+.search-empty{padding:22px 14px;border:1px solid var(--line);border-radius:13px;color:var(--soft);text-align:center}
+.search-empty strong{display:block;margin-bottom:5px;color:var(--text)}
+
 @media(min-width:700px){.app{padding-left:30px;padding-right:30px}.chipbar{margin:0 -30px;padding-left:10px;padding-right:10px}.chipbar::before,.chipbar::after{width:10px}}
 @media(max-width:380px){.app{padding-left:17px;padding-right:17px}}
 </style>
@@ -570,6 +600,8 @@ const state = {
   tab: 'lernen',
   vl: 1,
   openTopic: null,
+  searchOpen: false,
+  searchQuery: '',
   quiz: { vl: null, questions: [], index: 0, choice: null, score: 0 }
 };
 
@@ -577,16 +609,255 @@ function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 }
 
+function normalizeSearch(value) {
+  return String(value).toLocaleLowerCase('de-DE').replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').normalize('NFD').replace(/\p{M}/gu, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().replace(/\s+/g, ' ');
+}
+
+function normalizeSearchWithPositions(value) {
+  let normalized = '';
+  const positions = [];
+  let offset = 0;
+  for (const character of String(value)) {
+    const folded = character.toLocaleLowerCase('de-DE').replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').normalize('NFD').replace(/\p{M}/gu, '');
+    for (const part of folded) {
+      if (/[\p{L}\p{N}]/u.test(part)) {
+        normalized += part;
+        positions.push(offset);
+      } else if (normalized && !normalized.endsWith(' ')) {
+        normalized += ' ';
+        positions.push(offset);
+      }
+    }
+    offset += character.length;
+  }
+  while (normalized.endsWith(' ')) {
+    normalized = normalized.slice(0, -1);
+    positions.pop();
+  }
+  return { normalized, positions };
+}
+
+function plainSearchText(value) {
+  const template = document.createElement('template');
+  template.innerHTML = String(value);
+  return (template.content.textContent || '').replace(/\s+/g, ' ').trim();
+}
+
+function buildSearchIndex() {
+  const items = [];
+  Object.entries(VL_LABELS).forEach(([vl, title]) => items.push({ kind: 'lecture', kindLabel: 'Vorlesung', vl: Number(vl), title: `VL ${String(vl).padStart(2, '0')} · ${title}`, text: title }));
+  TOPICS.forEach((topic, index) => items.push({ kind: 'topic', kindLabel: 'Thema', vl: topic.vl, title: topic.title, text: [topic.tag, plainSearchText(topic.def), ...topic.points.map(plainSearchText)].filter(Boolean).join(' '), id: topic.id, sourceIndex: index }));
+  QUIZ.forEach((question, index) => items.push({ kind: 'quiz', kindLabel: 'Quizfrage', vl: question.vl, title: question.q, text: [...question.opts, question.note].filter(Boolean).join(' '), sourceIndex: index, source: question }));
+  return items.map((item, searchIndex) => {
+    const titleNormalized = normalizeSearch(item.title);
+    const textNormalized = normalizeSearch(`${item.title} ${item.text}`);
+    return { ...item, searchIndex, titleNormalized, textNormalized, titleTokens: [...new Set(titleNormalized.split(' '))], tokens: [...new Set(textNormalized.split(' '))] };
+  });
+}
+
+const SEARCH_ITEMS = buildSearchIndex();
+
+function editDistanceWithin(left, right, limit) {
+  if (Math.abs(left.length - right.length) > limit) return limit + 1;
+  let previous = Array.from({ length: right.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= left.length; i++) {
+    const current = [i];
+    let rowMinimum = i;
+    for (let j = 1; j <= right.length; j++) {
+      const value = Math.min(current[j - 1] + 1, previous[j] + 1, previous[j - 1] + (left[i - 1] === right[j - 1] ? 0 : 1));
+      current[j] = value;
+      rowMinimum = Math.min(rowMinimum, value);
+    }
+    if (rowMinimum > limit) return limit + 1;
+    previous = current;
+  }
+  return previous[right.length];
+}
+
+function termSearchScore(term, tokens) {
+  if (tokens.some(token => token === term)) return 30;
+  if (tokens.some(token => token.startsWith(term))) return 22;
+  if (tokens.some(token => token.includes(term))) return 14;
+  if (term.length >= 4) {
+    const limit = term.length >= 8 ? 2 : 1;
+    const distance = Math.min(...tokens.map(token => editDistanceWithin(term, token, limit)));
+    if (distance <= limit) return distance === 1 ? 5 : 3;
+  }
+  return 0;
+}
+
+function searchMatches(query) {
+  const normalizedQuery = normalizeSearch(query);
+  const terms = normalizedQuery.split(' ').filter(Boolean);
+  if (normalizedQuery.length < 2 || !terms.length) return { terms, matches: [] };
+  const matches = [];
+  SEARCH_ITEMS.forEach(item => {
+    const titleScores = terms.map(term => termSearchScore(term, item.titleTokens));
+    const allScores = terms.map((term, index) => Math.max(titleScores[index] * 2, termSearchScore(term, item.tokens)));
+    if (allScores.some(score => score === 0)) return;
+    let score = allScores.reduce((total, value) => total + value, 0);
+    if (item.titleNormalized === normalizedQuery) score += 500;
+    else if (item.titleNormalized.startsWith(normalizedQuery)) score += 260;
+    else if (item.titleNormalized.includes(normalizedQuery)) score += 190;
+    if (item.textNormalized.includes(normalizedQuery)) score += 45;
+    if (item.kind === 'topic') score += 5;
+    else if (item.kind === 'quiz') score += 4;
+    matches.push({ item, score });
+  });
+  matches.sort((left, right) => right.score - left.score || left.item.searchIndex - right.item.searchIndex);
+  return { terms, matches };
+}
+
+function highlightedExcerpt(item, terms) {
+  const source = item.text || item.title;
+  const mapped = normalizeSearchWithPositions(source);
+  const found = terms.map(term => mapped.normalized.indexOf(term)).filter(index => index >= 0);
+  if (!found.length) return escapeHtml(source.slice(0, 170)) + (source.length > 170 ? '…' : '');
+  const first = Math.min(...found);
+  const firstOffset = mapped.positions[first] || 0;
+  let start = Math.max(0, firstOffset - 54);
+  if (start > 0) {
+    const boundary = source.indexOf(' ', start);
+    if (boundary >= 0 && boundary < firstOffset) start = boundary + 1;
+  }
+  let end = Math.min(source.length, firstOffset + 140);
+  if (end < source.length) {
+    const boundary = source.lastIndexOf(' ', end);
+    if (boundary > firstOffset) end = boundary;
+  }
+  const spans = [];
+  terms.forEach(term => {
+    let cursor = 0;
+    while (cursor < mapped.normalized.length) {
+      const index = mapped.normalized.indexOf(term, cursor);
+      if (index < 0) break;
+      const rawStart = mapped.positions[index];
+      const lastOffset = mapped.positions[index + term.length - 1];
+      const rawEnd = lastOffset === undefined ? rawStart + term.length : lastOffset + String.fromCodePoint(source.codePointAt(lastOffset)).length;
+      if (rawStart >= start && rawEnd <= end) spans.push([rawStart - start, rawEnd - start]);
+      cursor = index + term.length;
+    }
+  });
+  spans.sort((left, right) => left[0] - right[0] || right[1] - left[1]);
+  const merged = [];
+  spans.forEach(span => {
+    const last = merged[merged.length - 1];
+    if (last && span[0] <= last[1]) last[1] = Math.max(last[1], span[1]);
+    else merged.push(span.slice());
+  });
+  const snippet = source.slice(start, end);
+  let html = start > 0 ? '…' : '';
+  let cursor = 0;
+  merged.forEach(([spanStart, spanEnd]) => {
+    html += escapeHtml(snippet.slice(cursor, spanStart)) + `<mark>${escapeHtml(snippet.slice(spanStart, spanEnd))}</mark>`;
+    cursor = spanEnd;
+  });
+  html += escapeHtml(snippet.slice(cursor)) + (end < source.length ? '…' : '');
+  return html;
+}
+
+function renderSearchResults(query) {
+  const { terms, matches } = searchMatches(query);
+  if (normalizeSearch(query).length < 2) return { summary: '', html: '<div class="search-empty"><strong>Suche in allen Lerninhalten</strong>Gib mindestens zwei Zeichen ein.</div>' };
+  if (!matches.length) return { summary: 'Keine Treffer', html: '<div class="search-empty"><strong>Nichts gefunden</strong>Prüfe die Schreibweise oder versuche einen kürzeren Begriff.</div>' };
+  const shown = matches.slice(0, 40);
+  const summary = matches.length > shown.length ? `${shown.length} von ${matches.length} Treffern` : `${matches.length} Treffer`;
+  const html = shown.map(({ item }) => {
+    const place = `Vorlesung ${String(item.vl).padStart(2, '0')} · ${VL_LABELS[item.vl]}`;
+    const action = item.kind === 'topic' ? 'Thema öffnen' : item.kind === 'quiz' ? 'Quiz starten, diese Frage zuerst' : 'Vorlesung öffnen';
+    return `<button type="button" class="search-result" data-action="search-result" data-index="${item.searchIndex}">
+      <span class="search-result-meta">${escapeHtml(item.kindLabel)} · ${escapeHtml(place)}</span>
+      <span class="search-result-title">${escapeHtml(item.title)}</span>
+      <span class="search-result-excerpt">${highlightedExcerpt(item, terms)}</span>
+      <span class="search-result-action">${action} ›</span>
+    </button>`;
+  }).join('');
+  return { summary, html: `<div class="search-results">${html}</div>` };
+}
+
+function renderSearchPanel() {
+  const { summary, html } = renderSearchResults(state.searchQuery);
+  return `<section class="search-overlay" role="dialog" aria-modal="true" aria-labelledby="search-title">
+    <div class="search-shell">
+      <header class="search-heading"><h1 id="search-title">Suchen</h1><button type="button" class="search-close" data-action="close-search" aria-label="Suche schließen">×</button></header>
+      <form class="search-form" id="global-search-form" role="search">
+        <label class="visually-hidden" for="global-search">Suchbegriff</label>
+        <div class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+          <input id="global-search" type="search" value="${escapeHtml(state.searchQuery)}" placeholder="Begriff, Thema oder Frage" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="search-help" aria-controls="search-results">
+          ${state.searchQuery ? '<button type="button" class="search-clear" data-action="clear-search" aria-label="Suchtext löschen">×</button>' : ''}
+        </div>
+      </form>
+      <p class="search-help" id="search-help">Durchsucht Vorlesungen, Themen, Erklärungen und Quizfragen.</p>
+      <p class="search-summary" id="search-summary" role="status" aria-live="polite">${escapeHtml(summary)}</p>
+      <div id="search-results">${html}</div>
+    </div>
+  </section>`;
+}
+
+function updateSearchResults() {
+  const { summary, html } = renderSearchResults(state.searchQuery);
+  const summaryNode = document.getElementById('search-summary');
+  const resultsNode = document.getElementById('search-results');
+  if (summaryNode) summaryNode.textContent = summary;
+  if (resultsNode) resultsNode.innerHTML = html;
+  const clearButton = document.querySelector('.search-clear');
+  const input = document.getElementById('global-search');
+  if (state.searchQuery && !clearButton) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'search-clear';
+    button.dataset.action = 'clear-search';
+    button.setAttribute('aria-label', 'Suchtext löschen');
+    button.textContent = '×';
+    input?.parentElement.appendChild(button);
+  } else if (!state.searchQuery) clearButton?.remove();
+}
+
+function closeSearch() {
+  state.searchOpen = false;
+  render();
+  document.querySelector('.search-trigger')?.focus({ preventScroll: true });
+}
+
+function openSearchResult(item) {
+  state.searchOpen = false;
+  if (item.kind === 'topic') {
+    state.vl = item.vl;
+    state.tab = 'lernen';
+    state.openTopic = item.id;
+  } else if (item.kind === 'quiz') {
+    state.vl = item.vl;
+    state.tab = 'quiz';
+    startQuiz(item.vl, item.source);
+  } else {
+    state.vl = item.vl;
+    state.tab = 'lernen';
+    state.openTopic = null;
+  }
+  render();
+  if (item.kind === 'topic') {
+    const target = [...document.querySelectorAll('.acc-header')].find(button => button.dataset.id === item.id);
+    if (target) {
+      const top = target.getBoundingClientRect().top + window.scrollY - 84;
+      window.scrollTo({ top, behavior: 'smooth' });
+      target.focus({ preventScroll: true });
+    }
+  } else document.querySelector('main h1, .lecture-head h1')?.focus({ preventScroll: true });
+}
+
 function topicsFor(vl) { return TOPICS.filter(topic => topic.vl === vl); }
 function questionsFor(vl) { return QUIZ.filter(question => question.vl === vl); }
 function scrollTop() { window.scrollTo(0, 0); }
 
-function startQuiz(vl) {
+function startQuiz(vl, firstQuestion = null) {
   const questions = questionsFor(vl).slice();
+  const firstIndex = firstQuestion ? questions.indexOf(firstQuestion) : -1;
+  const first = firstIndex >= 0 ? questions.splice(firstIndex, 1)[0] : null;
   for (let i = questions.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [questions[i], questions[j]] = [questions[j], questions[i]];
   }
+  if (first) questions.unshift(first);
   state.quiz = { vl, questions, index: 0, choice: null, score: 0 };
 }
 
@@ -615,7 +886,11 @@ function toggleTopic(id) {
 }
 
 function renderChipBar() {
-  return `<nav class="chipbar" aria-label="Vorlesung wählen">${Object.keys(VL_LABELS).map(key => {
+  return `<nav class="chipbar" aria-label="Vorlesung wählen und Suche öffnen">
+    <button type="button" class="search-trigger" data-action="open-search" aria-label="Suche öffnen" title="Suchen (Strg+K oder ⌘K)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+      <span class="visually-hidden">Suchen</span>
+    </button>${Object.keys(VL_LABELS).map(key => {
     const vl = Number(key);
     return `<button type="button" class="chip${vl === state.vl ? ' active' : ''}" data-action="chip" data-vl="${vl}">VL ${vl}</button>`;
   }).join('')}</nav>`;
@@ -694,11 +969,16 @@ function renderQuiz() {
 }
 
 function render() {
-  document.getElementById('app').innerHTML = `<div class="app">
+  document.getElementById('app').innerHTML = `<div class="app"${state.searchOpen ? ' aria-hidden="true" inert' : ''}>
     ${renderChipBar()}
     ${state.tab === 'lernen' ? renderLernen() : renderQuiz()}
     ${renderTabbar()}
-  </div>`;
+  </div>${state.searchOpen ? renderSearchPanel() : ''}`;
+  if (state.searchOpen) {
+    const input = document.getElementById('global-search');
+    input?.focus();
+    input?.setSelectionRange(input.value.length, input.value.length);
+  }
 }
 
 document.getElementById('app').addEventListener('click', event => {
@@ -706,7 +986,20 @@ document.getElementById('app').addEventListener('click', event => {
   if (!button) return;
   const action = button.dataset.action;
 
-  if (action === 'chip') selectVl(Number(button.dataset.vl));
+  if (action === 'open-search') { state.searchOpen = true; render(); }
+  else if (action === 'close-search') closeSearch();
+  else if (action === 'clear-search') {
+    state.searchQuery = '';
+    const input = document.getElementById('global-search');
+    if (input) input.value = '';
+    updateSearchResults();
+    input?.focus();
+  }
+  else if (action === 'search-result') {
+    const item = SEARCH_ITEMS[Number(button.dataset.index)];
+    if (item) openSearchResult(item);
+  }
+  else if (action === 'chip') selectVl(Number(button.dataset.vl));
   else if (action === 'tab') selectTab(button.dataset.tab);
   else if (action === 'topic-toggle') toggleTopic(button.dataset.id);
   else if (action === 'retry-quiz') { startQuiz(state.vl); render(); scrollTop(); }
@@ -723,6 +1016,33 @@ document.getElementById('app').addEventListener('click', event => {
     state.quiz.choice = null;
     render();
     scrollTop();
+  }
+});
+
+document.getElementById('app').addEventListener('input', event => {
+  if (event.target.id !== 'global-search') return;
+  state.searchQuery = event.target.value;
+  updateSearchResults();
+});
+
+document.getElementById('app').addEventListener('submit', event => {
+  if (event.target.id !== 'global-search-form') return;
+  event.preventDefault();
+  const first = searchMatches(state.searchQuery).matches[0]?.item;
+  if (first) openSearchResult(first);
+});
+
+document.addEventListener('keydown', event => {
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+    event.preventDefault();
+    if (!state.searchOpen) { state.searchOpen = true; render(); }
+    else document.getElementById('global-search')?.focus();
+  } else if (state.searchOpen && event.key === 'Escape') {
+    event.preventDefault();
+    closeSearch();
+  } else if (state.searchOpen && event.target.id === 'global-search' && event.key === 'ArrowDown') {
+    const firstResult = document.querySelector('.search-result');
+    if (firstResult) { event.preventDefault(); firstResult.focus(); }
   }
 });
 
